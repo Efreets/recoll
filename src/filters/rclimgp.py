@@ -30,6 +30,7 @@ import sys
 import os
 import re
 import subprocess
+import platform
 import json
 
 import rclexecm
@@ -66,23 +67,27 @@ class ImgTagExtractor(RclBaseHandler):
     def __init__(self, em):
         super(ImgTagExtractor, self).__init__(em)
         self.config = self.em.config()
-        
+        self.iswin = False
+        platsys = platform.system()
+        # On Windows, the rclimg perl program is a standalone binary.
+        if platsys == "Windows":
+            progname = "rclimg.exe"
+        else:
+            progname = "rclimg"
+        self.cmd = [os.path.join(_execdir, progname), "-j"]
+            
     def html_text(self, filename):
         ok = False
-
-        # On Windows, the rclimg perl program is a standalone binary.
-        cmd = [
-            os.path.join(_execdir, "rclimg"),
-            "-j",
-            filename,
-        ]
+        cmd = self.cmd
+        cmd.append(os.fsdecode(filename))
+        self.em.rclog(f"cmd: {cmd}")
         try:
             global perlproc
             perlproc = subprocess.Popen(cmd, stdout=subprocess.PIPE)
             data, stderr = perlproc.communicate()
             perlproc = None
         except Exception as e:
-            self.em.rclog(f"{cmd} failed: {e}")
+            self.em.rclog(f"{self.cmd} failed: {e}")
             return ""
         
         metadata = json.loads(data);
