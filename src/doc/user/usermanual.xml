@@ -5597,7 +5597,8 @@ db = recoll.connect(extra_dbs=["/home/me/.someconfdir/xapiandb", "/data/othercon
 
               <listitem><para>Starts a search for the query defined by
                   the <classname>SearchData</classname> object. See above for a description of the
-                  other parameters.</para></listitem>
+                  other parameters, see further for a description of
+              <classname>Searchdata</classname>.</para></listitem>
             </varlistentry>
 
             <varlistentry>
@@ -5828,17 +5829,31 @@ class MyHighlighter:
         <simplesect xml:id="RCL.PROGRAM.PYTHONAPI.RECOLL.CLASSES.SEARCHDATA">
           <title>The SearchData class</title>
 
-          <para>A <literal>SearchData</literal> object allows building a query by combining clauses,
-          for execution by <literal>Query.executesd()</literal>. It can be used in replacement of
-          the query language approach. The interface is going to change a little, so no detailed doc
-          for now...</para>
+          <para>A <classname>SearchData</classname> object allows building a query by combining
+          clauses, for execution by <literal>Query.executesd()</literal>. It can be used in
+          replacement of the query language. A <classname>Searchdata</classname> object is mostly a
+          list of search clauses, combined by either <literal>AND</literal> or <literal>OR</literal>
+          conjunctions. BEWARE: up to and including &RCL; 1.44.0 a bug in the type value processing
+          caused any input value to produce an <literal>OR</literal> query, except
+          <literal>"or|OR"</literal> which actually produced an <literal>AND</literal> one.  This
+          was fixed for later versions. This interface was used very little or not at all. However,
+          if you did use it, you will need to change the type value for newer
+          versions. Unfortunately the simplest way to detect the change is to execute a simple
+          two-clause query when your program starts and detecting the "OR" or "AND" in the
+          query.getxquery() value.</para>
 
           <variablelist>
-
             <varlistentry>
-              <term>addclause(type='and'|'or'|'excl'|'phrase'|'near'|'sub',
-              qstring=string, slack=0, field='', stemming=1, subSearch=SearchData)</term>
-              <listitem><para></para></listitem>
+              <term>SearchData(type='and'|'or', stemlang='lang')</term>
+              <listitem><para>Create a <classname>SearchData</classname> object of the given
+              conjunction type, and optionally specify the stemming language.</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>addclause('and'|'filename'|'or'|'near'|'phrase'|'sub', querystring,
+              slack=0, field='', stemming=True, exclude=False, anchorstart=False, anchorend=False,
+              casesens=False, diacsens=False)</term>
+              <listitem><para>Add a search clause of the specified type to the list, with the given
+              query string and options.</para></listitem>
             </varlistentry>
           </variablelist>
 
