@@ -36,7 +36,7 @@
 
 using namespace std;
 
-#undef DEBUGABSTRACT  
+#define DEBUGABSTRACT  
 #ifdef DEBUGABSTRACT
 #define LOGABS LOGINF
 #else
@@ -304,7 +304,7 @@ public:
                   [](const MatchFragment& a, const MatchFragment& b) -> bool {
                       if (a.start != b.start)
                           return a.start < b.start;
-                      return a.stop - a.start > b.stop - a.stop;
+                      return a.stop - a.start > b.stop - b.start;
                   }
             );
         
@@ -449,30 +449,35 @@ int Query::Native::abstractFromText(
     LOGABS("abstractFromText: text_to_words: " << chron.millis() << "mS\n");
     splitter.updgroups();
 
-    // Sort the fragments by decreasing weight
+    // Sort the fragments by decreasing weight before applying truncation
     const vector<MatchFragment>& res1 = splitter.getFragments();
     vector<MatchFragment> result(res1.begin(), res1.end());
+    std::sort(result.begin(), result.end(),
+              [](const MatchFragment& a,
+                 const MatchFragment& b) -> bool { 
+                  if (a.coef != b.coef)
+                      return b.coef < a.coef; 
+                  return  b.stop - b.start < a.stop - a.start;
+              }
+              );
+    // Apply requested truncation
+    if (maxtotaloccs > 0 and maxtotaloccs < result.size()) {
+        result.erase(result.begin() + maxtotaloccs, result.end());
+    }
+    // Possibly sort by position
     if (sortbypage) {
         std::sort(result.begin(), result.end(),
-                  [](const MatchFragment& a,
-                     const MatchFragment& b) -> bool { 
-                      return a.hitpos < b.hitpos; 
-                  }
-            );
-    } else {
-        std::sort(result.begin(), result.end(),
-                  [](const MatchFragment& a,
-                     const MatchFragment& b) -> bool { 
-                      return a.coef > b.coef; 
-                  }
-            );
+                  [](const MatchFragment &a, const MatchFragment &b) -> bool {
+                      return a.hitpos < b.hitpos;
+                  });
     }
+
+    // Page break positions
     vector<int> vpbreaks;
     ndb->getPagePositions(docid, vpbreaks);
 
     // Build the output snippets array by merging the fragments, their
-    // main term and the page positions. 
-    unsigned int count = 0;
+    // main term and the page positions.
     for (const auto& entry : result) {
         string frag(fixfrag(rawtext.substr(entry.start, entry.stop - entry.start)));
 
@@ -497,8 +502,6 @@ int Query::Native::abstractFromText(
         }
         LOGDEB0("=== FRAGMENT: p. " << page << " Coef: " << entry.coef << ": " << frag << "\n");
         vabs.push_back(Snippet(page, frag, entry.line).setTerm(entry.term));
-        if (count++ >= maxtotaloccs)
-            break;
     }
     return ABSRES_OK | splitter.getretflags();
 }
