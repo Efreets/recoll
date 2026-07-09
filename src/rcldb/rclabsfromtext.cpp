@@ -36,7 +36,7 @@
 
 using namespace std;
 
-#define DEBUGABSTRACT  
+// #define DEBUGABSTRACT  
 #ifdef DEBUGABSTRACT
 #define LOGABS LOGINF
 #else
@@ -227,7 +227,7 @@ public:
                 // Term group (phrase/near) handling
                 m_plists[dumb].push_back(pos);
                 m_gpostobytes[pos] = {bts, bte};
-                LOGABS("Recorded bpos for pos " << pos << ": " << bts << " " << bte << "\n");
+                LOGABS("Recorded bpos for term [" << dumb << "] pos " << pos << ": " << bts << " " << bte << "\n");
             }
         }
 #ifdef COMPUTE_HLZONES
@@ -334,9 +334,15 @@ public:
                     return;
                 }
             }
-            if (fragit->start <= grpmatch.offs.first && fragit->stop >= grpmatch.offs.second) {
+            // Note that there can be several overlapping fragments containing
+            // the match (because of expansion limitation), hence the while.
+            while (fragit->start <= grpmatch.offs.first && fragit->stop >= grpmatch.offs.second) {
                 // grp in frag
                 fragit->coef += 10.0;
+                fragit++;
+                if (fragit == m_fragments.end()) {
+                    return;
+                }
             }
         }
 
