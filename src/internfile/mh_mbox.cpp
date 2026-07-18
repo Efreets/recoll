@@ -282,8 +282,9 @@ public:
     std::string ipath;
     std::unique_ptr<istream> instream;
     int        msgnum{0}; // Current message number in folder. Starts at 1
-    int64_t    lineno{0}; // debug 
+    int64_t    lineno{0}; // debug
     int64_t    fsize{0};
+    bool       needselfdoc{false};
     std::vector<int64_t> offsets;
     int        quirks;
     MimeHandlerMbox *pthis;
@@ -323,6 +324,7 @@ void MimeHandlerMbox::clear_impl()
     m->fsize = 0;
     m->offsets.clear();
     m->quirks = 0;
+    m->needselfdoc = false;
 }
 
 bool MimeHandlerMbox::skip_to_document(const std::string& ipath) {
@@ -383,6 +385,7 @@ bool MimeHandlerMbox::set_document_string_impl(const string&, const string& cont
     m->instream = std::unique_ptr<std::istream>(new std::stringstream(content, std::ios_base::in));
 
     m->fsize = content.size();
+    m->needselfdoc = true;
     m_havedoc = true;
     return true;
 }
@@ -454,6 +457,20 @@ bool MimeHandlerMbox::next_document()
     if (mtarg == 0)
         mtarg = -1;
 
+    if (mtarg == -1 && m->msgnum == 0 && m->needselfdoc) {
+        // We are beginning extracting from memory (no file and no input ipath).
+        // Create the "self" document/ because fsindexer won't do it for us.
+        // This does not contain useful data but it provides a container doc for
+        // a program walking up the embedding chain. Actually this should
+        // probably be done in internfile, to be shared by all containers with
+        // no meaningful selfdoc, but internfile is already too complicated.
+        m->needselfdoc = false;
+        m_metaData[cstr_dj_keyipath] = std::string();
+        m_metaData[cstr_dj_keymt] = "text/plain";
+        m_metaData[cstr_dj_keycontent] = std::string();
+        return true;
+    }
+    
     // If we are called to retrieve a specific message, try to use the
     // offsets cache to try and position to the right header.
     bool storeoffsets = true;
