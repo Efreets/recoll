@@ -1,3 +1,23 @@
+recoll (1.44.1-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
+
+  * Fixed several errors in Snippets selection and sorting. Esp. snippets with
+    group matches were sometimes wrongly discarded.
+  * Python API: incompatible change: in the rarely used SearchData-based part of
+    the API the test for an 'OR' request was reversed. With an unspecified type
+    parameters, queries defaulted to AND and still do. If the type was
+    specified, OR was used _except_ if the parameter value was "or" or "OR" in
+    which case an AND query was generated. The fix breaks older code setting the
+    parameter. 
+  * PPT: fixed issue in the old .ppt (not pptx) handler preventing access to
+    part of the document data (Error: PropertySetStream object has no attribute
+    getDirectoryStreamByName' message).
+  * Windows: the new antiword version can now process very small word docs
+    (which previously caused a "too small to handle" error message). Of course
+    the fix is also available from the antiword repository on framagit if you
+    want to build from source on Linux or Mac OS.
+  
+ -- Jean-Francois Dockes <jf@dockes.org>  Wed, 22 Jul 2026 08:15:00 +0200
+
 recoll (1.44.0-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
 
   * Archive handlers (zip, rar, 7z, tar): avoid computing the name list

@@ -202,15 +202,21 @@ Index the file names of unprocessed files. Index the names of files the contents
 unsupported MIME type.
 .TP
 .BI "usesystemfilecommand = "bool
-Try to guess MIME type from data. The name is historical and kept for compatibility, old versions used to execute 'file'
-or 'xdg-mime' to determine a MIME type when not using the extension. Current Recoll versions
-use libmagic for this. (A compile-time configuration can still restore the old behaviour,
-disabling libmagic and using a command).
-This identification method can be more accurate in some cases than the suffix-based one, but it's
-slower and will cause the indexing of many bogus extension-less "text" files. In addition it will
-identify all zip-based formats (e.g. libreoffice) as application/zip, which is of course wrong, so
-it can only be a secondary step.
+Try to guess MIME type from document data. The name is historical and kept for compatibility, old versions used to execute 'file' or
+'xdg-mime' to determine a MIME type when not using the extension. By default, current Recoll
+versions use libmagic for this. Compile-time and run-time configuration parameters can still
+restore the old behaviour, disabling libmagic and using a command.
+
+The identification method based on data can be more accurate in some cases than the suffix-based
+one, but it's slower and will cause the indexing of many bogus extension-less "text" files. In
+addition it will identify all zip-based formats (e.g. libreoffice) as application/zip, which is of
+course wrong, so it can only be a secondary step.
+
 Also see "systemfilecommand". 
+.TP
+.BI "disablelibmagic = "bool
+Use command instead of libmagic. Only meaningful if libmagic is compiled in and usesystemfilecommand is set. Prefer running
+the command to using the lib.
 .TP
 .BI "systemfilecommand = "string
 Command to use for guessing the MIME type (if not compiled to use libmagic). The default is now to use libmagic instead. If in use, this should be a "file --mime-type"
@@ -759,6 +765,11 @@ the PATH.
 Store some GUI parameters locally to the index. GUI settings are normally stored in a global file, valid for all
 indexes. Setting this parameter will make some settings, such as the result
 table setup, specific to the index.
+.TP
+.BI "preferStoredTextMimes = "string
+MIME types for which we prefer stored text to re-extraction at query time. When fetching document text at query time (e.g. for previewing), the default is to always
+run the normal text extraction process if the file is available. This defines a list of MIME
+wildcards for which we will just use stored text if available.
 .TP
 .BI "autodiacsens = "bool
 auto-trigger diacritics sensitivity (raw index only). IF the index is not stripped, decide if we automatically trigger
