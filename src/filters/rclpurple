@@ -78,6 +78,31 @@ fi
 # protect access to our temp files and directories
 umask 77
 
+makemytmpdir()
+{
+    test -n "$progname" || senderror INTERNAL NO PROGNAME
+    if test z"$RECOLL_TMPDIR" != z; then
+        ttdir=$RECOLL_TMPDIR
+    elif test z"$TMPDIR" != z ; then
+        ttdir=$TMPDIR
+    else
+        ttdir=/tmp
+    fi
+    tmpdir=$ttdir/${progname}_tmp$$
+    mkdir $tmpdir || exit 1
+    mkdir $tmpdir/${progname}tmp || exit 1
+}
+
+cleanup()
+{
+    test -n "$progname" || senderror INTERNAL NO PROGNAME
+    test -n "$ttdir" || senderror INTERNAL NO TTDIR
+    # Note that we're using a constant part (rcllyxtmp), that hopefully
+    # guarantees that we can't do big mistakes here.
+    rm -rf $ttdir/${progname}_tmp$$/${progname}tmp
+    rmdir $ttdir/${progname}_tmp$$
+}
+
 ##############################################################################
 # !! Leave the following line unmodified !
 #ENDRECFILTCOMMONCODE
