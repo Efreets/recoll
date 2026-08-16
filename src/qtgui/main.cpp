@@ -191,11 +191,10 @@ void raiseWidget(QWidget* widget) {
         ::ShowWindow(hwnd, SW_RESTORE);
     }
     ::SetForegroundWindow(hwnd);
-#else
+#endif
     widget->show();
     widget->raise();
     widget->activateWindow();
-#endif
 }
 #endif // QAPPLICATION_CLASS
 
