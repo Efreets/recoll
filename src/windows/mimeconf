@@ -31,6 +31,17 @@ text/x-tex =
 
 # Types with different handlers on Windows
 
+# xlsx Excel. Very big spreadsheets with a huge number of cells will cause excessive memory usage
+# The default mimeconf substitutes soffice to the internal xslt-based processor for big xslx
+# files. This is fine because soffice is most likely available on a Linux system which uses
+# spreadsheets. This is not the case on Windows, and the substitution would cause failure for
+# spreadsheets which are big because of, e.g. images, without having many cells. So we don't try to
+# use soffice by default (of course this can be overridden in the user mimeconf).
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet = \
+ internal xsltproc meta docProps/core.xml openxml-meta.xsl \
+ body xl/sharedStrings.xml openxml-xls-body.xsl \
+ body xl/worksheets/sheet*.xml openxml-xls-body.xsl
+
 application/x-ipynb+json = execm rclipynb.py
 application/vnd.wordperfect = exec wpd/wpd2html;mimetype=text/html
 
