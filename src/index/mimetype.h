@@ -39,6 +39,9 @@ class RclConfig;
  * @param data file contents. This is only set by mh_execm when identifying subdocs (we always have
  * a memory copy of the data then). stp is nullptr in this case
  * @param forcemagic act as if usefilesystemcommand was true. Used to look at compressed data mostly.
+ * @return the MIME type or an empty string if it was not recognized. We do not
+ *   explicitly default to application/octet-stream but the called utilities
+ *   may do it in some cases.
  */
 std::string mimetype(RclConfig *cfg, const std::string &filename,
                      const struct PathStat *stp = nullptr, const std::string& data = std::string(),

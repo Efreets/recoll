@@ -110,10 +110,11 @@ application/vnd.openxmlformats-officedocument.wordprocessingml.template = as \
     application/vnd.openxmlformats-officedocument.wordprocessingml.document
 
 # Big excel spreadsheets probably cause a memory issue like the libreoffice ones.
-application/vnd.openxmlformats-officedocument.spreadsheetml.sheet = \
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet = decide sizekbs < 3000 ? \
  internal xsltproc meta docProps/core.xml openxml-meta.xsl \
  body xl/sharedStrings.xml openxml-xls-body.xsl \
- body xl/worksheets/sheet*.xml openxml-xls-body.xsl
+ body xl/worksheets/sheet*.xml openxml-xls-body.xsl : \
+ exec rclrunsoffice.py ; mimetype = text/html
 application/vnd.openxmlformats-officedocument.spreadsheetml.template = as \
     application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 
