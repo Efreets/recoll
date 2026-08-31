@@ -41,18 +41,21 @@ static std::map<std::string, std::string> mimealiases{
     {"text/xml", "application/xml"}, // libmagic wrong. We right: rfc7303
 };
 
-// Identification of file from contents. This is called for files with unrecognized extensions.
+// Identification of file from contents. This is called for files with
+// unrecognized extensions.
 //
-// The system 'file' utility does not always work for us. For example it will mistake mail folders
-// for simple text files if there is no 'Received' header, which would be the case, for example in
-// a 'Sent' folder. Also "file -i" does not exist on all systems, and is quite costly to execute.
+// The system 'file' utility (or libmagic) does not always work for us. For
+// example it will mistake mail folders for simple text files if there is no
+// 'Received' header, which would be the case, for example in a 'Sent' folder.
+// Also "file -i" does not exist on all systems, and is quite costly to execute.
 //
-// So we first call the internal file identifier, which currently only knows about mail, but in
-// which we can possibly add the more current/interesting file types in the future (note 10 years
-// later: never happened).
+// So we first call the internal file identifier, which currently only knows
+// about mail, but in which we can possibly add the more current/interesting
+// file types in the future (note 10 years later: never happened).
 //
-// As a last resort we either call into libmagic or execute 'file' or its configured replacement
-// (except if forbidden by config)
+// As a last resort we either call into libmagic or execute 'file' or its
+// configured replacement (except if forbidden by config)
+//
 static std::string mimetypefromdata(
     RclConfig *cfg, const std::string &fn, bool usfc, const std::string& data)
 {
@@ -105,12 +108,21 @@ static std::string mimetypefromdata(
             }
         }
         if (mgtoken) {
+            const char *cp;
             if (data.empty()) {
-                mime = magic_file(mgtoken, fn.c_str());
+                cp = magic_file(mgtoken, fn.c_str());
             } else {
-                mime = magic_buffer(mgtoken, data.c_str(), data.size());
+                cp = magic_buffer(mgtoken, data.c_str(), data.size());
             }
-            datalookupdone = true;
+            if (nullptr == cp) {
+                cp = magic_error(mgtoken);
+                if (nullptr != cp) {
+                    LOGERR("mimetype: magic_xxx failed: " << cp << "\n");
+                }
+            } else {
+                mime = cp;
+                datalookupdone = true;
+            }
         }
     }
 
