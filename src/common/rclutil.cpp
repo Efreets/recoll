@@ -169,12 +169,11 @@ static bool path_gettempfilename(string& filename, string&)
 {
     string tdir = tmplocation();
     LOGDEB0("path_gettempfilename: tdir: [" << tdir << "]\n");
-    wchar_t dbuf[MAX_PATH + 1];
-    utf8towchar(tdir, dbuf, MAX_PATH);
+    auto dbuf = utf8towchar(tdir);
 
     wchar_t buf[MAX_PATH + 1];
     static wchar_t prefix[]{L"rcl"};
-    GetTempFileNameW(dbuf, prefix, 0, buf);
+    GetTempFileNameW(dbuf.get(), prefix, 0, buf);
     wchartoutf8(buf, filename);
 
     // Windows will have created a temp file, we delete it.
@@ -509,7 +508,8 @@ std::string utf8datestring(const std::string& format, struct tm *tm)
     string u8date;
 #ifdef _WIN32
     wchar_t wformat[200];
-    utf8towchar(format, wformat, 199);
+    // utf8towchar expects capacity in bytes
+    utf8towchar(format, wformat, 2*199);
     wchar_t wdate[250];
     wcsftime(wdate, 250, wformat, tm);
     wchartoutf8(wdate, u8date);
