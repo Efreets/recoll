@@ -1,3 +1,12 @@
+recoll (1.44.2-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
+
+  * Fix crash in indexer caused by unprocessed NULL return from magic_file()
+  * Use soffice to process very big xslx spreadsheets, as we did for .ods
+    ones.
+  * Windows: fix disappearing app in singleapp + save to tray mode.
+  
+ -- Jean-Francois Dockes <jf@dockes.org>  Mon, 31 Aug 2026 10:09:00 +0200
+
 recoll (1.44.1-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
 
   * Fixed several errors in Snippets selection and sorting. Esp. snippets with

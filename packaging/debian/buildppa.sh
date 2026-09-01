@@ -7,14 +7,13 @@
 # Active series:
 # 22.04LTS jammy    2027-06
 # 24.04LTS noble    2029-06
-# 25.10    questing 2026-07
 # 26.04    resolute 2031-05
 
-SERIES="jammy noble questing resolute"
+SERIES="jammy noble resolute"
 
 PPA_KEYID=7808CE96D38B9201
 
-RCLVERS=1.44.1
+RCLVERS=1.44.2
 GSSPVERS=1.1.3
 PPAVERS=2
 
