@@ -189,9 +189,9 @@ public:
             return;
         }
         std::unique_lock<std::mutex> locker(o_mcache_mutex);
-        string fn = makefilename(udi);        
-        std::ofstream os(fn.c_str(), std::ios::out|std::ios::binary);
-        if (!os.good()) {
+        string fn = makefilename(udi);
+        std::fstream os;
+        if (!path_streamopen(fn, std::ios::out|std::ios::binary, os)) {
             LOGSYSERR("MboxCache::put_offsets", "open", fn);
             return;
         }

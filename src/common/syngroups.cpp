@@ -120,9 +120,8 @@ bool SynGroups::setfile(const string& fn)
     }
     LOGDEB("SynGroups::setfile: parsing file " << fn << endl);
     
-    ifstream input;
-    input.open(fn.c_str(), ios::in);
-    if (!input.is_open()) {
+    fstream input;
+    if (!path_streamopen(fn, ios::in, input)) {
         LOGSYSERR("SynGroups:setfile", "open", fn);
         return false;
     }        

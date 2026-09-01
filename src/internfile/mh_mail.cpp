@@ -39,6 +39,7 @@
 #include "rclconfig.h"
 #include "mimetype.h"
 #include "md5ut.h"
+#include "pathut.h"
 
 // binc imap mime definitions
 #include "mime.h"
@@ -104,7 +105,7 @@ bool MimeHandlerMail::set_document_file_impl(const string&, const string &fn)
             LOGERR("MimeHandlerMail: md5 [" << fn << "]: " << reason << "\n");
         }
     }
-    m_fd = open(fn.c_str(), 0);
+    m_fd = path_open(fn, 0);
     if (m_fd < 0) {
         LOGERR("MimeHandlerMail::set_document_file: open(" << fn <<
                ") errno " << errno << "\n");

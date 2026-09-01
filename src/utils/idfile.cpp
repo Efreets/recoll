@@ -25,7 +25,7 @@
 
 #include "idfile.h"
 #include "log.h"
-#include "smallut.h"
+#include "pathut.h"
 
 using namespace std;
 
@@ -156,9 +156,8 @@ static string idFileInternal(istream& input, const char *fn)
 
 string idFile(const char *fn)
 {
-    ifstream input;
-    input.open(fn, ios::in);
-    if (!input.is_open()) {
+    fstream input;
+    if (!path_streamopen(fn, ios::in, input)) {
         LOGERR("idFile: could not open [" << fn << "]\n");
         return string();
     }

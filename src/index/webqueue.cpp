@@ -52,7 +52,7 @@ public:
         : m_conf(conf), m_fn(fn) {}
 
     // Read input line, strip it of eol and return as c++ string
-    bool readLine(ifstream& input, string& line) {
+    bool readLine(fstream& input, string& line) {
         static const int LL = 2048;
         char cline[LL]; 
         cline[0] = 0;
@@ -76,10 +76,9 @@ public:
     // Process a Web queue dot file and set interesting stuff in the doc
     bool toDoc(Rcl::Doc& doc) {
         string line;
-        ifstream input;
+        fstream input;
 
-        input.open(m_fn.c_str(), ios::in);
-        if (!input.good()) {
+        if (!path_streamopen(m_fn, ios::in, input)) {
             LOGERR("WebQueueDotFile: open failed for [" << m_fn << "]\n");
             return false;
         }
