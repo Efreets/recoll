@@ -117,11 +117,27 @@ static std::string mimetypefromdata(
             if (nullptr == cp) {
                 cp = magic_error(mgtoken);
                 if (nullptr != cp) {
-                    LOGERR("mimetype: magic_xxx failed: " << cp << "\n");
+                    LOGERR("mimetype: magic_xxx failed with message: " << cp << "\n");
+                } else {
+                    LOGERR("mimetype: magic_xxx failed with no message\n");
                 }
             } else {
+                // In case of external error (like not such file or directory), libmagic returns
+                // an error message (e.g. no such file or directory) instead of a MIME type.
+                // So we need to check for a valid MIME type as type/subtype
                 mime = cp;
-                datalookupdone = true;
+                if (mime.find(' ') == std::string::npos) {
+                    std::vector<std::string> v;
+                    stringToTokens(mime, v, "/");
+                    if (v.size() == 2) {
+                        LOGERR("GOT MIME [" << mime << "] from magic_xxx\n");
+                        datalookupdone = true;
+                    }
+                }
+                if (!datalookupdone) {
+                    LOGERR("magic_file returned bad mime type [" << mime << "]\n");
+                    mime.clear();
+                }
             }
         }
     }
