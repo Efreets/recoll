@@ -21,10 +21,10 @@ PPANAME=recoll15-ppa
 #PPANAME=recollexp-ppa
 
 # recoll 
-series_rcl=
+series_rcl=$SERIES
 # KIO
 series_kio=
-series_krunner=resolute
+series_krunner=
 # gssp
 series_gssp=
 
@@ -57,6 +57,32 @@ check_recoll_orig()
     fi
 }
 
+# Copy series-specific files (e.g. control-resolute -> control)
+# Args:
+# $1 debdir: debian directory in source.
+# $2 topdir: top of build tree
+# $3 svers : series 
+series_customize()
+{
+    set -x
+    sc_debdir=$1
+    sc_topdir=$2
+    sc_svers=$3
+    if test -f $sc_debdir/control-$sc_svers ; then
+        cp -f -p $sc_debdir/control-$sc_svers $sc_topdir/debian/control
+    fi
+    if test -f $sc_debdir/rules-$sc_svers ; then
+        cp -f -p $sc_debdir/rules-$sc_svers $sc_topdir/debian/rules
+    fi
+    if test -f $sc_debdir/python3-recoll.install-$sc_svers ; then
+        cp -f -p $sc_debdir/python3-recoll.install-$sc_svers $sc_topdir/debian/python3-recoll.install
+    fi
+    if test -f $sc_debdir/patches/series-$sc_svers ; then
+        cp -f -p $sc_debdir/patches/series-$sc_svers $sc_topdir/debian/patches/series
+    fi
+    set +x
+}
+
 ####### recoll 
 
 debdir=debian
@@ -70,29 +96,12 @@ for svers in ${series_rcl} ; do
 
   rm -rf $topdir/debian
   cp -rp ${debdir}/ $topdir/debian || exit 1
-
-  if test -f $debdir/control-$svers ; then
-      cp -f -p $debdir/control-$svers $topdir/debian/control
-  fi
-  if test -f $debdir/rules-$svers ; then
-      cp -f -p $debdir/rules-$svers $topdir/debian/rules
-  fi
-  if test -f $debdir/python3-recoll.install-$svers ; then
-     cp -f -p $debdir/python3-recoll.install-$svers $topdir/debian/python3-recoll.install
-  fi
-  if test -f $debdir/patches/series-$svers ; then
-      cp -f -p $debdir/patches/series-$svers $topdir/debian/patches/series
-  fi
-
+  series_customize $debdir $topdir $svers
   sed -e s/SERIES/${svers}/g -e s/PPAVERS/${PPAVERS}/g \
       < ${debdir}/changelog > $topdir/debian/changelog
-
   (cd $topdir;debuild -d -k$PPA_KEYID -S -sa)  || break
-
   dput $PPANAME recoll_${RCLVERS}-1~ppa${PPAVERS}~${svers}1_source.changes
 done
-
-
 
 ### KIO.
 
@@ -114,14 +123,7 @@ fi
 for svers in ${series_kio} ; do
     rm -rf $topdir/debian
     cp -rp ${debdir}/ $topdir/debian || exit 1
-    if test -f $debdir/control-$svers ; then
-        cp -f -p $debdir/control-$svers $topdir/debian/control
-    else 
-        cp -f -p $debdir/control $topdir/debian/control
-    fi
-    if test -f $debdir/patches/series-$svers ; then
-        cp -f -p $debdir/patches/series-$svers $topdir/debian/patches/series
-    fi
+    series_customize $debdir $topdir $svers
     sed -e s/SERIES/$svers/g -e s/PPAVERS/${PPAVERS}/g \
         < ${debdir}/changelog > $topdir/debian/changelog ;
     (cd $topdir;debuild -k$PPA_KEYID -S -sa) || exit 1
@@ -148,17 +150,7 @@ fi
 for svers in ${series_krunner} ; do
     rm -rf $topdir/debian
     cp -rp ${debdir}/ $topdir/debian || exit 1
-    if test -f $debdir/control-$svers ; then
-        cp -f -p $debdir/control-$svers $topdir/debian/control
-    else 
-        cp -f -p $debdir/control $topdir/debian/control
-    fi
-    if test -f $debdir/rules-$svers ; then
-        cp -f -p $debdir/rules-$svers $topdir/debian/rules
-    fi
-    if test -f $debdir/patches/series-$svers ; then
-        cp -f -p $debdir/patches/series-$svers $topdir/debian/patches/series
-    fi
+    series_customize $debdir $topdir $svers
     sed -e s/SERIES/$svers/g -e s/PPAVERS/${PPAVERS}/g \
         < ${debdir}/changelog > $topdir/debian/changelog ;
     (cd $topdir;debuild -k$PPA_KEYID -S -sa) || exit 1
