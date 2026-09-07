@@ -15,16 +15,16 @@ PPA_KEYID=7808CE96D38B9201
 
 RCLVERS=1.44.2
 GSSPVERS=1.1.3
-PPAVERS=2
+PPAVERS=4
 
 PPANAME=recoll15-ppa
 #PPANAME=recollexp-ppa
 
 # recoll 
-series_rcl=$SERIES
+series_rcl=
 # KIO
 series_kio=
-series_krunner=
+series_krunner=resolute
 # gssp
 series_gssp=
 
@@ -152,6 +152,12 @@ for svers in ${series_krunner} ; do
         cp -f -p $debdir/control-$svers $topdir/debian/control
     else 
         cp -f -p $debdir/control $topdir/debian/control
+    fi
+    if test -f $debdir/rules-$svers ; then
+        cp -f -p $debdir/rules-$svers $topdir/debian/rules
+    fi
+    if test -f $debdir/patches/series-$svers ; then
+        cp -f -p $debdir/patches/series-$svers $topdir/debian/patches/series
     fi
     sed -e s/SERIES/$svers/g -e s/PPAVERS/${PPAVERS}/g \
         < ${debdir}/changelog > $topdir/debian/changelog ;

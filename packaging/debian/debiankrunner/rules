@@ -5,5 +5,6 @@ export DH_VERBOSE = 1
 	dh $@ --with kf5 --build-system=cmake --sourcedirectory=kde/krunner
 
 override_dh_auto_configure:
+	cp kde/krunner/CMakeLists-KF5.txt kde/krunner/CMakeLists.txt
 	dh_auto_configure -- -DRECOLL_PUBLIC_LIB=1
 

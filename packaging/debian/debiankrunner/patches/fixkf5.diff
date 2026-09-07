@@ -1,0 +1,39 @@
+diff --git a/src/kde/krunner/recollrunner.cpp b/src/kde/krunner/recollrunner.cpp
+index 225c2666..024282b0 100644
+--- a/kde/krunner/recollrunner.cpp
++++ b/kde/krunner/recollrunner.cpp
+@@ -173,10 +173,11 @@ void RecollRunner::match(KRUNNS::RunnerContext &context)
+ 
+         match.setRelevance(doc.pc/100.0);
+ 
++#if KRUNNER_VERSION_MAJOR >= 6
+         match.addAction(
+             KRUNNS::Action(QLatin1String("open-parent-folder"),
+                            QLatin1String("system-file-manager"), i18n("Open Parent Folder")));
+-
++#endif
+         // Could also call context.addMatch() for each match instead of buffering
+         matches.append(match);
+     }
+@@ -186,15 +187,17 @@ void RecollRunner::match(KRUNNS::RunnerContext &context)
+ void RecollRunner::run(const KRUNNS::RunnerContext & /*context*/, const KRUNNS::QueryMatch &match)
+ {
+     auto url = QUrl::fromLocalFile(match.data().toString());
++#if KRUNNER_VERSION_MAJOR >= 6
+     if (match.selectedAction().id() == QLatin1String("open-parent-folder")) {
+         auto *job = new KIO::OpenFileManagerWindowJob();
+         job->setHighlightUrls({url});
+         job->start();
+-    } else {
+-        auto *job = new KIO::OpenUrlJob(url);
+-        job->setRunExecutables(false);
+-        job->start();
++        return;
+     }
++#endif
++    auto *job = new KIO::OpenUrlJob(url);
++    job->setRunExecutables(false);
++    job->start();
+ }
+ 
+ void RecollRunner::reloadConfiguration()
