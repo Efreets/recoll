@@ -130,7 +130,7 @@ static std::string mimetypefromdata(
                     std::vector<std::string> v;
                     stringToTokens(mime, v, "/");
                     if (v.size() == 2) {
-                        LOGERR("GOT MIME [" << mime << "] from magic_xxx\n");
+                        LOGDEB1("mimetype: GOT MIME [" << mime << "] from magic_xxx\n");
                         datalookupdone = true;
                     }
                 }
