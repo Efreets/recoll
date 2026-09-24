@@ -599,13 +599,50 @@ Using multiple indexes and a final merge can significantly improve indexing perf
 the single-threaded Xapian index updates become a bottleneck. How useful this is depends
 on the type of input and CPU. See the manual for more details.
 </para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.MONAUXINTERVAL">
+<term><varname>monauxinterval</varname></term>
+<listitem><para>Auxiliary database update interval. The real time
+indexer only updates the auxiliary databases (stemdb, aspell)
+periodically, because it would be too costly to do it for every document
+change. The default period is one hour.
+</para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIXINTERVAL">
+<term><varname>monixinterval</varname></term>
+<listitem><para>Minimum interval (seconds) between processings of the indexing
+queue. The real time indexer does not process each event
+when it comes in, but lets the queue accumulate, to diminish overhead and
+to aggregate multiple events affecting the same file. Default 30
+S.
+</para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.MONDELAYPATTERNS">
+<term><varname>mondelaypatterns</varname></term>
+<listitem><para>Timing parameters for the real time indexing. Definitions for files which get a longer delay before reindexing
+is allowed. This is for fast-changing files, that should only be
+reindexed once in a while. A list of wildcardPattern:seconds pairs. The
+patterns are matched with fnmatch(pattern, path, 0) You can quote entries
+containing white space with double quotes (quote the whole entry, not the
+pattern). The default is empty.
+Example: mondelaypatterns = *.log:20 "*with spaces.*:30"
+</para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIONICECLASS">
+<term><varname>monioniceclass</varname></term>
+<listitem><para>ionice class for the indexing process. Despite the misleading name, and on platforms where this is
+supported, this affects all indexing processes,
+not only the real time/monitoring ones. The default value is 3 (use
+lowest "Idle" priority).
+</para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIONICECLASSDATA">
+<term><varname>monioniceclassdata</varname></term>
+<listitem><para>ionice class level parameter if the class supports it. The default is empty, as the default "Idle" class has no
+levels.
+</para></listitem></varlistentry>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.SUSPENDONBATTERY">
 <term><varname>suspendonbattery</varname></term>
 <listitem><para>Suspend the real time indexing when the system runs on battery. The indexer will wait for a return on AC and reexec itself when it happens.
 </para></listitem></varlistentry>
 </variablelist></sect2>
-<sect2  id="RCL.CONFIG.RECOLLCONF.MISC">
-<title>Miscellaneous parameters </title><variablelist>
+<sect2  id="RCL.CONFIG.RECOLLCONF.LOG">
+<title>Log location and verbosity parameters </title><variablelist>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.LOGLEVEL">
 <term><varname>loglevel</varname></term>
 <listitem><para>Log file verbosity 1-6. A value of 2 will print
@@ -656,6 +693,16 @@ directory to completely suppress the output.
 <varlistentry id="RCL.CONFIG.RECOLLCONF.PYLOGTHEDATE">
 <term><varname>pylogthedate</varname></term>
 <listitem><para>override logthedate for the Python extension. </para></listitem></varlistentry>
+</variablelist></sect2>
+<sect2  id="RCL.CONFIG.RECOLLCONF.MISC">
+<title>Miscellaneous parameters </title><variablelist>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.PYVIRTUALENV">
+<term><varname>pyvirtualenv</varname></term>
+<listitem><para>Python virtualenv location (1.44.3, Linux). This will adjust the PATH and set a VIRTUAL_ENV variable in the Recoll processes
+environment, so that any executed Python script will be isolated them from the system Python
+installation. The Python version must be the same as the system's. This is described in more
+detail in an appendix of the manual.
+</para></listitem></varlistentry>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.IDXNOAUTOPURGE">
 <term><varname>idxnoautopurge</varname></term>
 <listitem><para>Do not purge data for deleted or inaccessible files This can be overridden by recollindex command line options and may be useful if some parts
@@ -765,43 +812,6 @@ values are the 2-letter language codes (e.g. "en", "fr"...)
 <varlistentry id="RCL.CONFIG.RECOLLCONF.ASPELLKEEPSTDERR">
 <term><varname>aspellKeepStderr</varname></term>
 <listitem><para>Set this to have a look at aspell dictionary creation errors. There are always many, so this is mostly for debugging.
-</para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.MONAUXINTERVAL">
-<term><varname>monauxinterval</varname></term>
-<listitem><para>Auxiliary database update interval. The real time
-indexer only updates the auxiliary databases (stemdb, aspell)
-periodically, because it would be too costly to do it for every document
-change. The default period is one hour.
-</para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIXINTERVAL">
-<term><varname>monixinterval</varname></term>
-<listitem><para>Minimum interval (seconds) between processings of the indexing
-queue. The real time indexer does not process each event
-when it comes in, but lets the queue accumulate, to diminish overhead and
-to aggregate multiple events affecting the same file. Default 30
-S.
-</para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.MONDELAYPATTERNS">
-<term><varname>mondelaypatterns</varname></term>
-<listitem><para>Timing parameters for the real time indexing. Definitions for files which get a longer delay before reindexing
-is allowed. This is for fast-changing files, that should only be
-reindexed once in a while. A list of wildcardPattern:seconds pairs. The
-patterns are matched with fnmatch(pattern, path, 0) You can quote entries
-containing white space with double quotes (quote the whole entry, not the
-pattern). The default is empty.
-Example: mondelaypatterns = *.log:20 "*with spaces.*:30"
-</para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIONICECLASS">
-<term><varname>monioniceclass</varname></term>
-<listitem><para>ionice class for the indexing process. Despite the misleading name, and on platforms where this is
-supported, this affects all indexing processes,
-not only the real time/monitoring ones. The default value is 3 (use
-lowest "Idle" priority).
-</para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.MONIONICECLASSDATA">
-<term><varname>monioniceclassdata</varname></term>
-<listitem><para>ionice class level parameter if the class supports it. The default is empty, as the default "Idle" class has no
-levels.
 </para></listitem></varlistentry>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.SOFFICECMD">
 <term><varname>sofficecmd</varname></term>

@@ -368,6 +368,21 @@ RclConfig *recollinit(
             PATH = PATH + path_PATHsep() + npath;
             setenv("PATH", PATH.c_str(), 1);
         }
+    } else {
+        // Python virtualenv: not for the appimage at the moment, because it's rather at
+        // cross-purpose with having a self-contained install. The right approach for the appimage
+        // would rather be for me to add more modules to the appimage Python library.
+        std::string pyvirtualenv;
+        if (config->getConfParam("pyvirtualenv", pyvirtualenv)) {
+            pyvirtualenv = path_tildexpand(pyvirtualenv);
+            if (path_isdir(pyvirtualenv)) {
+                setenv("VIRTUAL_ENV", pyvirtualenv.c_str(), 1);
+                PATH = path_cat(pyvirtualenv, "bin") + path_PATHsep() + PATH;
+                setenv("PATH", PATH.c_str(), 1);
+            } else {
+              LOGERR("init: pyvirtualenv [" << pyvirtualenv << "] is not a directory\n");
+            }
+        }
     }
 #endif // __linux__    
 

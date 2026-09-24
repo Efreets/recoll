@@ -2,7 +2,7 @@
 01-2016:
 Webhelp is not packaged on Debian. To setup the build:
 
- - Get a docbook-xsl tar distribution (e.g. docbook-xsl-1.79.1.tar.bz2)
+ - Get a docbook-xsl tar distribution (e.g. docbook-xsl-nons-1.79.2.tar.bz2)
  - Copy webhelp/xsl to the docbook dist:
    /usr/share/xml/docbook/stylesheet/docbook-xsl/webhelp/xsl
  - Possibly adjust

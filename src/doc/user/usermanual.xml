@@ -7029,6 +7029,108 @@ application/x-blobapp = internal text/plain</programlisting>
 
   <part>
     <title>Appendices</title> 
+
+    <appendix xml:id="RCL.APPDX.VIRTUALENV">
+      <title>Setting up a Python virtual environment for the Recoll scripts</title>
+
+      <para>Many &RCL; format handlers are written in <application>Python</application>. A
+      few of these depend on modules that can be installed from <application>PyPI</application>, but
+      are not commonly packaged by <application>Linux</application> distributions. Installing
+      these modules system-wide may trigger warnings or cause conflicts.</para>
+
+      <para>To address this, the <literal>pyvirtualenv</literal> configuration parameter was
+      introduces in &RCL; 1.44.3. It allows &RCL; to easily run within a Python virtual environment,
+      keeping its required modules mostly isolated from system packages, and personal user modules
+      under <filename>~/.local/lib</filename>.</para>
+      
+      <para>Note that this parameter simply sets the <envar>VIRTUAL_ENV</envar> environment variable
+      and adjusts the <envar>PATH</envar>. You can achieve the same result manually by exporting
+      these variables before running &RCL; processes (<command>recoll</command>,
+      <command>recollindex</command>, <command>recollq</command>).</para>
+
+      <para>The Python version inside by the virtual environment must match the system's
+      <application>Python</application>, as some modules installed by &RCL; itself, such as the
+      <application>Python</application> extension, will be shared: copied or linked from the
+      system.</para>
+
+      <para>Below is a step-by-step example of setting up a virtual environment for all
+      <application>Python</application> modules currently used by by &RCL;. This scenario was
+      created on Debian Trixie, and you will need to adjust a few packaging commands and package
+      names (used in addition to <command>pip3</command>) for other distributions. In this example,
+      the virtual environment is placed in <filename>~/recollpy</filename>, which would also be the
+      setting of <literal>pyvirtualenv</literal>.</para>
+
+      <formalpara><title>Creating the virtual environment:</title><para>As per
+      usual:
+      <programlisting>cd
+python3 -m venv recollpy
+source recollpy/bin/activate</programlisting>All the following takes place inside the virtual
+      environment.</para></formalpara>
+
+      <formalpara><title>CHM:</title><para>this needs <application>chmlib</application> and the
+      <application>pychm</application> extension which is packaged as <literal>recollchm</literal> by
+      &RCL; because of issues with the upstream.
+      <programlisting>sudo apt install libchm1
+cd ~/recollpy/lib/python3.13/site-packages
+ln -s /usr/lib/python3/dist-packages/recollchm</programlisting></para></formalpara>
+
+      <formalpara><title>Audio:</title><para>
+      <programlisting>pip3 install mutagen</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>7zip:</title><para>This is a binary extension, you need gcc and the Python
+      development files, and also a specific version of the extension.
+      <programlisting>sudo apt install gcc libpython3-dev        
+pip3 install py7zr==0.22</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>RAR archives:</title><para>You need to add the nonfree repository to the
+      <command>apt</command> <filename>sources.list</filename> because of licensing issues with
+      libunrar. Then:
+      <programlisting>sudo apt update
+sudo apt install libunrar5t64
+pip3 install unrar</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>Chinese language support:</title><para>
+      <programlisting>pip3 install jieba</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>Korean language support:</title><para>This is broken at the moment, the
+      python-mecab-ko installation fails, I need to look into it.
+      <programlisting>pip3 install python-mecab-ko</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>Korean HWP office files:</title><para>
+      <programlisting>pip3 install six pyhwp</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>kar files:</title><para>
+      <programlisting>pip3 install chardet</programlisting>
+      </para></formalpara> 
+      
+      <formalpara><title>jupyter notebooks:</title><para>
+      <programlisting>pip3 install jupyter</programlisting>
+      </para></formalpara> 
+
+      <formalpara><title>Joplin:</title><para>This needs the &RCL; <application>Python</application>
+      extension. We link it from the system.
+      <programlisting>cd ~/recollpy/lib/python3.13/site-packages
+ln -s /usr/lib/python3/dist-packages/recoll</programlisting></para></formalpara>
+
+
+      <formalpara><title>PDF XMP support:</title><para>This needs <application>lxml</application>
+      and the GObject introspection library
+      module which is difficult to build (in my experience). We link it from the system.
+      <programlisting>pip3 install lxml
+cd ~/recollpy/lib/python3.13/site-packages
+ln -s /usr/lib/python3/dist-packages/gi</programlisting>
+      </para></formalpara> 
+      
+
+
+    </appendix>
+    
     <appendix xml:id="RCL.APPDX.SPECCHARS">
       <title>Processing of wild card and other special characters</title>
 
