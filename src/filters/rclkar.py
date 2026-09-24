@@ -23,10 +23,18 @@ except:
 
 try:
     import chardet
-
+    if chardet.__version__.startswith('5'):
+        confidence_threshold = 0.6
+    else:
+        confidence_threshold = 0.35
     has_chardet = True
 except:
-    has_chardet = False
+    try:
+        import charset_normalizer as chardet
+        confidence_threshold = 0.6
+        has_chardet = True
+    except:
+        has_chardet = False
 
 # Prototype for the html document we're returning
 htmltemplate = """
@@ -172,12 +180,13 @@ class KarTextExtractor(RclBaseHandler):
         confidence = encodconf["confidence"]
         # self.em.rclog("Chardet returns %s %.2f" % (encoding,confidence))
 
-        # chardet is awfully bad at detecting 8bit european
-        # encodings/languages and will mostly return iso-8859-2 for
+        # chardet used to be awfully bad at detecting 8bit european
+        # encodings/languages and mostly returned iso-8859-2 for
         # everything, which is a bad default (iso-8859-1/cp1252 being
         # much more common). We use our own ad-hoc stopwords based
-        # module to try and improve
-        if encoding.lower() == "iso-8859-2":
+        # module to try and improve. Not sure that this is still the case with
+        # recent chardet versions
+        if encoding is not None and encoding.lower() == "iso-8859-2":
             if self.classifier is None:
                 try:
                     import __main__
@@ -272,22 +281,23 @@ class KarTextExtractor(RclBaseHandler):
         # de-nulled data
 
         # self.em.rclog("Lyrics length %d" % len(lyrics))
-
+        self.em.rclog(f"has_chardet {has_chardet}")
         if self.encoding == "" and has_chardet:
             if self.hadnulls:
                 (encoding, confidence) = self.chardet_detect(lyricsN)
-                # self.em.rclog("With nulls: chardet: enc [%s], conf %.2f" % \
-                #              (encoding, confidence))
-                if confidence > 0.6 and encoding.lower() in self.acceptnullencodings:
+                self.em.rclog("With nulls: chardet: enc [%s], conf %.2f" % \
+                              (encoding, confidence))
+                if confidence > confidence_threshold and \
+                   encoding is not None and encoding.lower() in self.acceptnullencodings:
                     self.encoding = encoding
                     lyrics = lyricsN
                     title = titleN
                     author = authorN
             if self.encoding == "":
                 (encoding, confidence) = self.chardet_detect(lyrics)
-                # self.em.rclog("No nulls: chardet: enc [%s], conf %.2f" % \
-                #              (encoding, confidence))
-                if confidence > 0.6:
+                self.em.rclog("No nulls: chardet: enc [%s], conf %.2f" % \
+                              (encoding, confidence))
+                if confidence > confidence_threshold:
                     self.encoding = encoding
 
         if self.encoding == "":
