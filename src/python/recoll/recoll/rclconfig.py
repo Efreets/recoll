@@ -7,7 +7,12 @@ import sys
 import base64
 import platform
 
-import conftree
+# Arrange so that the import works both from the non-package recoll filters/ directory
+# and when a module imports rclconfig from the recoll extension (package).
+try:
+    from . import conftree
+except:
+    import conftree
 
 
 def msg(s):
