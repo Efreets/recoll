@@ -21,11 +21,12 @@ windows {
 }
 
 mac {
-    XAPIANDIR = ../../../xapian-core-1.4.29/
+    XAPIANDIR = ../../../xapian-core-2.1.0/
     CONFIG += staticlib
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 }
 
+# Note: not including honey backend source for now: needs: configure --disable-backend-honey
 SOURCES += \
 $$XAPIANDIR/api/compactor.cc \
 $$XAPIANDIR/api/constinfo.cc \

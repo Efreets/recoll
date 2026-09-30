@@ -178,7 +178,7 @@ mac {
     RECOLLDEPS = ../../../
     QMAKE_CXXFLAGS += -pthread -Wno-unused-parameter
     INCLUDEPATH += \
-      $$RECOLLDEPS/xapian-core-1.4.29/include \
+      $$RECOLLDEPS/xapian-core-2.1.0/include \
       $$RECOLLDEPS/libmagic/src
     SOURCES += \
       ../internfile/finderxattr.cpp
