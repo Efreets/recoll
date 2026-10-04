@@ -98,15 +98,19 @@ QMenu *create(QWidget *me, int opts, std::shared_ptr<DocSequence> source, Rcl::D
     }
 
     if (doc.isFsFile()) {
-        popup->addAction(QWidget::tr("Copy &File Path"), me, SLOT(menuCopyPath()));
+        popup->addAction(QWidget::tr("Copy File &Path"), me, SLOT(menuCopyPath()));
     }
     popup->addAction(QWidget::tr("Copy &URL"), me, SLOT(menuCopyURL()));
-    popup->addAction(QWidget::tr("Copy File Name"), me, SLOT(menuCopyFN()));
-    popup->addAction(QWidget::tr("Copy Text"), me, SLOT(menuCopyText()));
+    popup->addAction(QWidget::tr("Copy File &Name"), me, SLOT(menuCopyFN()));
+    popup->addAction(QWidget::tr("Copy &Text"), me, SLOT(menuCopyText()));
 
-    if ((opts&showSaveOne) && !(isFsTop))
-        popup->addAction(QWidget::tr("&Write to File"), me, SLOT(menuSaveToFile()));
-
+    if (opts & showSaveOne) {
+        if (isFsTop) {
+            popup->addAction(QWidget::tr("&Copy to File"), me, SLOT(menuSaveToFile()));
+        } else {
+            popup->addAction(QWidget::tr("&Write to File"), me, SLOT(menuSaveToFile()));
+        }
+    }
     if ((opts&showSaveSel))
         popup->addAction(QWidget::tr("Save selection to files"), me, SLOT(menuSaveSelection()));
 

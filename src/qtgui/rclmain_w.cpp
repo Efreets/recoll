@@ -1095,8 +1095,7 @@ void RclMain::sortByDateDesc(bool on)
 
 void RclMain::saveDocToFile(Rcl::Doc doc)
 {
-    QString s = QFileDialog::getSaveFileName(
-        this, tr("Save file"), path2qs(path_home()));
+    QString s = QFileDialog::getSaveFileName(this, tr("Save file"), path2qs(path_home()));
     string tofile = qs2path(s);
     TempFile temp; // not used because tofile is set.
     if (!FileInterner::idocToFile(temp, tofile, theconfig, doc)) {

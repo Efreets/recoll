@@ -180,7 +180,7 @@ Extractor_idoctofile(rclx_ExtractorObject* self, PyObject *args, PyObject *kwarg
     bool status = false;
     LOGDEB("Extractor_idoctofile: ipath [" << ipath << "] mimetype [" << mimetype <<
            "] doc mimetype [" << self->docobject->doc->mimetype << "\n");
-    if (ipath.empty() && !mimetype.compare(self->docobject->doc->mimetype)) {
+    if (ipath.empty() && mimetype == self->docobject->doc->mimetype) {
         status = FileInterner::idocToFile(temp, outfile, self->localconfig, *self->docobject->doc);
     } else {
         self->xtr->setTargetMType(mimetype);
