@@ -308,7 +308,6 @@ public:
     void reset() {
         m_buf.resize(0);
         m_bufoffs = 0;
-        m_stderrFile.erase();
         m_killRequest = false;
         m_hOutputRead = NULL;
         m_hInputWrite = NULL;
@@ -698,13 +697,28 @@ bool ExecCmd::Internal::preparePipes(bool has_input,HANDLE *hChildInput,
         }
     }
 
-    // Stderr: output to file or inherit. We don't support the file thing
-    // for the moment
-    if (false && !m_stderrFile.empty()) {
-        // Open the file set up the child handle: TBD
-        printError("preparePipes: m_stderrFile not empty");
+    // Stderr: output to file or inherit.
+    if (!m_stderrFile.empty()) {
+        // Open (or create) the file and give the child an inheritable handle
+        // to it. Use append mode, like the Unix version. The handle also needs
+        // SYNCHRONIZE access for the child to use it as a standard handle.
+        auto wfn = utf8towchar(m_stderrFile);
+        sa.bInheritHandle = TRUE;
+        hErrorWrite = CreateFileW(
+            wfn.get(),
+            FILE_APPEND_DATA | SYNCHRONIZE,
+            FILE_SHARE_READ | FILE_SHARE_WRITE,
+            &sa, OPEN_ALWAYS, // create if it does not exist
+            FILE_ATTRIBUTE_NORMAL, NULL);
+        if (hErrorWrite == INVALID_HANDLE_VALUE) {
+            printError("preparePipes: CreateFile(stderr)");
+            goto errout;
+        }
+        // FILE_APPEND_DATA makes the child's writes go to the end of the
+        // file, but be explicit about the position for good measure.
+        SetFilePointer(hErrorWrite, 0, NULL, FILE_END);
     } else {
-        // Let the child inherit our standard input
+        // Let the child inherit our standard error
         HANDLE hstd = GetStdHandle(STD_ERROR_HANDLE);
         if (hstd == INVALID_HANDLE_VALUE) {
             printError("preparePipes: GetStdHandle(stderr)");

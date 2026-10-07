@@ -83,11 +83,17 @@ class CmdTalk(object):
             self.debugfile = None
         if not hasattr(self, 'nodecodeinput'):
             self.nodecodeinput = False
-        self.errfout: TextIO = sys.stderr
-        if self.debugfile:
-            self.errfout: TextIO = open(self.debugfile, "a")
+        self.errfout = None
 
     def log(self, s: AnyStr, doexit: int = 0, exitvalue: int = 1) -> None:
+        if not self.errfout:
+            self.errfout: TextIO = sys.stderr
+            if self.debugfile:
+                try:
+                    self.errfout: TextIO = open(self.debugfile, "a")
+                except:
+                    print(f"Could not open {self.debugfile}", file=sys.stderr)
+                    self.errfout = sys.stderr
         print(f"CMDTALK: {self.myname}: {s!r}", file=self.errfout)
         if doexit:
             if self.exitfunc:

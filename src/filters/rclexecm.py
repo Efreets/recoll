@@ -45,15 +45,17 @@ def logmsg(msg, loglevel=4):
     if loglevel > _g_debuglevel:
         return
     global _g_debugfile, _g_errfout
-    if _g_debugfile and not _g_errfout:
-        try:
-            _g_errfout = open(_g_debugfile, "a")
-        except:
-            pass
-    if _g_errfout:
-        print("%s" % msg, file=_g_errfout)
-    elif not _g_mswindows:
-        print("%s" % msg, file=sys.stderr)
+    if not _g_errfout:
+        if _g_debugfile:
+            try:
+                _g_errfout = open(_g_debugfile, "a")
+            except:
+                print(f"Could not open {_g_debugfile}", file=sys.stderr)
+                _g_errfout = sys.stderr
+        else:
+            _g_errfout = sys.stderr
+
+    print(f"{msg}", file=_g_errfout)
 
 
 # Convert to bytes if not already such.
@@ -230,11 +232,10 @@ class RclExecM(cmdtalk.CmdTalk):
         super().__init__()
 
     def rclog(self, s, doexit=0, exitvalue=1):
-        # On windows, and I think that it changed quite recently (Qt
-        # change?), we get stdout as stderr?? So don't write at all if
-        # output not a file until this mystery is solved
-        if self.debugfile or sys.platform != "win32":
-            super().log(s, doexit, exitvalue)
+        # We used to not do this on Windows, if not outputting to a file because we
+        # thought at a point that this was polluting stdout. Seems that it was a fluke
+        # or somehow corrected.
+        super().log(s, doexit, exitvalue)
 
     def config(self):
         return _g_config
