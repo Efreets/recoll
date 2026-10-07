@@ -11240,9 +11240,9 @@ defaultcharset = utf-8</pre>
               <dd>
                 <p>override logthedate for the indexer.</p>
               </dd>
-              <dt><a name="RCL.CONFIG.RECOLLCONF.HELPERLOGFILENAME"
-              id=
-              "RCL.CONFIG.RECOLLCONF.HELPERLOGFILENAME"></a><span class="term"><code class="varname">helperlogfilename</code></span></dt>
+              <dt><a name=
+              "RCL.CONFIG.RECOLLCONF.HANDLERLOGFILENAME" id=
+              "RCL.CONFIG.RECOLLCONF.HANDLERLOGFILENAME"></a><span class="term"><code class="varname">handlerlogfilename</code></span></dt>
               <dd>
                 <p>Destination file for external helpers standard
                 error output. The external program error output is
@@ -11251,6 +11251,15 @@ defaultcharset = utf-8</pre>
                 command line. Use /dev/null or a file inside a
                 non-existent directory to completely suppress the
                 output.</p>
+              </dd>
+              <dt><a name="RCL.CONFIG.RECOLLCONF.HANDLERLOGLEVEL"
+              id=
+              "RCL.CONFIG.RECOLLCONF.HANDLERLOGLEVEL"></a><span class="term"><code class="varname">handlerloglevel</code></span></dt>
+              <dd>
+                <p>Handler log verbosity 1-5 from silent to
+                verbose. This can't control the output of external
+                programs of course, only the one from Recoll Python
+                handler scripts.</p>
               </dd>
               <dt><a name="RCL.CONFIG.RECOLLCONF.DAEMLOGLEVEL" id=
               "RCL.CONFIG.RECOLLCONF.DAEMLOGLEVEL"></a><span class=
@@ -12428,10 +12437,10 @@ other = rclcat:other</pre>
         <p>The file has a section for any index which needs
         translations, either the main one or additional query
         indexes. The sections are named with the <span class=
-        "application">Xapian</span> index directory names. No slash
-        character should exist at the end of the paths (all
+        "application">Xapian</span> index directory names. The
+        section names must have no ending slash character (all
         comparisons are textual). An example should make things
-        sufficiently clear</p>
+        sufficiently clear:</p>
         <pre class="programlisting">
 [/home/me/.recoll/xapiandb]
 /this/directory/moved = /to/this/place

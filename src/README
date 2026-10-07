@@ -5954,12 +5954,17 @@ Important
    idxlogthedate
           override logthedate for the indexer.
 
-   helperlogfilename
+   handlerlogfilename
           Destination file for external helpers standard error output. The
           external program error output is left alone by default, e.g.
           going to the terminal when the recoll[index] program is executed
           from the command line. Use /dev/null or a file inside a
           non-existent directory to completely suppress the output.
+
+   handlerloglevel
+          Handler log verbosity 1-5 from silent to verbose. This can't
+          control the output of external programs of course, only the one
+          from Recoll Python handler scripts.
 
    daemloglevel
           Override loglevel for the real time indexer. The default is to
@@ -6613,9 +6618,9 @@ other = rclcat:other
 
    The file has a section for any index which needs translations, either
    the main one or additional query indexes. The sections are named with
-   the Xapian index directory names. No slash character should exist at
-   the end of the paths (all comparisons are textual). An example should
-   make things sufficiently clear
+   the Xapian index directory names. The section names must have no ending
+   slash character (all comparisons are textual). An example should make
+   things sufficiently clear:
 [/home/me/.recoll/xapiandb]
 /this/directory/moved = /to/this/place
 

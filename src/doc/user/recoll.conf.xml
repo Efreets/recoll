@@ -666,12 +666,17 @@ console. </para></listitem></varlistentry>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.IDXLOGTHEDATE">
 <term><varname>idxlogthedate</varname></term>
 <listitem><para>override logthedate for the indexer. </para></listitem></varlistentry>
-<varlistentry id="RCL.CONFIG.RECOLLCONF.HELPERLOGFILENAME">
-<term><varname>helperlogfilename</varname></term>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.HANDLERLOGFILENAME">
+<term><varname>handlerlogfilename</varname></term>
 <listitem><para>Destination file for external helpers standard error output. The external program error output is left alone by default,
 e.g. going to the terminal when the recoll[index] program is executed
 from the command line. Use /dev/null or a file inside a non-existent
 directory to completely suppress the output.
+</para></listitem></varlistentry>
+<varlistentry id="RCL.CONFIG.RECOLLCONF.HANDLERLOGLEVEL">
+<term><varname>handlerloglevel</varname></term>
+<listitem><para>Handler log verbosity 1-5 from silent to verbose. This can't control the output of external programs of course, only the one from
+Recoll Python handler scripts.
 </para></listitem></varlistentry>
 <varlistentry id="RCL.CONFIG.RECOLLCONF.DAEMLOGLEVEL">
 <term><varname>daemloglevel</varname></term>

@@ -6915,13 +6915,10 @@ other = rclcat:other</programlisting>
         in <link linkend="RCL.SEARCH.PTRANS">multiple cases</link>.
         </para>
 
-        <para>The file has a section for any index which needs
-        translations, either the main one or additional query
-        indexes. The sections are named with the &XAP; index
-        directory names. No slash character should exist at the end
-        of the paths (all comparisons are textual). An example
-        should make things sufficiently clear</para>
-
+        <para>The file has a section for any index which needs translations, either the main one or
+        additional query indexes. The sections are named with the &XAP; index directory paths. The
+        section names must have no ending slash character (all comparisons are textual). An
+        example should make things sufficiently clear:
         <programlisting>
 [/home/me/.recoll/xapiandb]
 /this/directory/moved = /to/this/place
@@ -6929,7 +6926,7 @@ other = rclcat:other</programlisting>
 [/path/to/additional/xapiandb]
 /server/volume1/docdir = /net/server/volume1/docdir
 /server/volume2/docdir = /net/server/volume2/docdir</programlisting>
-
+        </para>
       </sect1>
 
 
