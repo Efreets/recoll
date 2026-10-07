@@ -152,6 +152,12 @@ windows {
   DEFINES += __WIN32__
   DEFINES += UNICODE
   RC_FILE = recoll.rc
+
+  # Qt version .
+  # All libs and non-GUI tools (e.g. recollindex) are built with a qt6 kit, they don't
+  # actually use Qt, only the kit compiler (MSVC).
+  # Only the GUI (this file) is optionally  built with qt5 (by changing the kit in qcreator).
+  # QCBUILDLOC points to the libs locations and only needs to change if we update the QT6 version.
   QCBUILDLOC = Desktop_Qt_6_8_2_MSVC2022_64bit
 
   HEADERS += \
