@@ -36,7 +36,8 @@ text/x-tex =
 # files. This is fine because soffice is most likely available on a Linux system which uses
 # spreadsheets. This is not the case on Windows, and the substitution would cause failure for
 # spreadsheets which are big because of, e.g. images, without having many cells. So we don't try to
-# use soffice by default (of course this can be overridden in the user mimeconf).
+# use soffice by default (of course this can be overridden in the user mimeconf). Also see the
+# comments in rclrunsoffice, the command line would need to be adjusted on Windows.
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet = \
  internal xsltproc meta docProps/core.xml openxml-meta.xsl \
  body xl/sharedStrings.xml openxml-xls-body.xsl \

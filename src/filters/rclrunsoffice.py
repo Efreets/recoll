@@ -76,6 +76,12 @@ class SofficeRunner(object):
         # We use a separate soffice configuration to avoid polluting the normal user one. 
         # This is also necessary because simultaneous execs by multithreaded recoll *must*
         # use separate install directories, else errors happen.
+        # Windows (2026-10): can't get this to work, tried all syntaxes for UserInstallation. The
+        # correct one is supposedly, e.g., -env:UserInstallation=file:///c:/temp/somedir
+        # but I get "corrupted bootstrap.ini" probably during USERINS. expansion in there.
+        # The Windows indexer is single-threaded, so we could possibly avoid the option. However
+        # I also get popups about waiting a printer connection. What a mess.
+        # We could probably use --safe-mode on Windows instead.
         sofficeconfig = _path2fileurl(posixpath.join(self.tmpdir.getpath(), "soffice-profile"))
         self.cmdbase = sofficecmd + ["--norestore", "--headless",
                                      f"-env:UserInstallation={sofficeconfig}",
