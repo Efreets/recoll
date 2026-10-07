@@ -169,7 +169,10 @@ bool MimeHandlerExec::next_document()
     mexec.putenv(m_forPreview ? "RECOLL_FILTER_FORPREVIEW=yes" : "RECOLL_FILTER_FORPREVIEW=no");
     mexec.setrlimit_as(m_filtermaxmbytes);
     std::string errfile;
-    m_config->getConfParam("helperlogfilename", errfile);
+    if (!m_config->getConfParam("handlerlogfilename", errfile)) {
+        // back compat
+        m_config->getConfParam("helperlogfilename", errfile);
+    }
     if (!errfile.empty()) {
         mexec.setStderr(errfile);
     }

@@ -62,7 +62,10 @@ bool MimeHandlerExecMultiple::startCmd()
     m_adv.setmaxsecs(m_filtermaxseconds);
     m_cmd.setAdvise(&m_adv);
     std::string errfile;
-    m_config->getConfParam("helperlogfilename", errfile);
+    if (!m_config->getConfParam("handlerlogfilename", errfile)) {
+        // back compat
+        m_config->getConfParam("helperlogfilename", errfile);
+    }
     if (!errfile.empty()) {
         m_cmd.setStderr(errfile);
     }

@@ -79,22 +79,15 @@ class CmdTalk(object):
             msvcrt.setmode(self.outfile.fileno(), os.O_BINARY)
             msvcrt.setmode(self.infile.fileno(), os.O_BINARY)
 
-        if not hasattr(self, 'debugfile'):
-            self.debugfile = None
         if not hasattr(self, 'nodecodeinput'):
             self.nodecodeinput = False
-        self.errfout = None
+        if not hasattr(self, 'loglevel'):
+            self.loglevel = 5 # Compat: we used to log every call to log()
+        self.errfout: TextIO = sys.stderr
 
-    def log(self, s: AnyStr, doexit: int = 0, exitvalue: int = 1) -> None:
-        if not self.errfout:
-            self.errfout: TextIO = sys.stderr
-            if self.debugfile:
-                try:
-                    self.errfout: TextIO = open(self.debugfile, "a")
-                except:
-                    print(f"Could not open {self.debugfile}", file=sys.stderr)
-                    self.errfout = sys.stderr
-        print(f"CMDTALK: {self.myname}: {s!r}", file=self.errfout)
+    def log(self, s: AnyStr, level: int = 2, doexit: int = 0, exitvalue: int = 1) -> None:
+        if level <= self.loglevel:
+            print(f"CMDTALK: {self.myname}: {s!r}", file=self.errfout)
         if doexit:
             if self.exitfunc:
                 self.exitfunc(exitvalue)

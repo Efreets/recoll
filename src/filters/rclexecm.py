@@ -32,30 +32,17 @@ _g_mswindows = sys.platform == "win32"
 _g_execdir = os.path.dirname(sys.argv[0])
 
 _g_config = rclconfig.RclConfig()
-_g_debugfile = _g_config.getConfParam("filterdebuglog")
-_g_debuglevel = _g_config.getConfParam("filterdebuglevel")
-if _g_debuglevel:
-    _g_debuglevel = int(_g_debuglevel)
+_g_loglevel = _g_config.getConfParam("handlerloglevel")
+if _g_loglevel:
+    _g_loglevel = int(_g_loglevel)
 else:
-    _g_debuglevel = 2
-_g_errfout = None
+    _g_loglevel = 2
+_g_errfout = sys.stderr
 
 
 def logmsg(msg, loglevel=4):
-    if loglevel > _g_debuglevel:
-        return
-    global _g_debugfile, _g_errfout
-    if not _g_errfout:
-        if _g_debugfile:
-            try:
-                _g_errfout = open(_g_debugfile, "a")
-            except:
-                print(f"Could not open {_g_debugfile}", file=sys.stderr)
-                _g_errfout = sys.stderr
-        else:
-            _g_errfout = sys.stderr
-
-    print(f"{msg}", file=_g_errfout)
+    if loglevel <= _g_loglevel:
+        print(f"{msg}", file=_g_errfout)
 
 
 # Convert to bytes if not already such.
@@ -224,18 +211,17 @@ class RclExecM(cmdtalk.CmdTalk):
             self.maxmembersize = 50 * 1024
         self.maxmembersize = self.maxmembersize * 1024
 
-        # Tell cmdtalk where to log
-        self.debugfile = _g_config.getConfParam("filterdebuglog")
         # Some of our params are binary, cmdtalk should not decode them
         self.nodecodeinput = True
-
+        self.loglevel = _g_loglevel
         super().__init__()
 
-    def rclog(self, s, doexit=0, exitvalue=1):
-        # We used to not do this on Windows, if not outputting to a file because we
+    def rclog(self, s, level=2, doexit=0, exitvalue=1):
+        # Windows: We used to suppress output if not outputting to a file because we
         # thought at a point that this was polluting stdout. Seems that it was a fluke
         # or somehow corrected.
-        super().log(s, doexit, exitvalue)
+        if level <= self.loglevel:
+            super().log(s, level=level, doexit=doexit, exitvalue=exitvalue)
 
     def config(self):
         return _g_config
@@ -299,7 +285,7 @@ class RclExecM(cmdtalk.CmdTalk):
             self.answer("", "", eof, RclExecM.fileerror)
             return
 
-        # self.rclog("processmessage: ok %s eof %s ipath %s"%(ok, eof, ipath))
+        #self.rclog("processmessage: ok %s eof %s ipath %s" % (ok, eof, ipath), level=2)
         if ok:
             self.answer(data, ipath, eof)
         else:

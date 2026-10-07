@@ -426,7 +426,7 @@ std::string make_config()
         }
         fprintf(fp, "# rclgrep default configuration. Will only be created by the program if it\n");
         fprintf(fp, "# does not exist, you can add your own customisations in here\n");
-        fprintf(fp, "helperlogfilename = /dev/null\n");
+        fprintf(fp, "handlerlogfilename = /dev/null\n");
         fprintf(fp, "textunknownasplain = 1\n");
         fprintf(fp, "loglevel = 1\n");
         fclose(fp);
