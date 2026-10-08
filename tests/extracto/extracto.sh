@@ -6,10 +6,7 @@ topdir=`dirname $0`/..
 initvariables $0
 
 (
-    tmpfile=$(
-        echo 'mkstemp(template)' |
-            m4 -D template="${TMPDIR:-/tmp}/rcltsttmpXXXXXX"
-           ) || exit 1
+    tmpfile=`mktemp -t rcltsttmpXXXXXX`
     trap "rm -f -- '$tmpfile'" EXIT
     rm -f "$tmpfile"
     recollq --extract-to "$tmpfile" -q HtmlAttachment_uniqueTerm
