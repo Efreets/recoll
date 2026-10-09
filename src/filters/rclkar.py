@@ -197,13 +197,12 @@ class KarTextExtractor(RclBaseHandler):
                     f.close()
                     classifier = rcllatinclass.European8859TextClassifier(langszip)
                 except:
-                    self.em.rclog("Can't build euroclassifier (missing stopwords zip?")
+                    self.em.rclog("Can't build euroclassifier (missing stopwords zip ?", level=3)
                     return (encoding, confidence)
 
             try:
                 lang, code, count = classifier.classify(text)
-                # self.em.rclog("euclass lang/code/matchcount: %s %s %d" % \
-                #              (lang, code, count))
+                # self.em.rclog("euclass lang/code/matchcount: %s %s %d" % (lang, code, count))
                 if count > 0:
                     confidence = 1.0
                     encoding = code
@@ -281,12 +280,11 @@ class KarTextExtractor(RclBaseHandler):
         # de-nulled data
 
         # self.em.rclog("Lyrics length %d" % len(lyrics))
-        self.em.rclog(f"has_chardet {has_chardet}")
+        # self.em.rclog(f"has_chardet {has_chardet}")
         if self.encoding == "" and has_chardet:
             if self.hadnulls:
                 (encoding, confidence) = self.chardet_detect(lyricsN)
-                self.em.rclog("With nulls: chardet: enc [%s], conf %.2f" % \
-                              (encoding, confidence))
+                self.em.rclog("With nulls: chardet: enc [%s], conf %.2f" % (encoding, confidence),4)
                 if confidence > confidence_threshold and \
                    encoding is not None and encoding.lower() in self.acceptnullencodings:
                     self.encoding = encoding
@@ -295,15 +293,12 @@ class KarTextExtractor(RclBaseHandler):
                     author = authorN
             if self.encoding == "":
                 (encoding, confidence) = self.chardet_detect(lyrics)
-                self.em.rclog("No nulls: chardet: enc [%s], conf %.2f" % \
-                              (encoding, confidence))
+                self.em.rclog("No nulls: chardet: enc [%s], conf %.2f" % (encoding, confidence), 4)
                 if confidence > confidence_threshold:
                     self.encoding = encoding
 
         if self.encoding == "":
-            self.em.rclog(
-                "Encoding not guessed, defaulting to [%s]" % (self.defaultencoding,)
-            )
+            self.em.rclog("Encoding not guessed, defaulting to [%s]" % (self.defaultencoding,))
             self.encoding = self.defaultencoding
 
         if title is None:
