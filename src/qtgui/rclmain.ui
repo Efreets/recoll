@@ -487,6 +487,14 @@
     <cstring>indexScheduleAction</cstring>
    </property>
   </action>
+  <action name="portabCreatAction">
+   <property name="text">
+    <string>Create portable installation</string>
+   </property>
+   <property name="name" stdset="0">
+    <cstring>portabCreatAction</cstring>
+   </property>
+  </action>
   <action name="queryPrefsAction">
    <property name="text">
     <string>&amp;GUI configuration</string>

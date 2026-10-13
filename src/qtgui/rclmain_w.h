@@ -55,6 +55,7 @@ class IdxTreeModel;
 class UIPrefsDialog;
 class ConfigSwitchW;
 class PTransEdit;
+class PortabCreatW;
 
 #include "ui_rclmain.h"
 
@@ -127,6 +128,7 @@ public slots:
 #ifdef _WIN32
     virtual void checkWinVersion();
 #endif 
+    virtual void showPortabCreat();
     virtual void startManual(const std::string& = std::string());
     virtual void showDocHistory();
     virtual void showExtIdxDialog();
@@ -220,6 +222,7 @@ private:
     ConfIndexW     *indexConfig{0};
     PTransEdit     *pathTrans{0};
     IdxSchedW      *indexSched{0};
+    PortabCreatW   *portabCreat{0};
 #ifdef _WIN32
     WinSchedToolW  *cronTool{0};
 #else

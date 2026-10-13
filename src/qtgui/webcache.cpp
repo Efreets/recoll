@@ -241,9 +241,8 @@ WebcacheEdit::WebcacheEdit(RclMain *parent)
     tableview->setContextMenuPolicy(Qt::CustomContextMenu);
     tableview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     
-    QSettings settings;
     QStringList wl;
-    wl = settings.value(cwnm).toStringList();
+    wl = g_settings->value(cwnm).toStringList();
     QHeaderView *header = tableview->horizontalHeader();
     if (header) {
         if (int(wl.size()) == header->count()) {
@@ -260,8 +259,8 @@ WebcacheEdit::WebcacheEdit(RclMain *parent)
         header->setDefaultSectionSize(fm.height() + ROWHEIGHTPAD);
     }
 
-    int width = settings.value(wwnm, 0).toInt();
-    int height = settings.value(whnm, 0).toInt();
+    int width = g_settings->value(wwnm, 0).toInt();
+    int height = g_settings->value(whnm, 0).toInt();
     if (width && height) {
         resize(QSize(width, height));
     }
@@ -350,7 +349,7 @@ void WebcacheEdit::saveToFile()
     if (qfn.isEmpty())
         return;
     string reason;
-    if (!stringtofile(data, qs2utf8s(qfn).c_str(), reason)) {
+    if (!stringtofile(data, qs2utf8s(qfn), reason)) {
         QMessageBox::warning(0, "Recoll", tr("File creation failed: ") + u8s2qs(reason));
     }
 }
@@ -364,8 +363,7 @@ void WebcacheEdit::saveColState()
         int li = header->logicalIndex(vi);
         newwidths.push_back(std::to_string(header->sectionSize(li)).c_str());
     }
-    QSettings settings;
-    settings.setValue(cwnm, newwidths);
+    g_settings->setValue(cwnm, newwidths);
 }
 
 void WebcacheEdit::closeEvent(QCloseEvent *event)
@@ -375,9 +373,8 @@ void WebcacheEdit::closeEvent(QCloseEvent *event)
                                     "to run the indexer after closing this window."));
     }
     if (!isFullScreen()) {
-        QSettings settings;
-        settings.setValue(wwnm, width());
-        settings.setValue(whnm, height());
+        g_settings->setValue(wwnm, width());
+        g_settings->setValue(whnm, height());
     }
     event->accept();
 }

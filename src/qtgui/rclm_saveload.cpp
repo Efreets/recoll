@@ -35,8 +35,7 @@ using namespace Rcl;
 
 static QString prevDir()
 {
-    QSettings settings;
-    QString prevdir = settings.value("/Recoll/prefs/lastQuerySaveDir").toString();
+    QString prevdir = g_settings->value("/Recoll/prefs/lastQuerySaveDir").toString();
     string defpath = path_cat(theconfig->getConfDir(), "saved_queries");
     if (prevdir.isEmpty()) {
         if (!path_exists(defpath)) {
@@ -95,7 +94,7 @@ void RclMain::saveLastQuery()
 
     LOGDEB("RclMain::saveLastQuery: XML: [" << xml << "]\n");
     string reason;
-    if (!stringtofile(xml, tofile.c_str(), reason)) {
+    if (!stringtofile(xml, tofile, reason)) {
         QMessageBox::warning(this, tr("Write failed"), tr("Could not write to file"));
     }
     return;

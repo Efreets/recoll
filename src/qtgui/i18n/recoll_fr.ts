@@ -438,7 +438,7 @@
     </message>
     <message>
         <source>Start folders</source>
-        <translation>Répertoires de départ</translation>
+        <translation type="vanished">Répertoires de départ</translation>
     </message>
     <message>
         <source>The list of folders/directories to be indexed. Sub-folders will be recursively processed. Default: your home.</source>
@@ -490,7 +490,7 @@
     </message>
     <message>
         <source>The list of folders/directories to be indexed, recursively with their sub-folders.&lt;br&gt;%USERPROFILE% or the &apos;~&apos; character expand to your user profile, which is the default The &apos;~&apos; character expands to your home directory, which is the default initial value.</source>
-        <translation>La liste des dossiers/répertoires à indexer, de manière récursive avec leurs sous-dossiers.&lt;br&gt;%USERPROFILE% ou le caractère &apos;~&apos; se développent en votre répertoire personnel, qui est la valeur initiale par défaut.</translation>
+        <translation type="vanished">La liste des dossiers/répertoires à indexer, de manière récursive avec leurs sous-dossiers.&lt;br&gt;%USERPROFILE% ou le caractère &apos;~&apos; se développent en votre répertoire personnel, qui est la valeur initiale par défaut.</translation>
     </message>
 </context>
 <context>
@@ -779,6 +779,13 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>HtmlDialog</name>
+    <message>
+        <source>Dialog</source>
+        <translation type="unfinished">Dialogue</translation>
+    </message>
+</context>
+<context>
     <name>IdxSchedW</name>
     <message>
         <source>Index scheduling setup</source>
@@ -913,6 +920,66 @@ Cliquez sur Annuler si vous voulez modifier le fichier de configuration avant le
     <message>
         <source>Save</source>
         <translation>Sauvegarder</translation>
+    </message>
+</context>
+<context>
+    <name>PortabCreatW</name>
+    <message>
+        <source>Index scheduling setup</source>
+        <translation type="unfinished">Paramétrage du planning d&apos;indexation</translation>
+    </message>
+    <message>
+        <source>Create portable installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose exactly one directory</source>
+        <translation type="obsolete">Choisir exactement un répertoire</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="obsolete">Annuler</translation>
+    </message>
+    <message>
+        <source>
+&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+  p, li { white-space: pre-wrap; }
+  p { margin-top:0px; margin-bottom:0px;margin-left:0px; margin-right:0px;
+    -qt-block-indent:0; text-indent:0px;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body style=&quot;font-family:&apos;Sans Serif&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p&gt;This tool creates a portable Recoll configuration on a movable volume (e.g. thumbdrive). 
+It will copy the %1 to the volume and create an initial configuration there. 
+The directory names for the %2 (&lt;em&gt;%3&lt;/em&gt;) and configuration (&lt;em&gt;recoll-config&lt;/em&gt;) are 
+used to detect a portable installation and should not be changed.
+&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;
+                                      </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>
+This will let you chose the location, and initialize it. 
+You will then need to start a new Recoll instance from the installation on the volume to run 
+indexing and queries there.
+                                      </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>full Recoll installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>AppImage executable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>executable location</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1225,6 +1292,14 @@ Cliquez sur Annuler si vous voulez modifier le fichier de configuration avant le
         <translation>Variable de configuration noContentSuffixes: suffixes sélectionnant des fichiers qui seront indexés uniquement sur leur nom
 (pas d&apos;identification de type MIME, pas de décompression, pas d&apos;indexation du contenu).</translation>
     </message>
+    <message>
+        <source>Start folders</source>
+        <translation type="unfinished">Répertoires de départ</translation>
+    </message>
+    <message>
+        <source>The list of folders/directories to be indexed, recursively with their sub-folders.&lt;br&gt;%USERPROFILE% or the &apos;~&apos; character expand to your user profile, which is the default The &apos;~&apos; character expands to your home directory, which is the default initial value.</source>
+        <translation type="unfinished">La liste des dossiers/répertoires à indexer, de manière récursive avec leurs sous-dossiers.&lt;br&gt;%USERPROFILE% ou le caractère &apos;~&apos; se développent en votre répertoire personnel, qui est la valeur initiale par défaut.</translation>
+    </message>
 </context>
 <context>
     <name>QWidget</name>
@@ -1310,15 +1385,31 @@ Cliquez sur Annuler si vous voulez modifier le fichier de configuration avant le
     </message>
     <message>
         <source>Copy Text</source>
-        <translation>Copier le texte</translation>
+        <translation type="vanished">Copier le texte</translation>
     </message>
     <message>
         <source>Copy &amp;File Path</source>
-        <translation>Copier le chemin du fichier</translation>
+        <translation type="vanished">Copier le chemin du fichier</translation>
     </message>
     <message>
         <source>Copy File Name</source>
-        <translation>Copier le nom du fichier</translation>
+        <translation type="vanished">Copier le nom du fichier</translation>
+    </message>
+    <message>
+        <source>Copy File &amp;Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy File &amp;Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy &amp;Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Copy to File</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2525,6 +2616,10 @@ Voulez vous afficher le dialogue de préférences ?</translation>
     <message>
         <source>Query Language cheat sheet</source>
         <translation>Afficher le résumé du language d&apos;interrogation</translation>
+    </message>
+    <message>
+        <source>Create portable installation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

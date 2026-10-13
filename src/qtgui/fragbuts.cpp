@@ -138,7 +138,7 @@ FragButs::FragButs(QWidget* parent)
             string src = path_cat(theconfig->getDatadir(), "examples");
             src = path_cat(src, "fragment-buttons.xml");
             m_fn = path_cat(theconfig->getConfDir(), "fragment-buttons.xml");
-            copyfile(src.c_str(), m_fn.c_str(), reason);
+            copyfile(src, m_fn, reason);
         }
     }
     if (!file_to_string(m_fn, data, &reason)) {

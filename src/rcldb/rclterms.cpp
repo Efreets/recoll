@@ -604,7 +604,7 @@ bool Db::dirlist(int depth, std::string& root, std::vector<std::string>& dirs)
                     break;
                 ixterm = strip_prefix(ixterm);
                 // Skip non-paths like Web entries etc.
-                if (!path_isabsolute(ixterm))
+                if (!path_isabsolute(ixterm, hasWinPaths()))
                     continue;
                 // Skip subdocs
                 auto pos = ixterm.rfind('|');

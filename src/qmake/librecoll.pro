@@ -100,6 +100,7 @@ SOURCES += \
 ../utils/cmdtalk.cpp \
 ../utils/conftree.cpp \
 ../utils/copyfile.cpp \
+../utils/copytree.cpp \
 ../utils/cpuconf.cpp \
 ../utils/ecrontab.cpp \
 ../utils/fileudi.cpp \

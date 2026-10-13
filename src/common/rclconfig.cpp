@@ -1,4 +1,3 @@
-
 /* Copyright (C) 2004-2022 J.F.Dockes 
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -230,9 +229,9 @@ public:
     // mboxcachedir, aspellDictDir, which can still be used to
     // override.
     std::string m_cachedir;  
-    std::string m_datadir;   // Example: /usr/local/share/recoll
-    std::string m_keydir;    // Current directory used for parameter fetches.
-    int    m_keydirgen; // To help with knowing when to update computed data.
+    std::string m_datadir; // Example: /usr/local/share/recoll
+    std::string m_keydir; // Current directory used for parameters which depend on location
+    int    m_keydirgen; // To help with knowing when to update computed data (see ParamStale).
 
     std::vector<std::string> m_cdirs; // directory stack for the confstacks
 
@@ -269,6 +268,11 @@ public:
 
     std::vector<std::pair<int, int> > m_thrConf;
 
+    // movable volume stuff
+    std::string m_confstemorg;
+    std::string m_confstemrep;
+    bool m_portable{false};
+    
     //////////////////
     // Members needing explicit processing when copying 
     std::unique_ptr<ConfStack<ConfTree>> m_conf;   // Parsed configuration files
@@ -370,7 +374,7 @@ bool RclConfig::Internal::initUserConfig()
     std::string dst = path_cat(m_confdir, "backends");
     if (!path_exists(dst)) {
         std::string reason;
-        if (!copyfile(src.c_str(), dst.c_str(), reason)) {
+        if (!copyfile(src, dst, reason)) {
             m_reason += std::string("Copying the backends file: ") + reason;
             LOGERR(m_reason);
         }
@@ -442,7 +446,10 @@ void RclConfig::Internal::initFrom(const RclConfig& r)
     m_excludeMTypes = r.m->m_excludeMTypes;
     m_mdreapers = r.m->m_mdreapers;
     m_thrConf = r.m->m_thrConf;
-
+    m_confstemorg = r.m->m_confstemorg;
+    m_confstemrep = r.m->m_confstemrep;
+    m_portable = r.m->m_portable;
+    
     // Special treatment
     if (r.m->m_conf)
         m_conf = std::make_unique<ConfStack<ConfTree>>(*(r.m->m_conf));
@@ -475,6 +482,52 @@ void RclConfig::Internal::initParamStale(ConfNull *cnf, ConfNull *mimemap)
     m_mdrstate.init(cnf);
 }
 
+// Static because this may need to be called extremely early, before we actually build the config
+std::string RclConfig::checkPortable(std::string *reasonp)
+{
+#ifdef _WIN32
+    // Check for a portable installation. The exe is directly under the top
+    // installation directory
+    auto installdir = path_thisexecdir();
+    auto installname = path_getsimple(installdir);
+    LOGDEB0("RclConfig: portable? got installname [" << installname << "]\n");
+    if (installname == "recoll-portable") {
+        // The config must be on the same level and named "recoll-config"
+        auto configdir = path_cat(path_getfather(installdir), "recoll-config");
+        if (path_exists(configdir)) {
+            return configdir;
+        }
+        if (reasonp) {
+            *reasonp = std::string(
+                         "Portable installation but the configuration directory is not found in ")
+                       + configdir;
+        }
+    }
+#else
+    // We only process the case where we are an appimage.
+    // Note that path_this execdir in this case correctly returns a path under the
+    // appimage temporary mount, which is not what we want here.
+    auto appimage = getenv("APPIMAGE");
+    if (nullptr == appimage) {
+        return std::string();
+    }
+    auto installdir = path_getfather(appimage);
+    auto installname = path_getsimple(installdir);
+    if (installname == "recoll-appimage-portable") {
+        // The config must be on the same level and named "recoll-config"
+        auto configdir = path_cat(path_getfather(installdir), "recoll-config");
+        if (path_exists(configdir)) {
+            return configdir;
+        }
+        if (reasonp) {
+            *reasonp =
+                std::string("Portable installation but the configuration directory is not found in ")
+                + configdir;
+        }
+    }
+#endif
+    return std::string();
+}
 
 RclConfig::RclConfig(const string *argcnf)
 {
@@ -507,8 +560,15 @@ RclConfig::RclConfig(const string *argcnf)
         if (cp) {
             m->m_confdir = path_canon(cp);
         } else {
-            autoconfdir = true;
-            m->m_confdir=path_cat(path_homedata(), path_defaultrecollconfsubdir());
+            m->m_confdir = checkPortable(&m->m_reason);
+            if (!m->m_confdir.empty()) {
+                // Used to decide, e.g., to store all GUI prefs inside the index config dir.
+                m->m_portable = true;
+            }
+            if (m->m_confdir.empty()) {
+                autoconfdir = true;
+                m->m_confdir = path_cat(path_homedata(), path_defaultrecollconfsubdir());
+            }
         }
     }
 
@@ -530,6 +590,7 @@ RclConfig::RclConfig(const string *argcnf)
     // the user needs to edit or truncate the file instead of removing it.
     if (!m->initUserConfig())
         return;
+
 
     // This can't change once computed inside a process. It would be
     // nicer to move this to a static class initializer to avoid
@@ -601,6 +662,42 @@ RclConfig::RclConfig(const string *argcnf)
     if (!updateMainConfig()) {
         m->m_reason = string("No/bad main configuration file in: ") + cnferrloc;
         return;
+    }
+
+    // Consistency check for a portable install: the existence of orgidxconfdir is mandatory
+    if (m->m_portable) {
+        std::string oconf;
+        if (!m->m_conf->get("orgidxconfdir", oconf, "")) {
+            LOGERR("RclConfig: looks portable but no orgidxconfdir. Turning off portable flag\n");
+            m->m_portable = false;
+        }
+    }
+
+    // If orgidxconfdir is set, we assume that this index is for a movable dataset,
+    // with the configuration directory stored inside the dataset tree.
+    // This allows computing automatic path translations if the dataset has been moved.
+    // orig_confdir: original location of the configuration directory when the index was created.
+    //  This can never change, it matches the paths stored in the index.
+    // cur_confdir is the current configuration location on the volume/dataset.
+    // It is set and different from m->m_confdir if the config has been copied from the removable
+    // volume to the local file system(e.g. to make it writable), in this case it points to the
+    // location on the volume.
+    // By comparing the original and current configuration directory paths, we get the path prefix
+    // to be replaced, and the replacement.
+    string orig_confdir;
+    string cur_confdir;
+    if (m->m_conf->get("orgidxconfdir", orig_confdir, "")) {
+        if (!m->m_conf->get("curidxconfdir", cur_confdir, "")) {
+            cur_confdir = m->m_confdir;
+        }
+        LOGDEB1("RclConfig: orgidxconfdir: " << orig_confdir <<
+                " curidxconfdir " << cur_confdir << "\n");
+        auto reason = path_diffstems(orig_confdir, cur_confdir, m->m_confstemorg, m->m_confstemrep);
+        if (!reason.empty()) {
+            LOGERR("RclConfig: path_diffstems failed: " << reason << " : orig [" <<
+                   orig_confdir << "] cur [" << cur_confdir << "\n");
+            m->m_confstemorg = m->m_confstemrep = "";
+        }
     }
 
     // Other files
@@ -681,6 +778,11 @@ RclConfig& RclConfig::operator=(const RclConfig &r)
     return *this;
 }
 
+
+bool RclConfig::isPortable() const
+{
+    return m->m_portable;
+}
 
 bool RclConfig::isDefaultConfig() const
 {
@@ -993,8 +1095,10 @@ vector<string> RclConfig::getTopdirs(bool formonitor) const
     }
 
     for (auto& dir : tdl) {
-        dir = path_canon(path_tildexpand(dir));
+        dir = path_canon_cross(path_tildexpand(dir));
+        pathFromIndex(dir);
     }
+    LOGDEB0("RclConfig::getTopdirs -> " << stringsToString(tdl) << '\n');
     return tdl;
 }
 
@@ -1857,48 +1961,95 @@ string RclConfig::getIdxStopFile() const
     return path_cat(getCacheDir(), "index.stop");
 }
 
-/* Eliminate the common leaf part of file paths p1 and p2. Example: 
- * /mnt1/common/part /mnt2/common/part -> /mnt1 /mnt2. This is used
- * for computing translations for paths when the dataset has been
- * moved. Of course this could be done more efficiently than by splitting 
- * into vectors, but we don't care.*/
-static string path_diffstems(const string& p1, const string& p2,
-                             string& r1, string& r2)
+bool RclConfig::movable() const
 {
-    string reason;
-    r1.clear();
-    r2.clear();
-    vector<string> v1, v2;
-    stringToTokens(p1, v1, "/");
-    stringToTokens(p2, v2, "/");
-    auto l1 = v1.size();
-    auto l2 = v2.size();
-        
-    // Search for common leaf part
-    unsigned int cl = 0;
-    for (; cl < MIN(l1, l2); cl++) {
-        if (v1[l1-cl-1] != v2[l2-cl-1]) {
-            break;
-        }
+    return !(m->m_confstemorg.empty() && m->m_confstemrep.empty());
+}
+
+bool RclConfig::pathToIndex(std::string& path) const
+{
+    if (!movable())
+        return false;
+    LOGDEB1("RclConfig::pathToIndex:" << "] confstemorg [" << m->m_confstemorg <<
+            "] confstemrep [" << m->m_confstemrep << "] path [" << path << "]\n");
+
+#ifdef _WIN32
+    auto lpath = unactolower(path);
+    auto lstemrep = unactolower(m->m_confstemrep);
+#else
+    std::string& lpath = path;
+    std::string& lstemrep = m->m_confstemrep;
+#endif
+
+    bool ret = false;
+    if (lstemrep.size() <= lpath.size() &&
+        !lpath.compare(0, lstemrep.size(), lstemrep)) {
+        path.replace(0, m->m_confstemrep.size(), m->m_confstemorg);
+        ret = true;
     }
-    //cerr << "Common length = " << cl << "\n";
-    if (cl == 0) {
-        reason = "Input paths are empty or have no common part";
-        return reason;
+
+    LOGDEB1("pathToIndex: final: [" << path << "]\n");
+    return ret;
+}
+
+void RclConfig::urlToIndex(std::string& url) const
+{
+    if (!movable())
+        return;
+    auto path = fileurltolocalpath(url);
+    if (path.empty()) {
+        LOGDEB0("RclConfig::urltoindex: not file url\n");
+        return;
     }
-    for (unsigned i = 0; i < l1 - cl; i++) {
-        r1 += "/" + v1[i];
+    pathToIndex(path);
+    url = path_pathtofileurl(path);
+}
+
+bool RclConfig::pathFromIndex(std::string& path)  const
+{
+    if (!movable())
+        return false;
+    LOGDEB1("RclConfig::pathFromIndex: confstemorg [" << m->m_confstemorg <<
+           "] confstemrep [" << m->m_confstemrep << "] path [" << path << "]\n");
+
+#ifdef _WIN32
+    auto lpath = unactolower(path);
+    auto lstemorg = unactolower(m->m_confstemorg);
+#else
+    std::string& lpath = path;
+    std::string& lstemorg = m->m_confstemorg;
+#endif
+
+    bool ret = false;
+    if (lstemorg.size() <= lpath.size() &&
+        !lpath.compare(0, lstemorg.size(), lstemorg)) {
+        path.replace(0, m->m_confstemorg.size(), m->m_confstemrep);
+        ret = true;
     }
-    for (unsigned i = 0; i < l2 - cl; i++) {
-        r2 += "/" + v2[i];
+
+    LOGDEB1("pathFromIndex: final: [" << path << "]\n");
+    return ret;
+}
+
+void RclConfig::urlFromIndex(std::string& url) const
+{
+    if (!movable())
+        return;
+    auto path = fileurltolocalpath(url);
+    if (path.empty()) {
+        LOGDEB0("RclConfig::urltoindex: not file url\n");
+        return;
     }
-        
-    return reason;
+    pathFromIndex(path);
+    url = path_pathtofileurl(path);
 }
 
 void RclConfig::urlrewrite(const string& _dbdir, string& url) const
 {
-    LOGDEB1("RclConfig::urlrewrite: dbdir [" << _dbdir << "] url [" << url << "]\n");
+    LOGDEB0("RclConfig::urlrewrite: dbdir [" << _dbdir <<
+            "] confstemorg [" << m->m_confstemorg <<
+            "] confstemrep [" << m->m_confstemrep <<
+            "] url [" << url << "]\n");
 
 #if defined(_WIN32) || defined(NOCASE_PTRANS)
     // Under Windows we want case-insensitive comparisons. Create an all-lowercase version
@@ -1916,27 +2067,6 @@ void RclConfig::urlrewrite(const string& _dbdir, string& url) const
     ConfSimple *ptrans = m->m_ptrans.get();
 #endif
 
-    // If orgidxconfdir is set, we assume that this index is for a
-    // movable dataset, with the configuration directory stored inside
-    // the dataset tree. This allows computing automatic path
-    // translations if the dataset has been moved.
-    string orig_confdir;
-    string cur_confdir;
-    string confstemorg, confstemrep;
-    if (m->m_conf->get("orgidxconfdir", orig_confdir, "")) {
-        if (!m->m_conf->get("curidxconfdir", cur_confdir, "")) {
-            cur_confdir = m->m_confdir;
-        }
-        LOGDEB1("RclConfig::urlrewrite: orgidxconfdir: " << orig_confdir <<
-                " cur_confdir " << cur_confdir << "\n");
-        string reason = path_diffstems(orig_confdir, cur_confdir, confstemorg, confstemrep);
-        if (!reason.empty()) {
-            LOGERR("urlrewrite: path_diffstems failed: " << reason << " : orig_confdir [" <<
-                   orig_confdir << "] cur_confdir [" << cur_confdir << "\n");
-            confstemorg = confstemrep = "";
-        }
-    }
-    
     // Do path translations exist for this index ?
     bool needptrans = true;
     if (!ptrans->ok() || !ptrans->hasSubKey(dbdir)) {
@@ -1944,7 +2074,7 @@ void RclConfig::urlrewrite(const string& _dbdir, string& url) const
         needptrans = false;
     }
 
-    if (!needptrans && confstemorg.empty()) {
+    if (!needptrans && !movable()) {
         return;
     }
     bool computeurl = false;
@@ -1954,13 +2084,10 @@ void RclConfig::urlrewrite(const string& _dbdir, string& url) const
         LOGDEB2("RclConfig::urlrewrite: not file url\n");
         return;
     }
-    
-    // Do the movable volume thing.
-    if (!confstemorg.empty() && confstemorg.size() <= path.size() &&
-        !path.compare(0, confstemorg.size(), confstemorg)) {
-        path = path.replace(0, confstemorg.size(), confstemrep);
-        computeurl = true;
-    }
+#ifdef _WIN32
+    path = unactolower(path);
+#endif
+    LOGDEB0("RclConfig::urlrewrite: path: [" << path << "]\n");
 
     if (needptrans) {
 #if defined(_WIN32) || defined(NOCASE_PTRANS)
@@ -1982,9 +2109,17 @@ void RclConfig::urlrewrite(const string& _dbdir, string& url) const
             }
         }
     }
+
+    // Do the movable volume thing after we applied ptrans which works with index paths.
+    if (movable()) {
+        if (pathFromIndex(path))
+            computeurl = true;
+    }
+
     if (computeurl) {
         url = path_pathtofileurl(path);
     }
+    LOGDEB0("RclConfig::urlrewrite: final: [" << url << "]\n");
 }
 
 bool RclConfig::sourceChanged() const
@@ -2042,8 +2177,16 @@ vector<string> RclConfig::getSkippedPaths() const
     vector<string> skpl;
     getConfParam("skippedPaths", &skpl);
 
-    // Always add the dbdir and confdir to the skipped paths. This is 
-    // especially important for the rt monitor which will go into a loop if we
+    // The file paths from the configuration are for the original location of the dataset.
+    // Maybe adjust them for the current mount point
+    if (movable()) {
+        for (auto& path : skpl) {
+            pathFromIndex(path);
+        }
+    }
+
+    // Add a number of hard-coded (not from config) directories, esp. the dbdir and confdir
+    // This is especially important for the rt monitor which will go into a loop if we
     // don't do this.
     skpl.push_back(getDbDir());
     skpl.push_back(getConfDir());
@@ -2055,9 +2198,9 @@ vector<string> RclConfig::getSkippedPaths() const
     }
     // And the web queue dir
     skpl.push_back(getWebQueueDir());
-    for (vector<string>::iterator it = skpl.begin(); it != skpl.end(); it++) {
-        *it = path_tildexpand(*it);
-        *it = path_canon(*it);
+    for (auto& skpp : skpl) {
+        skpp = path_tildexpand(skpp);
+        skpp = path_canon(skpp);
     }
     sort(skpl.begin(), skpl.end());
     vector<string>::iterator uit = unique(skpl.begin(), skpl.end());
@@ -2069,6 +2212,11 @@ vector<string> RclConfig::getDaemSkippedPaths() const
 {
     vector<string> dskpl;
     getConfParam("daemSkippedPaths", &dskpl);
+    if (movable()) {
+        for (auto& path : dskpl) {
+            pathFromIndex(path);
+        }
+    }
 
     for (vector<string>::iterator it = dskpl.begin(); it != dskpl.end(); it++) {
         *it = path_tildexpand(*it);
@@ -2081,8 +2229,7 @@ vector<string> RclConfig::getDaemSkippedPaths() const
         skpl = skpl1;
     } else {
         sort(dskpl.begin(), dskpl.end());
-        merge(dskpl.begin(), dskpl.end(), skpl1.begin(), skpl1.end(), 
-              skpl.begin());
+        merge(dskpl.begin(), dskpl.end(), skpl1.begin(), skpl1.end(), skpl.begin());
         vector<string>::iterator uit = unique(skpl.begin(), skpl.end());
         skpl.resize(uit - skpl.begin());
     }

@@ -123,7 +123,7 @@ void RTIToolW::accept()
         path_makepath(dir, 0700);
 
         std::string reason;
-        if (!stringtofile(text, autostartfile.c_str(), reason)) {
+        if (!stringtofile(text, autostartfile, reason)) {
             QString msg = tr("Can't create: ") + path2qs(autostartfile);
             QMessageBox::warning(0, tr("Warning"), msg, QMessageBox::Ok);
             return;

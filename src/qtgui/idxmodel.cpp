@@ -87,7 +87,7 @@ FsTreeWalker::Status WalkerCB::processone(
 }
 
 // Assemble a path from its components up to lst
-std::string toksToPath(std::vector<std::string>& path, int lst)
+std::string toksToPath(std::vector<std::string>& path, int lst, bool startslash)
 {
     if (path.empty()) {
         // ??
@@ -97,13 +97,8 @@ std::string toksToPath(std::vector<std::string>& path, int lst)
         return "/";
 #endif
     }
-    std::string out{
-#ifdef _WIN32
-        path[0]
-#else
-        "/" + path[0]
-#endif
-    };
+
+    std::string out{startslash ? "/" + path[0] : path[0]};
     for (int i = 1; i <= lst; i++) {
         out += "/" + path[i];
     }
@@ -122,6 +117,7 @@ static void treelist(const std::string& top, const std::vector<std::string>& lst
     LOGDEB0("treelist: " << "top [" << top << "] TOP depth is " << curpath.size() << "\n");
     for (const auto& dir : lst) {
         LOGDEB1("DIR: " << dir << "\n");
+        bool startslash = dir[0] == '/';
         std::vector<std::string> npath;
         // Compute the new directory stack
         stringToTokens(dir, npath, "/");
@@ -133,7 +129,7 @@ static void treelist(const std::string& top, const std::vector<std::string>& lst
                 // Differing at i, unwind old stack and break the main loop
                 for (int j = int(curpath.size()) - 1; j >= i; j--) {
                     LOGDEB1("treelist: exiting  " <<  toksToPath(curpath, j) << "\n");
-                    cb.processone(toksToPath(curpath, j), FsTreeWalker::FtwDirReturn);
+                    cb.processone(toksToPath(curpath, j, startslash), FsTreeWalker::FtwDirReturn);
                 }
                 break;
             }
@@ -141,7 +137,7 @@ static void treelist(const std::string& top, const std::vector<std::string>& lst
         // Callbacks for new entries above the base.
         for (int j = i; j < int(npath.size()); j++) {
             LOGDEB1("treelist: entering " << toksToPath(npath, j) << "\n");
-            cb.processone(toksToPath(npath, j), FsTreeWalker::FtwDirEnter);
+            cb.processone(toksToPath(npath, j, startslash), FsTreeWalker::FtwDirEnter);
         }
         curpath.swap(npath);
     }
@@ -164,8 +160,8 @@ void IdxTreeModel::populate()
             return;
     }
     const QModelIndex child = this->index(0, 0, index);
-    WalkerCB cb(path_isroot(prefix) ? std::string() : prefix, this, child);
+    WalkerCB cb(path_isroot(prefix, rcldb->hasWinPaths()) ? std::string() : prefix, this, child);
     if (!prefix.empty())
-        prefix = path_getfather(prefix);
+        prefix = path_getfather(prefix, true);
     treelist(prefix, thedirs, cb);
 }

@@ -46,6 +46,7 @@ using std::string;
 
 RclDynConf *g_dynconf;
 RclConfig *theconfig;
+QSettings *g_settings;
 
 #ifdef _WIN32
 static const std::string dirlistsep{";"};
@@ -76,9 +77,9 @@ PrefsPack prefs;
 // Using the same macro to read/write a setting. insurance against typing mistakes
 #define SETTING_RW(var, nm, tp, def)                    \
     if (writing) {                                      \
-        settings.setValue(nm , var);                    \
+        g_settings->setValue(nm , var);                    \
     } else {                                            \
-        var = settings.value(nm, def).to##tp ();        \
+        var = g_settings->value(nm, def).to##tp ();        \
     }
 
 /** 
@@ -91,22 +92,25 @@ PrefsPack prefs;
  * the qt/recoll settings to defaults) */
 static bool havereadsettings;
 
-#ifndef _WIN32
-static void maybeRenameGUISettings();
-#endif /* ! _WIN32 */
 
 void rwSettings(bool writing)
 {
-#ifndef _WIN32
-    maybeRenameGUISettings();
-#endif /* !_WIN32 */
-
     QSettings::setDefaultFormat(QSettings::IniFormat);
-
     LOGDEB1("rwSettings: write " << writing << "\n");
     if (writing && !havereadsettings)
         return;
-    QSettings settings;
+
+    if (nullptr == g_settings) {
+        // Can't use theconfig, it may not be built yet. Use static method instead.
+        std::string cdir = RclConfig::checkPortable();
+        if (!cdir.empty()) {
+            g_settings = new QSettings(u8s2qs(path_cat(cdir, "recollgui.ini")),
+                                       QSettings::IniFormat);
+        } else {
+            g_settings = new QSettings;
+        }
+    }
+
     SETTING_RW(prefs.showmode, "/Recoll/geometry/showmode", Int, 0);
     SETTING_RW(prefs.pvwidth, "/Recoll/geometry/pvwidth", Int, 0);
     SETTING_RW(prefs.pvheight, "/Recoll/geometry/pvheight", Int, 0);
@@ -166,9 +170,9 @@ void rwSettings(bool writing)
 
     SETTING_RW(prefs.maxhltextkbs, "/Recoll/prefs/preview/maxhltextkbs", Int, 3000);
     // Compat: if maxhltextkbs is not set but old maxhltextmbs is set use it
-    if (!writing && !settings.contains("/Recoll/prefs/preview/maxhltextkbs") &&
-        settings.contains("/Recoll/prefs/preview/maxhltextmbs")) {
-        prefs.maxhltextkbs = settings.value(
+    if (!writing && !g_settings->contains("/Recoll/prefs/preview/maxhltextkbs") &&
+        g_settings->contains("/Recoll/prefs/preview/maxhltextmbs")) {
+        prefs.maxhltextkbs = g_settings->value(
             "/Recoll/prefs/preview/maxhltextmbs").toInt() * 1024;
     }
 
@@ -193,10 +197,10 @@ void rwSettings(bool writing)
 
     const char *dfltdateformat = "&nbsp;%Y-%m-%d&nbsp;%H:%M:%S&nbsp;%z";
     if (writing) {
-        settings.setValue("/Recoll/prefs/reslist/dateformat", u8s2qs(prefs.reslistdateformat));
+        g_settings->setValue("/Recoll/prefs/reslist/dateformat", u8s2qs(prefs.reslistdateformat));
     } else {
         prefs.reslistdateformat = qs2u8s(
-            settings.value("/Recoll/prefs/reslist/dateformat", dfltdateformat).toString());
+            g_settings->value("/Recoll/prefs/reslist/dateformat", dfltdateformat).toString());
     }
     if (prefs.reslistdateformat.empty()) {
         prefs.reslistdateformat = dfltdateformat;
@@ -219,12 +223,12 @@ void rwSettings(bool writing)
     QString rlfDflt = QString::fromUtf8(prefs.dfltResListFormat);
     if (writing) {
         if (prefs.reslistformat.compare(rlfDflt)) {
-            settings.setValue("/Recoll/prefs/reslist/format", prefs.reslistformat);
+            g_settings->setValue("/Recoll/prefs/reslist/format", prefs.reslistformat);
         } else {
-            settings.remove("/Recoll/prefs/reslist/format");
+            g_settings->remove("/Recoll/prefs/reslist/format");
         }
     } else {
-        prefs.reslistformat = settings.value("/Recoll/prefs/reslist/format", rlfDflt).toString();
+        prefs.reslistformat = g_settings->value("/Recoll/prefs/reslist/format", rlfDflt).toString();
         prefs.creslistformat = qs2utf8s(prefs.reslistformat);
     }
 
@@ -274,17 +278,17 @@ void rwSettings(bool writing)
 
     // Ssearch combobox history list
     if (writing) {
-        settings.setValue("/Recoll/prefs/query/ssearchHistory",prefs.ssearchHistory);
+        g_settings->setValue("/Recoll/prefs/query/ssearchHistory",prefs.ssearchHistory);
     } else {
-        prefs.ssearchHistory = settings.value("/Recoll/prefs/query/ssearchHistory").toStringList();
+        prefs.ssearchHistory = g_settings->value("/Recoll/prefs/query/ssearchHistory").toStringList();
     }
 
     // Ignored file types (advanced search)
     if (writing) {
-        settings.setValue("/Recoll/prefs/query/asearchIgnFilTyps", prefs.asearchIgnFilTyps);
+        g_settings->setValue("/Recoll/prefs/query/asearchIgnFilTyps", prefs.asearchIgnFilTyps);
     } else {
         prefs.asearchIgnFilTyps =
-            settings.value("/Recoll/prefs/query/asearchIgnFilTyps").toStringList();
+            g_settings->value("/Recoll/prefs/query/asearchIgnFilTyps").toStringList();
     }
 
     SETTING_RW(prefs.fileTypesByCats, "/Recoll/prefs/query/asearchFilTypByCat", Bool, false);
@@ -667,25 +671,6 @@ string PrefsPack::stemlang()
     }
     return stemLang;
 }
-
-#ifndef _WIN32
-
-// The Linux settings name unvontarily changed from
-// ~/.config/Recoll.org/recoll.conf to ~/.config/Recoll.org/recoll.ini
-// when the Windows version switched from registry to ini storage. Too
-// late to really fix as 1.26.6 was released (at least in the
-// lesbonscomptes repo and Debian unstable). For the lucky guys who
-// did not run 1.26.6, the following was added in 1.26.7 to rename the
-// file if the .ini target does not exist.
-static void maybeRenameGUISettings()
-{
-    string opath = path_cat(path_home(), ".config/Recoll.org/recoll.conf");
-    string npath = path_cat(path_home(), ".config/Recoll.org/recoll.ini");
-    if (path_exists(opath) && !path_exists(npath)) {
-        rename(opath.c_str(), npath.c_str());
-    }
-}
-#endif /* ! _WIN32 */
 
 #ifdef SHOWEVENTS
 const char *eventTypeToStr(int tp)

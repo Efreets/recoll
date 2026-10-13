@@ -278,34 +278,33 @@
 <context>
     <name>ConfIndexW</name>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="209"/>
+        <location filename="../confgui/confguiindex.cpp" line="244"/>
         <source>Can&apos;t write configuration file</source>
         <translation>لا يمكن كتابة ملف التكوين</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="220"/>
+        <location filename="../confgui/confguiindex.cpp" line="255"/>
         <source>Global parameters</source>
         <translation>المعلمات العالمية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="225"/>
+        <location filename="../confgui/confguiindex.cpp" line="260"/>
         <source>Local parameters</source>
         <translation>المعلمات المحلية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="227"/>
+        <location filename="../confgui/confguiindex.cpp" line="262"/>
         <source>Web history</source>
         <translation>تاريخ الويب</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="230"/>
+        <location filename="../confgui/confguiindex.cpp" line="265"/>
         <source>Search parameters</source>
         <translation>معايير البحث</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="237"/>
         <source>Start folders</source>
-        <translation>بدء المجلدات</translation>
+        <translation type="vanished">بدء المجلدات</translation>
     </message>
     <message>
         <source>The list of folders/directories to be indexed, recursively with their sub-folders.&lt;br&gt;The &apos;~&apos; character expands to your home directory, which is the default initial value.</source>
@@ -313,102 +312,102 @@
 يمكن للرمز &quot;~&quot; التوسع إلى مجلد المنزل الخاص بك، وهو القيمة الافتراضية الأولية.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="248"/>
+        <location filename="../confgui/confguiindex.cpp" line="291"/>
         <source>Skipped paths</source>
         <translation>المسارات المتخطاة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="249"/>
+        <location filename="../confgui/confguiindex.cpp" line="292"/>
         <source>These are pathnames of directories which indexing will not enter.&lt;br&gt;Path elements may contain wildcards. The entries must match the paths seen by the indexer (e.g.: if topdirs includes &apos;/home/me&apos; and &apos;/home&apos; is actually a link to &apos;/usr/home&apos;, a correct skippedPath entry would be &apos;/home/me/tmp*&apos;, not &apos;/usr/home/me/tmp*&apos;)</source>
         <translation>هذه هي مسارات الدلائل التي لن يدخلها التجهيز.&lt;br&gt;قد تحتوي عناصر المسار على رموز بدائية. يجب أن تتطابق الإدخالات مع المسارات التي يراها المجهر (على سبيل المثال: إذا كانت topdirs تتضمن &apos;/home/me&apos; و &apos;/home&apos; في الواقع رابط إلى &apos;/usr/home&apos;، فإن إدخال skippedPath الصحيح سيكون &apos;/home/me/tmp*&apos;، وليس &apos;/usr/home/me/tmp*&apos;)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="265"/>
+        <location filename="../confgui/confguiindex.cpp" line="309"/>
         <source>Stemming languages</source>
         <translation>لغات التقليم</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="266"/>
+        <location filename="../confgui/confguiindex.cpp" line="310"/>
         <source>The languages for which stemming expansion dictionaries will be built.&lt;br&gt;See the Xapian stemmer documentation for possible values. E.g. english, french, german...</source>
         <translation>اللغات التي سيتم بناء قواميس التوسيع لها. انظر إلى وثائق مقطع الكلمات في Xapian للقيم الممكنة. على سبيل المثال، الإنجليزية، الفرنسية، الألمانية...</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="272"/>
+        <location filename="../confgui/confguiindex.cpp" line="316"/>
         <source>Log file name</source>
         <translation>اسم ملف السجل</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="273"/>
+        <location filename="../confgui/confguiindex.cpp" line="317"/>
         <source>The file where the messages will be written.&lt;br&gt;Use &apos;stderr&apos; for terminal output</source>
         <translation>الملف الذي سيتم كتابة الرسائل فيه.&lt;br&gt;استخدم &apos;stderr&apos; لإخراج الطرفية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="277"/>
+        <location filename="../confgui/confguiindex.cpp" line="321"/>
         <source>Log verbosity level</source>
         <translation>مستوى تفصيل السجلات</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="278"/>
+        <location filename="../confgui/confguiindex.cpp" line="322"/>
         <source>This value adjusts the amount of messages,&lt;br&gt;from only errors to a lot of debugging data.</source>
         <translation>تعديل هذه القيمة يعدل كمية الرسائل، من الأخطاء فقط إلى الكثير من بيانات التصحيح.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="282"/>
+        <location filename="../confgui/confguiindex.cpp" line="326"/>
         <source>Indexer log file name</source>
         <translation>اسم ملف سجل المؤشر</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="283"/>
+        <location filename="../confgui/confguiindex.cpp" line="327"/>
         <source>If empty, the above log file name value will be used. It may useful to have a separate log for diagnostic purposes because the common log will be erased when&lt;br&gt;the GUI starts up.</source>
         <translation>إذا كانت فارغة، سيتم استخدام قيمة اسم ملف السجل أعلاه. قد يكون من المفيد أن يكون لديك سجل منفصل لأغراض التشخيص لأن السجل الشائع سيتم مسحه عند بدء تشغيل واجهة المستخدم الرسومية.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="289"/>
+        <location filename="../confgui/confguiindex.cpp" line="333"/>
         <source>Index flush megabytes interval</source>
         <translation>فهرس تفريغ ميغابايت فاصل زمني</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="290"/>
+        <location filename="../confgui/confguiindex.cpp" line="334"/>
         <source>This value adjust the amount of data which is indexed between flushes to disk.&lt;br&gt;This helps control the indexer memory usage. Default 10MB </source>
         <translation>تعديل هذه القيمة يحدد كمية البيانات التي يتم فهرستها بين عمليات تفريغها إلى القرص.&lt;br&gt;هذا يساعد في التحكم في استخدام ذاكرة المؤشر. القيمة الافتراضية 10 ميجابايت.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="296"/>
+        <location filename="../confgui/confguiindex.cpp" line="340"/>
         <source>Disk full threshold percentage at which we stop indexing&lt;br&gt;(E.g. 90 to stop at 90% full, 0 or 100 means no limit)</source>
         <translation>نسبة الحد الأقصى للقرص الممتلئ عندما نتوقف عن فهرسة البيانات (مثال: 90 للتوقف عند 90% ممتلئ، 0 أو 100 يعني عدم وجود حد)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="298"/>
+        <location filename="../confgui/confguiindex.cpp" line="342"/>
         <source>This is the percentage of disk usage - total disk usage, not index size - at which indexing will fail and stop.&lt;br&gt;The default value of 0 removes any limit.</source>
         <translation>هذه هي نسبة استخدام القرص - إجمالي استخدام القرص، وليس حجم الفهرس - التي ستفشل فيها عملية الفهرسة والتوقف.&lt;br&gt;القيمة الافتراضية هي 0 وتزيل أي حدود.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="304"/>
+        <location filename="../confgui/confguiindex.cpp" line="348"/>
         <source>Suspend the real time indexer when running on battery</source>
         <translation>تعليق مؤشر الوقت الحقيقي عند تشغيل الجهاز على البطارية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="305"/>
+        <location filename="../confgui/confguiindex.cpp" line="349"/>
         <source>The indexer will wait for a return on AC and reexec itself when it happens</source>
         <translation>سينتظر المؤشر على عودة على AC وسيقوم بإعادة تنفيذ نفسه عند حدوث ذلك.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="307"/>
+        <location filename="../confgui/confguiindex.cpp" line="351"/>
         <source>No aspell usage</source>
         <translation>عدم استخدام aspell</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="308"/>
+        <location filename="../confgui/confguiindex.cpp" line="352"/>
         <source> (by default, aspell suggests mispellings when a query has no results).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="326"/>
+        <location filename="../confgui/confguiindex.cpp" line="370"/>
         <source>Database directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="327"/>
+        <location filename="../confgui/confguiindex.cpp" line="371"/>
         <source>The name or path for a directory where to store the index&lt;br&gt;A non-absolute path is taken relative to the configuration directory. The default is &apos;xapiandb&apos;.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -417,17 +416,17 @@
         <translation type="vanished">(افتراضيًا، يقترح aspell الأخطاء الإملائية عندما لا توجد نتائج للاستعلام).</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="309"/>
+        <location filename="../confgui/confguiindex.cpp" line="353"/>
         <source>Disables use of aspell to generate spelling approximation in the term explorer tool.&lt;br&gt; Useful if aspell is absent or does not work. </source>
         <translation>يعطل استخدام aspell لإنشاء تقريب للإملاء في أداة استكشاف المصطلحات. مفيد إذا كان aspell غير متوفر أو لا يعمل.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="314"/>
+        <location filename="../confgui/confguiindex.cpp" line="358"/>
         <source>Aspell language</source>
         <translation>لغة Aspell</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="315"/>
+        <location filename="../confgui/confguiindex.cpp" line="359"/>
         <source>The language for the aspell dictionary. The values are are 2-letter language codes, e.g. &apos;en&apos;, &apos;fr&apos; ...&lt;br&gt;If this value is not set, the NLS environment will be used to compute it, which usually works. To get an idea of what is installed on your system, type &apos;aspell config&apos; and look for .dat files inside the &apos;data-dir&apos; directory.</source>
         <translation>اللغة لقاموس aspell. القيم هي رموز لغة مكونة من حرفين، على سبيل المثال &apos;en&apos;، &apos;fr&apos; ...&lt;br&gt;إذا لم يتم تعيين هذه القيمة، سيتم استخدام بيئة NLS لحسابها، والتي عادة ما تعمل. للحصول على فكرة عن ما هو مثبت على نظامك، اكتب &apos;aspell config&apos; وابحث عن ملفات .dat داخل دليل &apos;data-dir&apos;.</translation>
     </message>
@@ -441,122 +440,117 @@
 يتم اتخاذ المسار غير المطلق بالنسبة إلى دليل التكوين. الافتراضي هو &apos;xapiandb&apos;.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="238"/>
-        <source>The list of folders/directories to be indexed, recursively with their sub-folders.&lt;br&gt;%USERPROFILE% or the &apos;~&apos; character expand to your user profile, which is the default The &apos;~&apos; character expands to your home directory, which is the default initial value.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../confgui/confguiindex.cpp" line="331"/>
+        <location filename="../confgui/confguiindex.cpp" line="375"/>
         <source>Unac exceptions</source>
         <translation>استثناءات Unac</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="332"/>
+        <location filename="../confgui/confguiindex.cpp" line="376"/>
         <source>&lt;p&gt;These are exceptions to the unac mechanism which, by default, removes all diacritics, and performs canonic decomposition. You can override unaccenting for some characters, depending on your language, and specify additional decompositions, e.g. for ligatures. In each space-separated entry, the first character is the source one, and the rest is the translation.</source>
         <translation>هذه استثناءات من آلية إزالة العلامات التشكيلية التي تقوم بإزالة جميع العلامات التشكيلية بشكل افتراضي، وتقوم بتحليل كانوني. يمكنك تجاوز عملية إزالة العلامات التشكيلية لبعض الحروف، اعتمادًا على لغتك، وتحديد تحليلات إضافية، على سبيل المثال للربطات. في كل إدخال مفصول بمسافة، الحرف الأول هو الحرف المصدري، والبتة هي الترجمة.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="349"/>
+        <location filename="../confgui/confguiindex.cpp" line="393"/>
         <source>Process the Web history queue</source>
         <translation>معالجة طابور تاريخ الويب</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="350"/>
+        <location filename="../confgui/confguiindex.cpp" line="394"/>
         <source>Enables indexing Firefox visited pages.&lt;br&gt;(you need also install the Firefox Recoll plugin)</source>
         <translation>يمكنك تفعيل فهرسة صفحات Firefox التي تم زيارتها. (يجب أيضًا تثبيت إضافة Firefox Recoll)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="354"/>
+        <location filename="../confgui/confguiindex.cpp" line="398"/>
         <source>Web page store directory name</source>
         <translation>اسم دليل متجر الصفحة الإلكترونية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="355"/>
+        <location filename="../confgui/confguiindex.cpp" line="399"/>
         <source>The name for a directory where to store the copies of visited web pages.&lt;br&gt;A non-absolute path is taken relative to the configuration directory.</source>
         <translation>الاسم لدليل حيث يتم تخزين نسخ من صفحات الويب التي تم زيارتها. يتم اتخاذ مسار غير مطلق بالنسبة إلى دليل التكوين.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="360"/>
+        <location filename="../confgui/confguiindex.cpp" line="404"/>
         <source>Max. size for the web store (MB)</source>
         <translation>الحد الأقصى لحجم المتجر الإلكتروني (ميجابايت)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="361"/>
+        <location filename="../confgui/confguiindex.cpp" line="405"/>
         <source>Entries will be recycled once the size is reached.&lt;br&gt;Only increasing the size really makes sense because reducing the value will not truncate an existing file (only waste space at the end).</source>
         <translation>سيتم إعادة تدوير الإدخالات بمجرد الوصول إلى الحجم المحدد. الزيادة فقط في الحجم تجعل فعلاً معنى لأن تقليل القيمة لن يقوم بقص ملف موجود (سيؤدي فقط إلى إهدار المساحة في النهاية).</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="370"/>
+        <location filename="../confgui/confguiindex.cpp" line="414"/>
         <source>Page recycle interval</source>
         <translation>فترة إعادة تحميل الصفحة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="371"/>
+        <location filename="../confgui/confguiindex.cpp" line="415"/>
         <source>&lt;p&gt;By default, only one instance of an URL is kept in the cache. This can be changed by setting this to a value determining at what frequency we keep multiple instances (&apos;day&apos;, &apos;week&apos;, &apos;month&apos;, &apos;year&apos;). Note that increasing the interval will not erase existing entries.</source>
         <translation>بشكل افتراضي، يتم الاحتفاظ بنسخة واحدة فقط من عنوان URL في الذاكرة المؤقتة. يمكن تغيير هذا عن طريق تعيين قيمة تحدد تردد الاحتفاظ بعدة نسخ (&apos;يوم&apos;، &apos;أسبوع&apos;، &apos;شهر&apos;، &apos;سنة&apos;). يرجى ملاحظة أن زيادة الفاصل الزمني لن تمحو الإدخالات الحالية.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="384"/>
+        <location filename="../confgui/confguiindex.cpp" line="428"/>
         <source>Note: old pages will be erased to make space for new ones when the maximum size is reached. Current size: %1</source>
         <translation>ملاحظة: سيتم مسح الصفحات القديمة لإفساح المجال للصفحات الجديدة عند الوصول إلى الحجم الأقصى. الحجم الحالي: %1</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="390"/>
+        <location filename="../confgui/confguiindex.cpp" line="434"/>
         <source>Browser add-on download folder</source>
         <translation>مجلد تنزيل إضافة المتصفح</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="391"/>
+        <location filename="../confgui/confguiindex.cpp" line="435"/>
         <source>Only set this if you set the &quot;Downloads subdirectory&quot; parameter in the Web browser add-on settings. &lt;br&gt;In this case, it should be the full path to the directory (e.g. /home/[me]/Downloads/my-subdir)</source>
         <translation>قم بتعيين هذا فقط إذا قمت بتعيين معلمة &quot;الدليل الفرعي للتنزيلات&quot; في إعدادات إضافة متصفح الويب. &lt;br&gt; في هذه الحالة، يجب أن يكون المسار الكامل إلى الدليل (على سبيل المثال /home/[me]/Downloads/my-subdir)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="404"/>
+        <location filename="../confgui/confguiindex.cpp" line="448"/>
         <source>Automatic diacritics sensitivity</source>
         <translation>حساسية التشكيل التلقائي</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="405"/>
+        <location filename="../confgui/confguiindex.cpp" line="449"/>
         <source>&lt;p&gt;Automatically trigger diacritics sensitivity if the search term has accented characters (not in unac_except_trans). Else you need to use the query language and the &lt;i&gt;D&lt;/i&gt; modifier to specify diacritics sensitivity.</source>
         <translation>تفعيل حساسية الحركات تلقائيًا إذا كانت كلمة البحث تحتوي على حروف ملونة (ليست ضمن unac_except_trans). وإلا، يجب عليك استخدام لغة الاستعلام والمعدل &lt;i&gt;D&lt;/i&gt; لتحديد حساسية الحركات.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="412"/>
+        <location filename="../confgui/confguiindex.cpp" line="456"/>
         <source>Automatic character case sensitivity</source>
         <translation>حساسية حالة الأحرف التلقائية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="413"/>
+        <location filename="../confgui/confguiindex.cpp" line="457"/>
         <source>&lt;p&gt;Automatically trigger character case sensitivity if the entry has upper-case characters in any but the first position. Else you need to use the query language and the &lt;i&gt;C&lt;/i&gt; modifier to specify character-case sensitivity.</source>
         <translation>&lt;p&gt;تفعيل حساسية حالة الأحرف تلقائيًا إذا كانت الإدخال تحتوي على أحرف كبيرة في أي مكان غير الموقع الأول. وإلا، يجب عليك استخدام لغة الاستعلام والمعدل &lt;i&gt;C&lt;/i&gt; لتحديد حساسية حالة الأحرف.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="422"/>
+        <location filename="../confgui/confguiindex.cpp" line="466"/>
         <source>Maximum term expansion count</source>
         <translation>الحد الأقصى لعدد توسيع المصطلحات</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="423"/>
+        <location filename="../confgui/confguiindex.cpp" line="467"/>
         <source>&lt;p&gt;Maximum expansion count for a single term (e.g.: when using wildcards). The default of 10 000 is reasonable and will avoid queries that appear frozen while the engine is walking the term list.</source>
         <translation>الحد الأقصى لعدد التوسيع لمصطلح واحد (على سبيل المثال: عند استخدام البدائل). القيمة الافتراضية هي 10،000 وهي معقولة وستجنب الاستعلامات التي تبدو متجمدة أثناء تصفح قائمة المصطلحات.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="430"/>
+        <location filename="../confgui/confguiindex.cpp" line="474"/>
         <source>Maximum Xapian clauses count</source>
         <translation>الحد الأقصى لعدد شروط Xapian</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="431"/>
+        <location filename="../confgui/confguiindex.cpp" line="475"/>
         <source>&lt;p&gt;Maximum number of elementary clauses we add to a single Xapian query. In some cases, the result of term expansion can be multiplicative, and we want to avoid using excessive memory. The default of 100 000 should be both high enough in most cases and compatible with current typical hardware configurations.</source>
         <translation>الحد الأقصى لعدد العبارات الأساسية التي نضيفها إلى استعلام Xapian واحد. في بعض الحالات، يمكن أن يكون نتيجة توسيع المصطلح مضاعفًا، ونريد تجنب استخدام الذاكرة بشكل مفرط. يجب أن يكون الإعداد الافتراضي لعدد 100،000 كافيًا في معظم الحالات ومتوافقًا مع تكوينات الأجهزة الحالية النموذجية.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="441"/>
+        <location filename="../confgui/confguiindex.cpp" line="485"/>
         <source>Store some GUI parameters locally to the index</source>
         <translation>قم بتخزين بعض معلمات واجهة المستخدم الرسومية محليًا في الفهرس</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="442"/>
+        <location filename="../confgui/confguiindex.cpp" line="486"/>
         <source>&lt;p&gt;GUI settings are normally stored in a global file, valid for all indexes. Setting this parameter will make some settings, such as the result table setup, specific to the index</source>
         <translation>إعدادات واجهة المستخدم الرسومية عادة ما تكون مخزنة في ملف عام، صالح لجميع الفهارس. تعيين هذا المعلمة سيجعل بعض الإعدادات، مثل إعداد جدول النتائج، محددة للفهرس.</translation>
     </message>
@@ -564,70 +558,70 @@
 <context>
     <name>ConfSubPanelW</name>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="529"/>
+        <location filename="../confgui/confguiindex.cpp" line="579"/>
         <source>Only mime types</source>
         <translation>أنواع الـ MIME فقط</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="530"/>
+        <location filename="../confgui/confguiindex.cpp" line="580"/>
         <source>An exclusive list of indexed mime types.&lt;br&gt;Nothing else will be indexed. Normally empty and inactive</source>
         <translation>قائمة حصرية من أنواع الـ MIME المُفهرسة. لن يتم فهرسة أي شيء آخر. عادة ما تكون فارغة وغير نشطة.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="539"/>
+        <location filename="../confgui/confguiindex.cpp" line="589"/>
         <source>Exclude mime types</source>
         <translation>استبعاد أنواع الـ MIME</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="540"/>
+        <location filename="../confgui/confguiindex.cpp" line="590"/>
         <source>Mime types not to be indexed</source>
         <translation>أنواع الـ Mime التي لا يجب فهرستها</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="617"/>
+        <location filename="../confgui/confguiindex.cpp" line="667"/>
         <source>Max. compressed file size (KB)</source>
         <translation>الحد الأقصى لحجم الملف المضغوط (كيلوبايت)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="618"/>
+        <location filename="../confgui/confguiindex.cpp" line="668"/>
         <source>This value sets a threshold beyond which compressedfiles will not be processed. Set to -1 for no limit, to 0 for no decompression ever.</source>
         <translation>هذه القيمة تحدد عتبة تجاوزها لن يتم معالجة الملفات المضغوطة. ضعها على -1 لعدم وجود حد، وعلى 0 لعدم فك الضغط أبدًا.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="628"/>
+        <location filename="../confgui/confguiindex.cpp" line="678"/>
         <source>Max. text file size (MB)</source>
         <translation>الحد الأقصى لحجم ملف النص (ميجابايت)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="629"/>
+        <location filename="../confgui/confguiindex.cpp" line="679"/>
         <source>This value sets a threshold beyond which text files will not be processed. Set to -1 for no limit. 
 This is for excluding monster log files from the index.</source>
         <translation>هذه القيمة تحدد عتبة تجاوزها لن يتم معالجة ملفات النص. ضعها على -1 لعدم وجود حدود. هذا لاستبعاد ملفات سجل الوحوش من الفهرس.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="640"/>
+        <location filename="../confgui/confguiindex.cpp" line="690"/>
         <source>Text file page size (KB)</source>
         <translation>حجم صفحة الملف النصي (كيلوبايت)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="641"/>
+        <location filename="../confgui/confguiindex.cpp" line="691"/>
         <source>If this value is set (not equal to -1), text files will be split in chunks of this size for indexing.
 This will help searching very big text  files (ie: log files).</source>
         <translation>إذا تم تعيين هذه القيمة (غير مساوية لـ -1)، سيتم تقسيم ملفات النص إلى قطع بهذا الحجم للفهرسة. سيساعد هذا في البحث في ملفات النص الكبيرة جدًا (على سبيل المثال: ملفات السجل).</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="652"/>
+        <location filename="../confgui/confguiindex.cpp" line="702"/>
         <source>Max. filter exec. time (s)</source>
         <translation>الحد الأقصى لوقت تنفيذ عملية التصفية (ثواني)</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="653"/>
+        <location filename="../confgui/confguiindex.cpp" line="703"/>
         <source>External filters working longer than this will be aborted. This is for the rare case (ie: postscript) where a document could cause a filter to loop. Set to -1 for no limit.
 </source>
         <translation>سيتم إيقاف تشغيل المرشحات الخارجية التي تعمل لفترة أطول من ذلك. هذا ينطبق في الحالات النادرة (على سبيل المثال: Postscript) حيث يمكن أن يتسبب المستند في حدوث حلقة في المرشح. ضبط القيمة على -1 لعدم وجود حدود.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="688"/>
+        <location filename="../confgui/confguiindex.cpp" line="738"/>
         <source>Global</source>
         <translation>عالمي</translation>
     </message>
@@ -815,6 +809,14 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
+    <name>HtmlDialog</name>
+    <message>
+        <location filename="../widgets/htmldialog.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished">حوار</translation>
+    </message>
+</context>
+<context>
     <name>IdxSchedW</name>
     <message>
         <location filename="../idxsched.ui" line="14"/>
@@ -877,17 +879,17 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Main</name>
     <message>
-        <location filename="../main.cpp" line="455"/>
+        <location filename="../main.cpp" line="454"/>
         <source>&quot;history&quot; file is damaged, please check or remove it: </source>
         <translation>ملف &quot;history&quot; تالف، يرجى التحقق أو إزالته:</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="487"/>
+        <location filename="../main.cpp" line="486"/>
         <source>No db directory in configuration</source>
         <translation>لا توجد دليل قاعدة بيانات في التكوين</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="499"/>
+        <location filename="../main.cpp" line="498"/>
         <source>Needs &quot;Show system tray icon&quot; to be set in preferences!
 </source>
         <translation>يحتاج &quot;عرض أيقونة صينية النظام&quot; إلى أن يتم تعيينه في التفضيلات!</translation>
@@ -952,6 +954,73 @@ p, li { white-space: pre-wrap; }
         <location filename="../ptrans.ui" line="122"/>
         <source>Save</source>
         <translation>حفظ</translation>
+    </message>
+</context>
+<context>
+    <name>PortabCreatW</name>
+    <message>
+        <location filename="../portabcreat.ui" line="14"/>
+        <source>Index scheduling setup</source>
+        <translation type="unfinished">إعداد جدولة الفهرس</translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.ui" line="41"/>
+        <source>Create portable installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Choose exactly one directory</source>
+        <translation type="obsolete">اختر دليلًا واحدًا تمامًا</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="obsolete">إلغاء</translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.cpp" line="38"/>
+        <source>
+&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+  p, li { white-space: pre-wrap; }
+  p { margin-top:0px; margin-bottom:0px;margin-left:0px; margin-right:0px;
+    -qt-block-indent:0; text-indent:0px;}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body style=&quot;font-family:&apos;Sans Serif&apos;; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p&gt;This tool creates a portable Recoll configuration on a movable volume (e.g. thumbdrive). 
+It will copy the %1 to the volume and create an initial configuration there. 
+The directory names for the %2 (&lt;em&gt;%3&lt;/em&gt;) and configuration (&lt;em&gt;recoll-config&lt;/em&gt;) are 
+used to detect a portable installation and should not be changed.
+&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;
+                                      </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.cpp" line="58"/>
+        <source>
+This will let you chose the location, and initialize it. 
+You will then need to start a new Recoll instance from the installation on the volume to run 
+indexing and queries there.
+                                      </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.cpp" line="67"/>
+        <source>full Recoll installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.cpp" line="71"/>
+        <source>AppImage executable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../portabcreat.cpp" line="72"/>
+        <source>executable location</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1191,37 +1260,47 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="459"/>
+        <location filename="../confgui/confguiindex.cpp" line="276"/>
+        <source>Start folders</source>
+        <translation type="unfinished">بدء المجلدات</translation>
+    </message>
+    <message>
+        <location filename="../confgui/confguiindex.cpp" line="277"/>
+        <source>The list of folders/directories to be indexed, recursively with their sub-folders.&lt;br&gt;%USERPROFILE% or the &apos;~&apos; character expand to your user profile, which is the default The &apos;~&apos; character expands to your home directory, which is the default initial value.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../confgui/confguiindex.cpp" line="509"/>
         <source>&lt;b&gt;Customised subtrees</source>
         <translation>الأشجار الفرعية المخصصة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="460"/>
+        <location filename="../confgui/confguiindex.cpp" line="510"/>
         <source>The list of subdirectories in the indexed hierarchy &lt;br&gt;where some parameters need to be redefined. Default: empty.</source>
         <translation>قائمة الدلائل الفرعية في التسلسل الهرمي المفهرس حيث تحتاج بعض المعلمات إلى إعادة تعريفها. الافتراضي: فارغ.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="491"/>
+        <location filename="../confgui/confguiindex.cpp" line="540"/>
         <source>&lt;i&gt;The parameters that follow are set either at the top level, if nothing or an empty line is selected in the listbox above, or for the selected subdirectory. You can add or remove directories by clicking the +/- buttons.</source>
         <translation>المعلمات التي تتبعها مضبوطة إما على المستوى العلوي، إذا لم يتم تحديد شيء أو سطر فارغ في صندوق القائمة أعلاه، أو للدليل الفرعي المحدد. يمكنك إضافة أو إزالة الدلائل عن طريق النقر على الأزرار +/- .</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="513"/>
+        <location filename="../confgui/confguiindex.cpp" line="563"/>
         <source>Skipped names</source>
         <translation>الأسماء المتخطاة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="514"/>
+        <location filename="../confgui/confguiindex.cpp" line="564"/>
         <source>These are patterns for file or directory names which should not be indexed.</source>
         <translation>هذه هي الأنماط لأسماء الملفات أو الدلائل التي لا يجب فهرستها.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="550"/>
+        <location filename="../confgui/confguiindex.cpp" line="600"/>
         <source>Ignored endings</source>
         <translation>النهايات المتجاهلة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="551"/>
+        <location filename="../confgui/confguiindex.cpp" line="601"/>
         <source>noContentSuffixes configuration variable: these are file name endings for files which will be indexed by name only 
 (no MIME type identification attempt, no decompression, no content indexing).</source>
         <translation type="unfinished"></translation>
@@ -1232,33 +1311,33 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">هذه هي نهايات أسماء الملفات للملفات التي سيتم فهرسة اسمها فقط (لا محاولة لتحديد نوع MIME، لا فك الضغط، لا فهرسة المحتوى).</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="581"/>
+        <location filename="../confgui/confguiindex.cpp" line="631"/>
         <source>Default&lt;br&gt;character set</source>
         <translation>الإعداد الافتراضي&lt;br&gt;لمجموعة الأحرف</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="582"/>
+        <location filename="../confgui/confguiindex.cpp" line="632"/>
         <source>Character set used for reading files which do not identify the character set internally, for example pure text files.&lt;br&gt;The default value is empty, and the value from the NLS environnement is used.</source>
         <translation>مجموعة الأحرف المستخدمة لقراءة الملفات التي لا تحدد مجموعة الأحرف داخليًا، على سبيل المثال ملفات النص النقي.
 القيمة الافتراضية فارغة، ويتم استخدام القيمة من بيئة NLS.</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="595"/>
+        <location filename="../confgui/confguiindex.cpp" line="645"/>
         <source>Follow symbolic links</source>
         <translation>اتبع الروابط الرمزية</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="596"/>
+        <location filename="../confgui/confguiindex.cpp" line="646"/>
         <source>Follow symbolic links while indexing. The default is no, to avoid duplicate indexing</source>
         <translation>اتبع الروابط الرمزية أثناء فهرسة المحتوى. الإعداد الافتراضي هو لا، لتجنب فهرسة مكررة</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="606"/>
+        <location filename="../confgui/confguiindex.cpp" line="656"/>
         <source>Index all file names</source>
         <translation>فهرسة جميع أسماء الملفات</translation>
     </message>
     <message>
-        <location filename="../confgui/confguiindex.cpp" line="607"/>
+        <location filename="../confgui/confguiindex.cpp" line="657"/>
         <source>Index the names of files for which the contents cannot be identified or processed (no or unsupported mime type). Default true</source>
         <translation>فهرسة أسماء الملفات التي لا يمكن تحديد محتواها أو معالجته (بدون نوع MIME غير مدعوم). القيمة الافتراضية صحيحة</translation>
     </message>
@@ -1311,9 +1390,8 @@ p, li { white-space: pre-wrap; }
         <translation>تشغيل النصية</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="101"/>
         <source>Copy &amp;File Path</source>
-        <translation>انسخ مسار الملف</translation>
+        <translation type="vanished">انسخ مسار الملف</translation>
     </message>
     <message>
         <location filename="../respopup.cpp" line="103"/>
@@ -1321,52 +1399,70 @@ p, li { white-space: pre-wrap; }
         <translation>انسخ الرابط &amp;URL</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="104"/>
         <source>Copy File Name</source>
-        <translation>انسخ اسم الملف</translation>
+        <translation type="vanished">انسخ اسم الملف</translation>
+    </message>
+    <message>
+        <source>Copy Text</source>
+        <translation type="vanished">نسخ النص</translation>
+    </message>
+    <message>
+        <location filename="../respopup.cpp" line="101"/>
+        <source>Copy File &amp;Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../respopup.cpp" line="104"/>
+        <source>Copy File &amp;Name</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../respopup.cpp" line="105"/>
-        <source>Copy Text</source>
-        <translation>نسخ النص</translation>
+        <source>Copy &amp;Text</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="108"/>
+        <location filename="../respopup.cpp" line="109"/>
+        <source>&amp;Copy to File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../respopup.cpp" line="111"/>
         <source>&amp;Write to File</source>
         <translation>اكتب إلى الملف</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="111"/>
+        <location filename="../respopup.cpp" line="115"/>
         <source>Save selection to files</source>
         <translation>حفظ التحديد في ملفات</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="120"/>
+        <location filename="../respopup.cpp" line="124"/>
         <source>Preview P&amp;arent document/folder</source>
         <translation>معاينة المستند/المجلد الأصلي</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="122"/>
+        <location filename="../respopup.cpp" line="126"/>
         <source>&amp;Open Parent document</source>
         <translation>افتح المستند الأصلي</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="125"/>
+        <location filename="../respopup.cpp" line="129"/>
         <source>&amp;Open Parent Folder</source>
         <translation>افتح المجلد الأصلي</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="128"/>
+        <location filename="../respopup.cpp" line="132"/>
         <source>Find &amp;similar documents</source>
         <translation>البحث عن المستندات المماثلة</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="131"/>
+        <location filename="../respopup.cpp" line="135"/>
         <source>Open &amp;Snippets window</source>
         <translation>افتح نافذة القصاصات</translation>
     </message>
     <message>
-        <location filename="../respopup.cpp" line="134"/>
+        <location filename="../respopup.cpp" line="138"/>
         <source>Show subdocuments / attachments</source>
         <translation>عرض الوثائق الفرعية / المرفقات</translation>
     </message>
@@ -1374,7 +1470,7 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>QxtConfirmationMessage</name>
     <message>
-        <location filename="../widgets/qxtconfirmationmessage.cpp" line="64"/>
+        <location filename="../widgets/qxtconfirmationmessage.cpp" line="65"/>
         <source>Do not show again.</source>
         <translation>لا تظهر مرة أخرى.</translation>
     </message>
@@ -1667,52 +1763,52 @@ p، li { white-space: pre-wrap; }
         <translation>لا يمكن تحديث الفهرس: خطأ داخلي</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="106"/>
+        <location filename="../rclm_menus.cpp" line="115"/>
         <source>Simple search type</source>
         <translation>نوع البحث البسيط</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="108"/>
+        <location filename="../rclm_menus.cpp" line="117"/>
         <source>Any term</source>
         <translation>أي مصطلح</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="114"/>
+        <location filename="../rclm_menus.cpp" line="123"/>
         <source>All terms</source>
         <translation>جميع المصطلحات</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="119"/>
+        <location filename="../rclm_menus.cpp" line="128"/>
         <source>File name</source>
         <translation>اسم الملف</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="124"/>
+        <location filename="../rclm_menus.cpp" line="133"/>
         <source>Query language</source>
         <translation>لغة الاستعلام</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="131"/>
+        <location filename="../rclm_menus.cpp" line="140"/>
         <source>Semantic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="146"/>
+        <location filename="../rclm_menus.cpp" line="155"/>
         <source>Stemming language</source>
         <translation>لغة التقليم</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="148"/>
+        <location filename="../rclm_menus.cpp" line="157"/>
         <source>(no stemming)</source>
         <translation>(بدون تقليم)</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="149"/>
+        <location filename="../rclm_menus.cpp" line="158"/>
         <source>(all languages)</source>
         <translation>(جميع اللغات)</translation>
     </message>
     <message>
-        <location filename="../rclm_menus.cpp" line="163"/>
+        <location filename="../rclm_menus.cpp" line="172"/>
         <source>error retrieving stemming languages</source>
         <translation>خطأ في استرداد لغات التشتيت</translation>
     </message>
@@ -1768,53 +1864,53 @@ p، li { white-space: pre-wrap; }
         <translation>لا يمكن استرداد معلومات المستند من قاعدة البيانات</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="66"/>
+        <location filename="../rclm_saveload.cpp" line="65"/>
         <source>No search</source>
         <translation>لا توجد نتائج بحث</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="66"/>
+        <location filename="../rclm_saveload.cpp" line="65"/>
         <source>No preserved previous search</source>
         <translation>لا توجد بحث سابق محفوظ</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="72"/>
+        <location filename="../rclm_saveload.cpp" line="71"/>
         <source>Choose file to save</source>
         <translation>اختر ملف للحفظ</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="73"/>
-        <location filename="../rclm_saveload.cpp" line="108"/>
+        <location filename="../rclm_saveload.cpp" line="72"/>
+        <location filename="../rclm_saveload.cpp" line="107"/>
         <source>Saved Queries (*.rclq)</source>
         <translation>الاستعلامات المحفوظة (*.rclq)</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="99"/>
+        <location filename="../rclm_saveload.cpp" line="98"/>
         <source>Write failed</source>
         <translation>فشل الكتابة</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="99"/>
+        <location filename="../rclm_saveload.cpp" line="98"/>
         <source>Could not write to file</source>
         <translation>تعذر الكتابة إلى الملف</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="115"/>
+        <location filename="../rclm_saveload.cpp" line="114"/>
         <source>Read failed</source>
         <translation>فشلت القراءة</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="115"/>
+        <location filename="../rclm_saveload.cpp" line="114"/>
         <source>Could not open file: </source>
         <translation>تعذر فتح الملف:</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="135"/>
+        <location filename="../rclm_saveload.cpp" line="134"/>
         <source>Load error</source>
         <translation>خطأ في التحميل</translation>
     </message>
     <message>
-        <location filename="../rclm_saveload.cpp" line="135"/>
+        <location filename="../rclm_saveload.cpp" line="134"/>
         <source>Could not load saved query</source>
         <translation>تعذر تحميل الاستعلام المحفوظ</translation>
     </message>
@@ -1865,7 +1961,7 @@ Do you want to start the preferences dialog ?</source>
     </message>
     <message>
         <location filename="../rclm_view.cpp" line="433"/>
-        <location filename="../rclmain_w.cpp" line="1103"/>
+        <location filename="../rclmain_w.cpp" line="1106"/>
         <source>Cannot extract document or create temporary file</source>
         <translation>لا يمكن استخراج المستند أو إنشاء ملف مؤقت</translation>
     </message>
@@ -1890,84 +1986,84 @@ Do you want to start the preferences dialog ?</source>
         <translation>تنفيذ: [</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="94"/>
+        <location filename="../rclm_wins.cpp" line="95"/>
         <source>Unknown indexer state. Can&apos;t access webcache file.</source>
         <translation>حالة المؤشر غير معروفة. لا يمكن الوصول إلى ملف الذاكرة المؤقتة على الويب.</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="99"/>
+        <location filename="../rclm_wins.cpp" line="100"/>
         <source>Indexer is running. Can&apos;t access webcache file.</source>
         <translation>الفهرس يعمل. لا يمكن الوصول إلى ملف الذاكرة المؤقتة على الويب.</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="241"/>
+        <location filename="../rclm_wins.cpp" line="242"/>
         <source>Batch scheduling</source>
         <translation>جدولة الدفعة</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="243"/>
+        <location filename="../rclm_wins.cpp" line="244"/>
         <source>The tool will let you decide at what time indexing should run.  It uses the Windows task scheduler.</source>
         <translation>سيتيح لك الأداة تحديد وقت تشغيل فهرسة البيانات. تستخدم جدول المهام في نظام Windows.</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="254"/>
+        <location filename="../rclm_wins.cpp" line="255"/>
         <source>Disabled because the real time indexer was not compiled in.</source>
         <translation>تم تعطيله بسبب عدم تضمين مؤشر الوقت الحقيقي في الترجمة.</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="367"/>
+        <location filename="../rclm_wins.cpp" line="382"/>
         <source>About Recoll</source>
         <translation>حول Recoll</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="375"/>
+        <location filename="../rclm_wins.cpp" line="390"/>
         <source>No information: initial indexing not yet performed.</source>
         <translation>لا توجد معلومات: لم يتم بعد إجراء فهرسة أولية.</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="379"/>
+        <location filename="../rclm_wins.cpp" line="394"/>
         <source>External applications/commands needed for your file types and not found, as stored by the last indexing pass in </source>
         <translation>التطبيقات/الأوامر الخارجية اللازمة لأنواع الملفات الخاصة بك والتي لم يتم العثور عليها، كما تم تخزينها خلال آخر عملية فهرسة في</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="387"/>
+        <location filename="../rclm_wins.cpp" line="402"/>
         <source>No helpers found missing</source>
         <translation>لم يتم العثور على مساعدين مفقودين</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="390"/>
+        <location filename="../rclm_wins.cpp" line="405"/>
         <source>Missing helper programs</source>
         <translation>البرامج المساعدة المفقودة</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="398"/>
-        <location filename="../rclm_wins.cpp" line="408"/>
+        <location filename="../rclm_wins.cpp" line="413"/>
+        <location filename="../rclm_wins.cpp" line="423"/>
         <source>Error</source>
         <translation>خطأ</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="409"/>
+        <location filename="../rclm_wins.cpp" line="424"/>
         <source>Index query error</source>
         <translation>خطأ في استعلام الفهرس</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="447"/>
+        <location filename="../rclm_wins.cpp" line="462"/>
         <source>Indexed MIME Types</source>
         <translation>أنواع MIME المُفَهَرَسَة</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="450"/>
+        <location filename="../rclm_wins.cpp" line="465"/>
         <source>Content has been indexed for these MIME types:</source>
         <translation>تم فهرسة المحتوى لهذه الأنواع MIME:</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="459"/>
+        <location filename="../rclm_wins.cpp" line="474"/>
         <source>Types list empty: maybe wait for indexing to progress?</source>
         <translation>قائمة الأنواع فارغة: ربما يجب الانتظار حتى يتقدم عملية الفهرسة؟</translation>
     </message>
     <message>
-        <location filename="../rclm_wins.cpp" line="478"/>
-        <location filename="../rclm_wins.cpp" line="479"/>
+        <location filename="../rclm_wins.cpp" line="493"/>
+        <location filename="../rclm_wins.cpp" line="494"/>
         <source>Duplicates</source>
         <translation>التكرارات</translation>
     </message>
@@ -2023,145 +2119,145 @@ Do you want to start the preferences dialog ?</source>
         <translation>أدوات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="439"/>
+        <location filename="../rclmain_w.cpp" line="438"/>
         <source>Results</source>
         <translation>النتائج</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="493"/>
-        <location filename="../rclmain_w.cpp" line="502"/>
-        <location filename="../rclmain_w.cpp" line="518"/>
-        <location filename="../rclmain_w.cpp" line="533"/>
+        <location filename="../rclmain_w.cpp" line="492"/>
+        <location filename="../rclmain_w.cpp" line="501"/>
+        <location filename="../rclmain_w.cpp" line="517"/>
+        <location filename="../rclmain_w.cpp" line="532"/>
         <source>All</source>
         <translation>الكل</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="493"/>
+        <location filename="../rclmain_w.cpp" line="492"/>
         <source>media</source>
         <translation>وسائل الإعلام</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="493"/>
+        <location filename="../rclmain_w.cpp" line="492"/>
         <source>message</source>
         <translation>رسالة</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="494"/>
+        <location filename="../rclmain_w.cpp" line="493"/>
         <source>other</source>
         <translation>آخر</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="494"/>
+        <location filename="../rclmain_w.cpp" line="493"/>
         <source>presentation</source>
         <translation>العرض</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="495"/>
+        <location filename="../rclmain_w.cpp" line="494"/>
         <source>spreadsheet</source>
         <translation>جدول بيانات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="495"/>
+        <location filename="../rclmain_w.cpp" line="494"/>
         <source>text</source>
         <translation>نص</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="496"/>
-        <location filename="../rclmain_w.cpp" line="1018"/>
+        <location filename="../rclmain_w.cpp" line="495"/>
+        <location filename="../rclmain_w.cpp" line="1022"/>
         <source>sorted</source>
         <translation>مرتب</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="496"/>
-        <location filename="../rclmain_w.cpp" line="1020"/>
+        <location filename="../rclmain_w.cpp" line="495"/>
+        <location filename="../rclmain_w.cpp" line="1024"/>
         <source>filtered</source>
         <translation>تمت تصفية</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="503"/>
+        <location filename="../rclmain_w.cpp" line="502"/>
         <source>Document filter</source>
         <translation>تصفية المستندات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="530"/>
+        <location filename="../rclmain_w.cpp" line="529"/>
         <source>F&amp;ilter</source>
         <translation>تصفية</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="650"/>
+        <location filename="../rclmain_w.cpp" line="649"/>
         <source>Main index open error: </source>
         <translation>خطأ في فتح الفهرس الرئيسي:</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="651"/>
+        <location filename="../rclmain_w.cpp" line="650"/>
         <source>. The index may be corrupted. Maybe try to run xapian-check or rebuild the index ?.</source>
         <translation>قد يكون الفهرس تالفًا. ربما حاول تشغيل xapian-check أو إعادة بناء الفهرس؟.</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="655"/>
+        <location filename="../rclmain_w.cpp" line="654"/>
         <source>Could not open external index. Db not open. Check external index list.</source>
         <translation>تعذر فتح الفهرس الخارجي. قاعدة البيانات غير مفتوحة. يرجى التحقق من قائمة الفهارس الخارجية.</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="831"/>
+        <location filename="../rclmain_w.cpp" line="835"/>
         <source>Can&apos;t set synonyms file (parse error?)</source>
         <translation>لا يمكن تعيين ملف المرادفات (خطأ في التحليل؟)</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="853"/>
-        <location filename="../rclmain_w.cpp" line="862"/>
+        <location filename="../rclmain_w.cpp" line="857"/>
+        <location filename="../rclmain_w.cpp" line="866"/>
         <source>Query results</source>
         <translation>نتائج الاستعلامات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="903"/>
+        <location filename="../rclmain_w.cpp" line="907"/>
         <source>Query in progress.&lt;br&gt;Due to limitations of the indexing library,&lt;br&gt;cancelling will exit the program</source>
         <translation>الاستعلام قيد التقدم. نظرًا لقيود مكتبة الفهرسة، سيؤدي إلغاء العملية إلى خروج البرنامج.</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="935"/>
+        <location filename="../rclmain_w.cpp" line="939"/>
         <source>Result count (est.)</source>
         <translation>عدد النتائج (تقديري)</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="937"/>
+        <location filename="../rclmain_w.cpp" line="941"/>
         <source>No results found</source>
         <translation>لم يتم العثور على نتائج</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1099"/>
+        <location filename="../rclmain_w.cpp" line="1102"/>
         <source>Save file</source>
         <translation>حفظ الملف</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1123"/>
-        <location filename="../rclmain_w.cpp" line="1124"/>
+        <location filename="../rclmain_w.cpp" line="1126"/>
+        <location filename="../rclmain_w.cpp" line="1127"/>
         <source>Sub-documents and attachments</source>
         <translation>الوثائق الفرعية والمرفقات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1175"/>
-        <location filename="../rclmain_w.cpp" line="1181"/>
+        <location filename="../rclmain_w.cpp" line="1178"/>
+        <location filename="../rclmain_w.cpp" line="1184"/>
         <source>History data</source>
         <translation>بيانات التاريخ</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1180"/>
+        <location filename="../rclmain_w.cpp" line="1183"/>
         <source>Document history</source>
         <translation>سجل المستندات</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1206"/>
+        <location filename="../rclmain_w.cpp" line="1209"/>
         <source>Confirm</source>
         <translation>تأكيد</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1207"/>
+        <location filename="../rclmain_w.cpp" line="1210"/>
         <source>Erasing simple and advanced search history lists, please click Ok to confirm</source>
         <translation>مسح قوائم تاريخ البحث البسيط والمتقدم، يرجى النقر على موافق للتأكيد</translation>
     </message>
     <message>
-        <location filename="../rclmain_w.cpp" line="1233"/>
+        <location filename="../rclmain_w.cpp" line="1236"/>
         <source>Could not open/create file</source>
         <translation>تعذر فتح/إنشاء الملف</translation>
     </message>
@@ -2387,128 +2483,133 @@ Do you want to start the preferences dialog ?</source>
     </message>
     <message>
         <location filename="../rclmain.ui" line="492"/>
+        <source>Create portable installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../rclmain.ui" line="500"/>
         <source>&amp;GUI configuration</source>
         <translation>تكوين واجهة المستخدم (GUI)</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="500"/>
+        <location filename="../rclmain.ui" line="508"/>
         <source>E&amp;xternal index dialog</source>
         <translation>حوار فهرس خارجي</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="503"/>
+        <location filename="../rclmain.ui" line="511"/>
         <source>External index dialog</source>
         <translation>مربع حوار الفهرس الخارجي</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="514"/>
-        <location filename="../rclmain.ui" line="517"/>
+        <location filename="../rclmain.ui" line="522"/>
+        <location filename="../rclmain.ui" line="525"/>
         <source>Enable synonyms</source>
         <translation>تمكين المرادفات</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="525"/>
+        <location filename="../rclmain.ui" line="533"/>
         <source>&amp;Full Screen</source>
         <translation>شاشة كاملة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="528"/>
+        <location filename="../rclmain.ui" line="536"/>
         <source>Full Screen</source>
         <translation>شاشة كاملة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="531"/>
+        <location filename="../rclmain.ui" line="539"/>
         <source>F11</source>
         <translation>F11
 المفتاح F11</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="539"/>
+        <location filename="../rclmain.ui" line="547"/>
         <source>Increase results text font size</source>
         <translation>زيادة حجم الخط لنص النتائج</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="542"/>
+        <location filename="../rclmain.ui" line="550"/>
         <source>Increase Font Size</source>
         <translation>زيادة حجم الخط</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="550"/>
+        <location filename="../rclmain.ui" line="558"/>
         <source>Decrease results text font size</source>
         <translation>تقليل حجم خط نص النتائج</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="553"/>
+        <location filename="../rclmain.ui" line="561"/>
         <source>Decrease Font Size</source>
         <translation>تقليل حجم الخط</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="571"/>
+        <location filename="../rclmain.ui" line="579"/>
         <source>Sort by date, oldest first</source>
         <translation>فرز حسب التاريخ، الأقدم أولاً</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="574"/>
+        <location filename="../rclmain.ui" line="582"/>
         <source>Sort by dates from oldest to newest</source>
         <translation>فرز حسب التواريخ من الأقدم إلى الأحدث</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="589"/>
+        <location filename="../rclmain.ui" line="597"/>
         <source>Sort by date, newest first</source>
         <translation>فرز حسب التاريخ، الأحدث أولاً</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="592"/>
+        <location filename="../rclmain.ui" line="600"/>
         <source>Sort by dates from newest to oldest</source>
         <translation>فرز حسب التواريخ من الأحدث إلى الأقدم</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="597"/>
+        <location filename="../rclmain.ui" line="605"/>
         <source>Show Query Details</source>
         <translation>عرض تفاصيل الاستعلام</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="609"/>
+        <location filename="../rclmain.ui" line="617"/>
         <source>Show as table</source>
         <translation>عرض كجدول</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="612"/>
+        <location filename="../rclmain.ui" line="620"/>
         <source>Show results in a spreadsheet-like table</source>
         <translation>عرض النتائج في جدول يشبه جدول الجداول الإلكترونية</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="617"/>
+        <location filename="../rclmain.ui" line="625"/>
         <source>Save as CSV (spreadsheet) file</source>
         <translation>حفظ كملف CSV (جدول بيانات)</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="620"/>
+        <location filename="../rclmain.ui" line="628"/>
         <source>Saves the result into a file which you can load in a spreadsheet</source>
         <translation>يحفظ النتيجة في ملف يمكنك تحميله في جدول بيانات</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="625"/>
+        <location filename="../rclmain.ui" line="633"/>
         <source>Next Page</source>
         <translation>الصفحة التالية</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="630"/>
+        <location filename="../rclmain.ui" line="638"/>
         <source>Previous Page</source>
         <translation>الصفحة السابقة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="635"/>
+        <location filename="../rclmain.ui" line="643"/>
         <source>First Page</source>
         <translation>الصفحة الأولى</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="644"/>
+        <location filename="../rclmain.ui" line="652"/>
         <source>Query Fragments</source>
         <translation>قطع الاستعلامات</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="652"/>
+        <location filename="../rclmain.ui" line="660"/>
         <source>    With failed files retrying</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2517,47 +2618,47 @@ Do you want to start the preferences dialog ?</source>
         <translation type="vanished">مع إعادة محاولة الملفات الفاشلة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="655"/>
+        <location filename="../rclmain.ui" line="663"/>
         <source>Next update will retry previously failed files</source>
         <translation>التحديث القادم سيعيد محاولة تنزيل الملفات التي فشلت سابقاً</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="663"/>
+        <location filename="../rclmain.ui" line="671"/>
         <source>Save last query</source>
         <translation>حفظ الاستعلام الأخير</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="668"/>
+        <location filename="../rclmain.ui" line="676"/>
         <source>Load saved query</source>
         <translation>تحميل الاستعلام المحفوظ</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="673"/>
+        <location filename="../rclmain.ui" line="681"/>
         <source>Special Indexing</source>
         <translation>الفهرسة الخاصة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="676"/>
+        <location filename="../rclmain.ui" line="684"/>
         <source>Indexing with special options</source>
         <translation>الفهرسة بخيارات خاصة</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="681"/>
+        <location filename="../rclmain.ui" line="689"/>
         <source>Switch Configuration...</source>
         <translation>تكوين التبديل...</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="684"/>
+        <location filename="../rclmain.ui" line="692"/>
         <source>Choose another configuration to run on, replacing this process</source>
         <translation>اختر تكوينًا آخر لتشغيله، لاستبدال هذه العملية</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="689"/>
+        <location filename="../rclmain.ui" line="697"/>
         <source>Index &amp;statistics</source>
         <translation>الفهرس والإحصائيات</translation>
     </message>
     <message>
-        <location filename="../rclmain.ui" line="694"/>
+        <location filename="../rclmain.ui" line="702"/>
         <source>Webcache Editor</source>
         <translation>محرر ذاكرة التخزين المؤقت على الويب</translation>
     </message>
@@ -3682,91 +3783,91 @@ Do you want to start the preferences dialog ?</source>
         <translation>النظام</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="275"/>
-        <location filename="../uiprefs_w.cpp" line="284"/>
-        <location filename="../uiprefs_w.cpp" line="326"/>
-        <location filename="../uiprefs_w.cpp" line="674"/>
-        <location filename="../uiprefs_w.cpp" line="683"/>
+        <location filename="../uiprefs_w.cpp" line="274"/>
+        <location filename="../uiprefs_w.cpp" line="283"/>
+        <location filename="../uiprefs_w.cpp" line="325"/>
+        <location filename="../uiprefs_w.cpp" line="672"/>
+        <location filename="../uiprefs_w.cpp" line="681"/>
         <source>Choose</source>
         <translation>اختر</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="301"/>
+        <location filename="../uiprefs_w.cpp" line="300"/>
         <source>error retrieving stemming languages</source>
         <translation>خطأ في استرداد لغات التشتيت</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="359"/>
+        <location filename="../uiprefs_w.cpp" line="358"/>
         <source>Context</source>
         <translation>السياق</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="360"/>
+        <location filename="../uiprefs_w.cpp" line="359"/>
         <source>Description</source>
         <translation>الوصف</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="361"/>
+        <location filename="../uiprefs_w.cpp" line="360"/>
         <source>Shortcut</source>
         <translation>اختصار</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="362"/>
+        <location filename="../uiprefs_w.cpp" line="361"/>
         <source>Default</source>
         <translation>الافتراضي</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="410"/>
+        <location filename="../uiprefs_w.cpp" line="409"/>
         <source>Default QtWebkit font</source>
         <translation>الخط الافتراضي لـ QtWebkit</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="574"/>
+        <location filename="../uiprefs_w.cpp" line="572"/>
         <source>Result list paragraph format (erase all to reset to default)</source>
         <translation>تنسيق الفقرة في قائمة النتائج (امسح الكل لإعادة الضبط إلى الوضع الافتراضي)</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="584"/>
+        <location filename="../uiprefs_w.cpp" line="582"/>
         <source>Result list header (default is empty)</source>
         <translation>عنوان قائمة النتائج (الافتراضي فارغ)</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="643"/>
+        <location filename="../uiprefs_w.cpp" line="641"/>
         <source>Choose QSS File</source>
         <translation>اختر ملف QSS</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="740"/>
+        <location filename="../uiprefs_w.cpp" line="738"/>
         <source>At most one index should be selected</source>
         <translation>يجب تحديد فهرس واحد على الأكثر</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="802"/>
+        <location filename="../uiprefs_w.cpp" line="800"/>
         <source>Select recoll config directory or xapian index directory (e.g.: /home/me/.recoll or /home/me/.recoll/xapiandb)</source>
         <translation>حدد دليل تكوين recoll أو دليل فهرس xapian (على سبيل المثال: /home/me/.recoll أو /home/me/.recoll/xapiandb)</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="816"/>
+        <location filename="../uiprefs_w.cpp" line="814"/>
         <source>The selected directory looks like a Recoll configuration directory but the configuration could not be read</source>
         <translation>يبدو أن المجلد المحدد يشبه مجلد تكوين Recoll ولكن لم يتم قراءة التكوين.</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="826"/>
+        <location filename="../uiprefs_w.cpp" line="824"/>
         <source>The selected directory does not appear to be a Xapian index</source>
         <translation>الدليل المحدد لا يبدو أنه فهرس Xapian</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="832"/>
+        <location filename="../uiprefs_w.cpp" line="830"/>
         <source>Can&apos;t add index with different case/diacritics stripping option.</source>
         <translation>لا يمكن إضافة فهرس بخيار تجريد الحالات/الحركات المختلفة.</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="837"/>
+        <location filename="../uiprefs_w.cpp" line="835"/>
         <source>This is the main/local index!</source>
         <translation>هذا هو الفهرس الرئيسي/المحلي!</translation>
     </message>
     <message>
-        <location filename="../uiprefs_w.cpp" line="846"/>
+        <location filename="../uiprefs_w.cpp" line="844"/>
         <source>The selected directory is already in the index list</source>
         <translation>المجلد المحدد موجود بالفعل في قائمة الفهرس.</translation>
     </message>
@@ -3774,22 +3875,22 @@ Do you want to start the preferences dialog ?</source>
 <context>
     <name>ViewAction</name>
     <message>
-        <location filename="../viewaction_w.cpp" line="123"/>
+        <location filename="../viewaction_w.cpp" line="121"/>
         <source>Desktop Default</source>
         <translation>الإعدادات الافتراضية لسطح المكتب</translation>
     </message>
     <message>
-        <location filename="../viewaction_w.cpp" line="127"/>
+        <location filename="../viewaction_w.cpp" line="125"/>
         <source>MIME type</source>
         <translation>نوع MIME</translation>
     </message>
     <message>
-        <location filename="../viewaction_w.cpp" line="128"/>
+        <location filename="../viewaction_w.cpp" line="126"/>
         <source>Command</source>
         <translation>الأمر</translation>
     </message>
     <message>
-        <location filename="../viewaction_w.cpp" line="210"/>
+        <location filename="../viewaction_w.cpp" line="208"/>
         <source>Changing entries with different current values</source>
         <translation>تغيير الإدخالات ذات القيم الحالية المختلفة</translation>
     </message>
@@ -3883,42 +3984,42 @@ Do you want to start the preferences dialog ?</source>
 <context>
     <name>WebcacheEdit</name>
     <message>
-        <location filename="../webcache.cpp" line="280"/>
+        <location filename="../webcache.cpp" line="279"/>
         <source>Maximum size %1 (Index config.). Current size %2. Write position %3.</source>
         <translation>الحجم الأقصى %1 (تكوين الفهرس). الحجم الحالي %2. موضع الكتابة %3.</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="295"/>
+        <location filename="../webcache.cpp" line="294"/>
         <source>Copy URL</source>
         <translation>نسخ عنوان الرابط</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="296"/>
+        <location filename="../webcache.cpp" line="295"/>
         <source>Save to File</source>
         <translation>حفظ إلى ملف</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="302"/>
+        <location filename="../webcache.cpp" line="301"/>
         <source>Unknown indexer state. Can&apos;t edit webcache file.</source>
         <translation>حالة المؤشر غير معروفة. لا يمكن تحرير ملف الذاكرة المؤقتة على الويب.</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="306"/>
+        <location filename="../webcache.cpp" line="305"/>
         <source>Indexer is running. Can&apos;t edit webcache file.</source>
         <translation>الفهرس يعمل. لا يمكن تحرير ملف الذاكرة المؤقتة على الويب.</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="309"/>
+        <location filename="../webcache.cpp" line="308"/>
         <source>Delete selection</source>
         <translation>حذف التحديد</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="354"/>
+        <location filename="../webcache.cpp" line="353"/>
         <source>File creation failed: </source>
         <translation>فشل إنشاء الملف:</translation>
     </message>
     <message>
-        <location filename="../webcache.cpp" line="374"/>
+        <location filename="../webcache.cpp" line="372"/>
         <source>Webcache was modified, you will need to run the indexer after closing this window.</source>
         <translation>تم تعديل ذاكرة التخزين المؤقت على الويب، ستحتاج إلى تشغيل المؤشر بعد إغلاق هذه النافذة.</translation>
     </message>
@@ -3988,7 +4089,7 @@ Do you want to start the preferences dialog ?</source>
 <context>
     <name>confgui::ConfParamFNW</name>
     <message>
-        <location filename="../confgui/confgui.cpp" line="675"/>
+        <location filename="../confgui/confgui.cpp" line="680"/>
         <source>Choose</source>
         <translation>اختر</translation>
     </message>
@@ -3996,32 +4097,32 @@ Do you want to start the preferences dialog ?</source>
 <context>
     <name>confgui::ConfParamSLW</name>
     <message>
-        <location filename="../confgui/confgui.cpp" line="755"/>
+        <location filename="../confgui/confgui.cpp" line="760"/>
         <source>+</source>
         <translation>نص البحث: +</translation>
     </message>
     <message>
-        <location filename="../confgui/confgui.cpp" line="757"/>
+        <location filename="../confgui/confgui.cpp" line="762"/>
         <source>Add entry</source>
         <translation>إضافة إدخال</translation>
     </message>
     <message>
-        <location filename="../confgui/confgui.cpp" line="765"/>
+        <location filename="../confgui/confgui.cpp" line="770"/>
         <source>-</source>
         <translation>- وقد تم العثور على 10 نتائج.</translation>
     </message>
     <message>
-        <location filename="../confgui/confgui.cpp" line="767"/>
+        <location filename="../confgui/confgui.cpp" line="772"/>
         <source>Delete selected entries</source>
         <translation>حذف العناصر المحددة</translation>
     </message>
     <message>
-        <location filename="../confgui/confgui.cpp" line="775"/>
+        <location filename="../confgui/confgui.cpp" line="780"/>
         <source>~</source>
         <translation>البحث في النصوص</translation>
     </message>
     <message>
-        <location filename="../confgui/confgui.cpp" line="777"/>
+        <location filename="../confgui/confgui.cpp" line="782"/>
         <source>Edit selected entries</source>
         <translation>تحرير الإدخالات المحددة</translation>
     </message>

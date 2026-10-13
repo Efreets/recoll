@@ -94,6 +94,15 @@ void RclMain::buildMenus()
     toolsMenu->addAction(showMissingHelpers_Action);
     toolsMenu->addAction(showActiveTypes_Action);
     toolsMenu->addAction(actionShow_index_statistics);
+#ifdef _WIN32
+    portabCreatAction->setText(portabCreatAction->text() + ellips);
+    toolsMenu->addAction(portabCreatAction);
+#else
+    if (getenv("APPIMAGE")) {
+        portabCreatAction->setText(portabCreatAction->text() + ellips);
+        toolsMenu->addAction(portabCreatAction);
+    }
+#endif
 
     queryPrefsAction->setText(queryPrefsAction->text() + ellips);
     preferencesMenu->addAction(queryPrefsAction);

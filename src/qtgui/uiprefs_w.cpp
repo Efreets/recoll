@@ -148,7 +148,6 @@ void UIPrefsDialog::setFromPrefs()
 {
     // Most values are stored in the prefs struct. Some rarely used
     // ones go directly through the settings
-    QSettings settings;
 
     // Entries per result page spinbox
     pageLenSB->setValue(prefs.respagesize);
@@ -236,7 +235,7 @@ void UIPrefsDialog::setFromPrefs()
 
     // See qxtconfirmationmessage. Needs to be -1 for the dialog to show.
     showTempFileWarningCB->setChecked(prefs.showTempFileWarning == -1);
-    anchorTamilHackCB->setChecked(settings.value("anchorSpcHack", 0).toBool());
+    anchorTamilHackCB->setChecked(g_settings->value("anchorSpcHack", 0).toBool());
     previewHtmlCB->setChecked(prefs.previewHtml);
     previewActiveLinksCB->setChecked(prefs.previewActiveLinks);
     switch (prefs.previewPlainPre) {
@@ -419,7 +418,6 @@ void UIPrefsDialog::accept()
     emit delPTrans();
     // Most values are stored in the prefs struct. Some rarely used
     // ones go directly through the settings
-    QSettings settings;
     prefs.noBeeps = noBeepsCB->isChecked();
     prefs.ssearchNoComplete = ssNoCompleteCB->isChecked();
     prefs.showcompleterhitcounts = showcompleterhitcountsCB->isChecked();
@@ -526,7 +524,7 @@ void UIPrefsDialog::accept()
 
     // -1 is the qxtconf... predefined value to show the dialog
     prefs.showTempFileWarning = showTempFileWarningCB->isChecked() ? -1 : 1;
-    settings.setValue("anchorSpcHack", anchorTamilHackCB->isChecked());
+    g_settings->setValue("anchorSpcHack", anchorTamilHackCB->isChecked());
     prefs.previewHtml = previewHtmlCB->isChecked();
     prefs.previewActiveLinks = previewActiveLinksCB->isChecked();
 

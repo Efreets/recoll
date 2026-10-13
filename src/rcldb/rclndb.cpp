@@ -62,6 +62,32 @@ using namespace std;
 #include "rcldoc.h"
 #include "daterange.h"
 
+// Convert X:/path to /X/path for path splitting inside the index
+string path_slashdrive(const string& _path)
+{
+    LOGDEB1("path_slashdrive: in [" << path << "]\n");
+    // fix possible path from file:///c:/some/path -> /c:/some/path
+    string path(_path);
+    if (_path.size() && _path[0] == '/' && path_hasdrive(_path.substr(1))) {
+        path = _path.substr(1);
+    }
+    string npath;
+    if (path_hasdrive(path)) {
+        npath.append(1, '/');
+        npath.append(1, path[0]);
+        if (path_isdriveabs(path)) {
+            npath.append(path.substr(2));
+        } else {
+            // This should be an error really
+            npath.append(1, '/');
+            npath.append(path.substr(2));
+        }
+    } else {
+        npath = path; ///??
+    }
+    LOGDEB1("path_slashdrive: out [" << npath << "]\n");
+    return npath;
+}
 
 namespace Rcl {
 // Empty string md5s 
@@ -299,7 +325,7 @@ void Db::Native::openWrite(const string& dir, Db::OpenMode mode, int flags)
             LOGDEB("Db:: index " << (m_storetext?"stores":"does not store") << " document text\n");
         } else {
             // Existing non empty. Get the option from the index.
-            storesDocText(xwdb);
+            readIndexCaps(xwdb);
         }
     } else {
         // Use the default index backend and let the user decide of the abstract generation
@@ -308,12 +334,31 @@ void Db::Native::openWrite(const string& dir, Db::OpenMode mode, int flags)
         m_storetext = o_index_storedoctext;
     }
 
-    // If the index is empty, write the data format version, 
-    // and the storetext option value inside the index descriptor (new
-    // with recoll 1.24, maybe we'll have other stuff to store in
-    // there in the future).
+    // If the index is empty, write the data format version, and other parameters inside the index
+    // descriptor.
     if (xwdb.get_doccount() == 0) {
         string desc = string("storetext=") + (m_storetext ? "1" : "0") + "\n";
+#ifdef _WIN32
+        // Windows index has Windows paths. Mostly useful for portable installs but why not set it
+        // always. Used to enable the transformation of the drive part of dir: clauses, which
+        // conflicts with a possible Posix directory named something like "C:". In other words, no
+        // filtering on such a path when using a Windows index on Posix. See searchdatatox.cpp,
+        // SearchDataClausePath()
+        desc += "haswinpaths=1\n";
+#else
+        {
+            // Not on Windows, but check if we are maybe resetting a portable index initially from
+            // Windows, given the path transformation, it will hold Windows paths and we want to
+            // mark it as such. The main consequences is that some methods will test for a Windows
+            // drive at the head of paths to determine root/absolute etc.
+            std::string orgidxconfdir;
+            m_rcldb->m_config->getConfParam("orgidxconfdir", orgidxconfdir);
+            if (path_isdriveabs(orgidxconfdir)) {
+                desc += "haswinpaths=1\n";
+                m_haswinpaths = true;
+            }
+        }
+#endif // ! _WIN32
         xwdb.set_metadata(cstr_RCL_IDX_DESCRIPTOR_KEY, desc);
         xwdb.set_metadata(cstr_RCL_IDX_VERSION_KEY, cstr_RCL_IDX_VERSION);
     }
@@ -325,7 +370,7 @@ void Db::Native::openWrite(const string& dir, Db::OpenMode mode, int flags)
 #endif
 }
 
-void Db::Native::storesDocText(Xapian::Database& db)
+void Db::Native::readIndexCaps(Xapian::Database& db)
 {
     string desc = db.get_metadata(cstr_RCL_IDX_DESCRIPTOR_KEY);
     ConfSimple cf(desc, 1);
@@ -334,14 +379,17 @@ void Db::Native::storesDocText(Xapian::Database& db)
     if (cf.get("storetext", val) && stringToBool(val)) {
         m_storetext = true;
     }
-    LOGDEB("Db:: index " << (m_storetext?"stores":"does not store") << " document text\n");
+    if (cf.get("haswinpaths", val) && stringToBool(val)) {
+        m_haswinpaths = true;
+    }
+    LOGDEB("Db:: index: storetext " << m_storetext << " win paths " << m_haswinpaths << "\n");
 }
 
 void Db::Native::openRead(const string& dir)
 {
     m_iswritable = false;
     xrdb = Xapian::Database(dir);
-    storesDocText(xrdb);
+    readIndexCaps(xrdb);
 }
 
 /* See comment in class declaration: return all subdocuments of a
@@ -948,11 +996,17 @@ bool Db::Native::docToXdoc(
     const FieldTraits *ftp{nullptr};
     m_rcldb->fieldToTraits(cstr_dir, &ftp);
     if (ftp && !ftp->pfx.empty()) {
-        string path = url_gpathS(doc.url);
 #ifdef _WIN32
         // Windows file names are case-insensitive, and read as UTF-8
-        path = unactolower(path);
+        string path = unactolower(path_slashdrive(url_gpath(doc.url)));
+#else
+        string path = url_gpath(doc.url);
+        LOGINF("docToXdoc: haswinpaths " << m_haswinpaths << " path [" << path << "]\n");
+        if (m_haswinpaths) {
+            path = unactolower(path_slashdrive(path));
+        }
 #endif
+
         vector<string> vpath;
         stringToTokens(path, vpath, "/");
         // If vpath is not /, the last elt is the file/dir name, not a part of the path.

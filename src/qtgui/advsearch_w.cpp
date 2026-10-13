@@ -411,7 +411,7 @@ void AdvSearch::browsePB_clicked()
 #ifdef _WIN32
     string s = qs2utf8s(dir);
     path_slashize(s);
-    dir = u8s2qs(path_slashdrive(s));
+    dir = u8s2qs(s);
 #endif
     subtreeCMB->setEditText(dir);
 }

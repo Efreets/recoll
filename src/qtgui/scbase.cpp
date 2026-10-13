@@ -50,8 +50,7 @@ SCBase::SCBase()
 {
     m = new Internal();
 
-    QSettings settings;
-    auto sl = settings.value(m->scBaseSettingsKey()).toStringList();
+    auto sl = g_settings->value(m->scBaseSettingsKey()).toStringList();
 
     for (int i = 0; i < sl.size(); ++i) {
         auto ssc = qs2utf8s(sl.at(i));
@@ -159,8 +158,7 @@ void SCBase::store()
     // Note: we emit even if the non-default values are not really
     // changed, just not worth the trouble doing otherwise.
     emit shortcutsChanged();
-    QSettings settings;
-    settings.setValue(m->scBaseSettingsKey(), slout);
+    g_settings->setValue(m->scBaseSettingsKey(), slout);
 }
 
 static SCBase *theBase;

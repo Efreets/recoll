@@ -468,9 +468,9 @@ void RclMain::startNativeViewer(Rcl::Doc doc, int pagenum, QString qterm, int li
                "<br/>them to a permanent location."),
             tr("Do not show this warning next time (use GUI preferences to restore)."));
         confirm.setOverrideSettingsKey("/Recoll/prefs/showTempFileWarning");
+        confirm.setOverrideSettings(g_settings);
         confirm.exec();
-        QSettings settings;
-        prefs.showTempFileWarning = settings.value("/Recoll/prefs/showTempFileWarning").toInt();
+        prefs.showTempFileWarning = g_settings->value("/Recoll/prefs/showTempFileWarning").toInt();
     }
 
     // If we are not called with a page number and/or term (which would happen for a call from the

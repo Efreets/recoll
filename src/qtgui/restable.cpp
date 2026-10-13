@@ -627,6 +627,7 @@ void ResTable::init(QStringList _ifields)
     } else {
         bool locset;
         if (theconfig->getConfParam("idxlocalguisettings", &locset) && locset) {
+            // Not that if this is a portable config, this is the same as g_settings
             QSettings settings(
                 u8s2qs(path_cat(theconfig->getConfDir(), "recollgui.ini")), QSettings::IniFormat);
             restableFields = settings.value(settingskey_fieldlist).toStringList();
@@ -634,10 +635,9 @@ void ResTable::init(QStringList _ifields)
             splittersizes = settings.value(settingskey_splittersizes);            
         }
         if (restableFields.empty()) {
-            QSettings settings;
-            restableFields = settings.value(settingskey_fieldlist).toStringList();
-            qw = settings.value(settingskey_fieldwiths).toString();
-            splittersizes = settings.value(settingskey_splittersizes);
+            restableFields = g_settings->value(settingskey_fieldlist).toStringList();
+            qw = g_settings->value(settingskey_fieldwiths).toString();
+            splittersizes = g_settings->value(settingskey_splittersizes);
         }
         if (restableFields.empty()) {
             restableFields.push_back("date");
@@ -920,10 +920,11 @@ void ResTable::saveColState()
 {
     if (!m_ismainres)
         return;
-    QSettings gsettings;
+
+    // Actually same as main settings if config is portable
     QSettings lsettings(
         u8s2qs(path_cat(theconfig->getConfDir(), "recollgui.ini")), QSettings::IniFormat);
-    QSettings *settings = &gsettings;
+    QSettings *settings = g_settings;
     bool locset;
     if (theconfig->getConfParam("idxlocalguisettings", &locset) && locset) {
         settings = &lsettings;
@@ -1065,13 +1066,12 @@ void ResTable::saveAsCSV()
     LOGDEB("ResTable::saveAsCSV\n");
     if (!m_model)
         return;
-    QSettings settings;
     QString s = QFileDialog::getSaveFileName(this, tr("Save table to CSV file"),
-                                             settings.value(csvprevdirkey).toString());
+                                             g_settings->value(csvprevdirkey).toString());
     if (s.isEmpty())
         return;
     QDir cdir;
-    settings.setValue(csvprevdirkey, cdir.absoluteFilePath(s));
+    g_settings->setValue(csvprevdirkey, cdir.absoluteFilePath(s));
     std::string tofile = qs2path(s);
     std::fstream fp;
     if (!path_streamopen(tofile, std::ios::out|std::ios::trunc, fp)) {

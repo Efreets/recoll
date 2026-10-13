@@ -52,6 +52,7 @@ public:
     bool remember;
     QCheckBox* confirm;
     QString overrideKey;
+    QSettings *overrideSettings{nullptr};
 };
 
 void QxtConfirmationMessagePrivate::init(const QString& message)
@@ -93,14 +94,24 @@ QString QxtConfirmationMessagePrivate::key() const
 
 int QxtConfirmationMessagePrivate::showAgain()
 {
-    QSettings settings;
-    return settings.value(key(), -1).toInt();
+    QSettings *s = qxt_p().overrideSettings();
+    if (s) {
+        return s->value(key(), -1).toInt();
+    } else {
+        QSettings settings;
+        return settings.value(key(), -1).toInt();
+    }
 }
 
 void QxtConfirmationMessagePrivate::doNotShowAgain(int result)
 {
-    QSettings settings;
-    settings.setValue(key(), result);
+    QSettings *s = qxt_p().overrideSettings();
+    if (s) {
+        s->setValue(key(), result);
+    } else {
+        QSettings settings;
+        settings.setValue(key(), result);
+    }
 }
 
 void QxtConfirmationMessagePrivate::reset()
@@ -250,6 +261,15 @@ QString QxtConfirmationMessage::overrideSettingsKey() const
 void QxtConfirmationMessage::setOverrideSettingsKey(const QString& key)
 {
     qxt_d().overrideKey = key;
+}
+
+QSettings* QxtConfirmationMessage::overrideSettings() const
+{
+    return qxt_d().overrideSettings;
+}
+void QxtConfirmationMessage::setOverrideSettings(QSettings *settingsp)
+{
+    qxt_d().overrideSettings = settingsp;
 }
 
 /*!

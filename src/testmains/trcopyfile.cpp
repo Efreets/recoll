@@ -73,21 +73,21 @@ int main(int argc, const char **argv)
     bool ret;
     string reason;
     if (op_flags & OPT_m) {
-        ret = renameormove(src.c_str(), dst.c_str(), reason);
+        ret = renameormove(src, dst, reason);
     } else {
         int flags = 0;
         if (op_flags & OPT_e) {
             flags |= COPYFILE_EXCL;
         }
-        ret = copyfile(src.c_str(), dst.c_str(), reason, flags);
+        ret = copyfile(src, dst, reason, flags);
     }
     if (!ret) {
-        cerr << reason << endl;
+        cerr << reason << '\n';
         exit(1);
     }  else {
-        cout << "Succeeded" << endl;
+        cout << "Succeeded" << '\n';
         if (!reason.empty()) {
-            cout << "Warnings: " << reason << endl;
+            cout << "Warnings: " << reason << '\n';
         }
         exit(0);
     }

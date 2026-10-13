@@ -25,6 +25,7 @@ HEADERS += \
         fragbuts.h \
         idxmodel.h \
         idxsched.h \
+        portabcreat.h \
         preview_load.h \
         preview_plaintorich.h \
         preview_w.h \
@@ -61,6 +62,7 @@ SOURCES += \
         idxmodel.cpp \
         main.cpp \
         multisave.cpp \
+        portabcreat.cpp \
         preview_load.cpp \
         preview_plaintorich.cpp \
         preview_w.cpp \
@@ -97,6 +99,7 @@ FORMS   = \
         configswitch.ui \
         firstidx.ui \
         idxsched.ui \
+        portabcreat.ui \
         preview.ui \
         ptrans.ui \
         rclmain.ui \

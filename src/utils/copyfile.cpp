@@ -1,4 +1,4 @@
-/* Copyright (C) 2005 J.F.Dockes 
+/* Copyright (C) 2005-2026 J.F.Dockes 
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
@@ -14,22 +14,13 @@
  *   Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#include "autoconfig.h"
-
 #include "copyfile.h"
 
-#include <stdio.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include "safeunistd.h"
-
-#ifndef _WIN32
-#include <sys/time.h>
-#include <utime.h>
 #include <sys/stat.h>
-#endif
 
 #include <cstring>
 
@@ -40,26 +31,27 @@ using namespace std;
 
 #define CPBSIZ 8192
 
-bool copyfile(const char *src, const char *dst, string &reason, int flags)
+bool copyfile(const std::string& src, const std::string& dst, string &reason, int flags)
 {
     int sfd = -1;
     int dfd = -1;
     bool ret = false;
     char buf[CPBSIZ];
     int oflags = O_WRONLY|O_CREAT|O_TRUNC|O_BINARY;
+    int64_t total = 0;
+    PathStat st;
+    LOGDEB("copyfile: " << src << " to "  << dst << "\n");
 
-    LOGDEB("copyfile: "  << (src) << " to "  << (dst) << "\n" );
-
-    if ((sfd = ::open(src, O_RDONLY, 0)) < 0) {
+    if ((sfd = path_open(src, O_RDONLY|O_BINARY, 0)) < 0) {
         reason += string("open ") + src + ": " + strerror(errno);
         goto out;
     }
-
+    path_fileprops(sfd, &st);
     if (flags & COPYFILE_EXCL) {
         oflags |= O_EXCL;
     }
 
-    if ((dfd = ::open(dst, oflags, 0644)) < 0) {
+    if ((dfd = path_open(dst, oflags, st.pst_mode)) < 0) {
         reason += string("open/creat ") + dst + ": " + strerror(errno);
         // If we fail because of an open/truncate error, we do not
         // want to unlink the file, we might succeed...
@@ -73,17 +65,20 @@ bool copyfile(const char *src, const char *dst, string &reason, int flags)
             reason += string("read src ") + src + ": " + strerror(errno);
             goto out;
         }
-        if (didread == 0)
+        if (didread == 0) {
+            LOGDEB1("GOT 0 READ after " << total << " bytes\n");
             break;
+        }
         if (sys_write(dfd, buf, didread) != didread) {
             reason += string("write dst ") + src + ": " + strerror(errno);
             goto out;
         }
+        total += didread;
     }
 
     ret = true;
 out:
-    if (ret == false && !(flags&COPYFILE_NOERRUNLINK))
+    if (ret == false && !(flags & COPYFILE_NOERRUNLINK))
         path_unlink(dst);
     if (sfd >= 0)
         ::close(sfd);
@@ -92,21 +87,20 @@ out:
     return ret;
 }
 
-bool stringtofile(const string& dt, const char *dst, string& reason,
-                  int flags)
+bool stringtofile(const string& dt, const std::string& dst, string& reason, int flags)
 {
     LOGDEB("stringtofile:\n" );
     int dfd = -1;
     bool ret = false;
     int oflags = O_WRONLY|O_CREAT|O_TRUNC|O_BINARY;
 
-    LOGDEB("stringtofile: "  << ((unsigned int)dt.size()) << " bytes to "  << (dst) << "\n" );
+    LOGDEB("stringtofile: " << dt.size() << " bytes to " << dst << "\n");
 
     if (flags & COPYFILE_EXCL) {
         oflags |= O_EXCL;
     }
 
-    if ((dfd = ::open(dst, oflags, 0644)) < 0) {
+    if ((dfd = path_open(dst, oflags, 0644)) < 0) {
         reason += string("open/creat ") + dst + ": " + strerror(errno);
         // If we fail because of an open/truncate error, we do not
         // want to unlink the file, we might succeed...
@@ -127,7 +121,7 @@ out:
     return ret;
 }
 
-bool renameormove(const char *src, const char *dst, string &reason)
+bool renameormove(const std::string& src, const std::string& dst, string &reason)
 {
 #ifdef _WIN32
     // Windows refuses to rename to an existing file. It appears that
@@ -139,7 +133,7 @@ bool renameormove(const char *src, const char *dst, string &reason)
     // First try rename(2). If this succeeds we're done. If this fails
     // with EXDEV, try to copy. Unix really should have a library function
     // for this.
-    if (rename(src, dst) == 0) {
+    if (rename(src.c_str(), dst.c_str()) == 0) {
         return true;
     }
     if (errno != EXDEV) {
@@ -152,24 +146,24 @@ bool renameormove(const char *src, const char *dst, string &reason)
 
 #ifndef _WIN32
     struct stat st;
-    if (stat(src, &st) < 0) {
+    if (stat(src.c_str(), &st) < 0) {
         reason += string("Can't stat ") + src + " : " + strerror(errno);
         return false;
     }
     struct stat st1;
-    if (stat(dst, &st1) < 0) {
+    if (stat(dst.c_str(), &st1) < 0) {
         reason += string("Can't stat ") + dst + " : " + strerror(errno);
         return false;
     }
     // Try to preserve modes, owner, times. This may fail for a number
     // of reasons
     if ((st1.st_mode & 0777) != (st.st_mode & 0777)) {
-        if (chmod(dst, st.st_mode&0777) != 0) {
+        if (chmod(dst.c_str(), st.st_mode&0777) != 0) {
             reason += string("Chmod ") + dst + "Error : " + strerror(errno);
         }
     }
     if (st.st_uid != st1.st_uid || st.st_gid != st1.st_gid) {
-        if (chown(dst, st.st_uid, st.st_gid) != 0) {
+        if (chown(dst.c_str(), st.st_uid, st.st_gid) != 0) {
             reason += string("Chown ") + dst + "Error : " + strerror(errno);
         }
     }

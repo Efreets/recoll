@@ -11,7 +11,7 @@
   <meta name="generator" content=
   "DocBook XSL Stylesheets Vsnapshot">
   <meta name="description" content=
-  "Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the license can be found at the following location: GNU web site. This document introduces full text search notions and describes the installation and use of the Recoll application. This version describes Recoll 1.44.1.">
+  "Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the license can be found at the following location: GNU web site. This document introduces full text search notions and describes the installation and use of the Recoll application. This version describes Recoll 1.45.0.">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084"
 alink="#0000FF">
@@ -54,7 +54,7 @@ alink="#0000FF">
             and describes the installation and use of the
             <span class="application">Recoll</span> application.
             This version describes <span class=
-            "application">Recoll</span> 1.44.1.</p>
+            "application">Recoll</span> 1.45.0.</p>
           </div>
         </div>
       </div>
@@ -569,14 +569,28 @@ alink="#0000FF">
             "#RCL.CONFIG.PTRANS">The <code class=
             "filename">ptrans</code> file</a></span></dt>
             <dt><span class="sect1">5.9. <a href=
+            "#RCL.CONFIG.PORTABLE">Portable installation
+            (1.45)</a></span></dt>
+            <dd>
+              <dl>
+                <dt><span class="sect2">5.9.1. <a href=
+                "#RCL.CONFIG.PORTABLE.GUI">Using the GUI to create
+                a portable installation</a></span></dt>
+                <dt><span class="sect2">5.9.2. <a href=
+                "#RCL.CONFIG.PORTABLE.DETAILS">Details of the
+                volume configuration, manual
+                creation</a></span></dt>
+              </dl>
+            </dd>
+            <dt><span class="sect1">5.10. <a href=
             "#RCL.CONFIG.EXAMPLES">Examples of configuration
             adjustments</a></span></dt>
             <dd>
               <dl>
-                <dt><span class="sect2">5.9.1. <a href=
+                <dt><span class="sect2">5.10.1. <a href=
                 "#RCL.CONFIG.EXAMPLES.ADDVIEW">Adding an external
                 viewer for an non-indexed type</a></span></dt>
-                <dt><span class="sect2">5.9.2. <a href=
+                <dt><span class="sect2">5.10.2. <a href=
                 "#RCL.CONFIG.EXAMPLES.ADDINDEX">Adding indexing
                 support for a new file type</a></span></dt>
               </dl>
@@ -677,7 +691,7 @@ alink="#0000FF">
       <p>This document introduces full text search notions and
       describes the installation and use of the <span class=
       "application">Recoll</span> application. It is updated for
-      <span class="application">Recoll</span> 1.44.1.</p>
+      <span class="application">Recoll</span> 1.45.0.</p>
       <div class="note" style=
       "margin-left: 0.5in; margin-right: 0.5in;">
         <h3 class="title"><span class="application">Recoll</span>
@@ -3276,26 +3290,31 @@ imgocr = 1</pre>
               </div>
             </div>
           </div>
-          <p><span class="application">Recoll</span> used to have
-          no support for indexing removable volumes (portable
-          disks, USB keys, etc.). Recent versions have improved the
-          situation and support indexing removable volumes in two
-          different ways:</p>
+          <p><span class="application">Recoll</span> supports
+          removable volumes (e.g. thumb drives, external disks) in
+          several ways:</p>
           <div class="itemizedlist">
             <ul class="itemizedlist" style=
             "list-style-type: disc;">
-              <li class="listitem">
-                <p>By indexing the volume in the main, fixed,
-                index, and ensuring that the volume data is not
-                purged if the indexing runs while the volume is
-                mounted. (since <span class=
-                "application">Recoll</span> 1.25.2).</p>
-              </li>
-              <li class="listitem">
-                <p>By storing a volume index on the volume itself
-                (since <span class="application">Recoll</span>
-                1.24).</p>
-              </li>
+              <li class="listitem">By indexing the volume in the
+              main, fixed, index, and ensuring that the volume data
+              is not purged if the indexing runs while the volume
+              is not mounted.</li>
+              <li class="listitem">By storing a volume index on the
+              volume itself.</li>
+              <li class="listitem">By storing software,
+              configuration, data and index on the volume
+              (<a class="link" href="#RCL.CONFIG.PORTABLE" title=
+              "5.9.&nbsp;Portable installation (1.45)">portable
+              installation</a>). This last approach is only
+              possible when using an <span class=
+              "application">AppImage</span> or <span class=
+              "application">Windows</span> version of <span class=
+              "application">Recoll</span>, and is an extension of
+              the earlier <a class="link" href=
+              "#RCL.INDEXING.REMOVABLE.SELF" title=
+              "Self contained volumes">self contained volume</a>
+              support.</li>
             </ul>
           </div>
           <div class="simplesect">
@@ -9811,8 +9830,8 @@ db.purge()</pre>
           <div class="titlepage">
             <div>
               <div>
-                <h3 class="title"><a name="id5235" id=
-                "id5235"></a>GUI settings</h3>
+                <h3 class="title"><a name="id5237" id=
+                "id5237"></a>GUI settings</h3>
               </div>
             </div>
           </div>
@@ -9828,8 +9847,8 @@ db.purge()</pre>
           <div class="titlepage">
             <div>
               <div>
-                <h3 class="title"><a name="id5242" id=
-                "id5242"></a>Index configuration parameters</h3>
+                <h3 class="title"><a name="id5244" id=
+                "id5244"></a>Index configuration parameters</h3>
               </div>
             </div>
           </div>
@@ -12437,7 +12456,7 @@ other = rclcat:other</pre>
         <p>The file has a section for any index which needs
         translations, either the main one or additional query
         indexes. The sections are named with the <span class=
-        "application">Xapian</span> index directory names. The
+        "application">Xapian</span> index directory paths. The
         section names must have no ending slash character (all
         comparisons are textual). An example should make things
         sufficiently clear:</p>
@@ -12454,8 +12473,185 @@ other = rclcat:other</pre>
           <div>
             <div>
               <h2 class="title" style="clear: both"><a name=
+              "RCL.CONFIG.PORTABLE" id=
+              "RCL.CONFIG.PORTABLE"></a>5.9.&nbsp;Portable
+              installation (1.45)</h2>
+            </div>
+          </div>
+        </div>
+        <p>Under <span class="application">Windows</span>, or
+        <span class="application">Linux</span> (using the
+        <span class="application">Recoll</span> <span class=
+        "application">AppImage</span>), you can create a portable
+        installation on a removable drive. Your data and
+        <span class="application">Recoll</span> binaries,
+        configuration files, and index reside on the drive,
+        allowing you to move it to another system without extra
+        configuration.</p>
+        <p>Searching and previewing documents work out of the box.
+        Opening files depends on whether the target system has the
+        required application installed.</p>
+        <p>You can also update data on the volume and run an
+        incremental indexing. While the <span class=
+        "application">Windows</span> version is completely
+        self-contained, the <span class="application">Linux</span>
+        <span class="application">AppImage</span> requires helper
+        utilities on the target system for certain file types (for
+        example, <code class="literal">poppler-utils</code> for PDF
+        indexing is not bundled in the <span class=
+        "application">AppImage</span>).</p>
+        <p>It is possible to install both the <span class=
+        "application">Windows</span> binaries and the AppImage on
+        the same drive, making it portable betweeen Linux and
+        <span class="application">Windows</span>. Because of the
+        differing file paths structure there are a few specific
+        limitations in this case.</p>
+        <p><a name="RCL.CONFIG.PORTABLE.LIMITATIONS" id=
+        "RCL.CONFIG.PORTABLE.LIMITATIONS"></a>
+        <b>Limitations.&nbsp;</b> Some of the following will
+        possibly be fixed or mitigated in the future:</p>
+        <div class="itemizedlist">
+          <p>Portable installation can only be created based on the
+          <span class="application">Windows</span> or <span class=
+          "application">AppImage</span> versions of <span class=
+          "application">Recoll</span></p>
+          <ul class="itemizedlist" style="list-style-type: disc;">
+            <li class="listitem">For the moment, portable
+            installations do not support customising indexing
+            parameters to folder subtrees: all parameters must be
+            global to the configuration.</li>
+            <li class="listitem">When a drive initialised on
+            <span class="application">Windows</span> is used with
+            the AppImage under Linux the directory side filter and
+            path-based filtering in general do not work well or at
+            all because the Linux side does not understand
+            <span class="application">Windows</span> drive names
+            (e.g. <em class=
+            "replaceable"><code>C:/some/path</code></em>).</li>
+            <li class="listitem">This feature being very new, some
+            other issues will probably emerge.</li>
+          </ul>
+        </div>
+        <div class="sect2">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a name="RCL.CONFIG.PORTABLE.GUI"
+                id="RCL.CONFIG.PORTABLE.GUI"></a>5.9.1.&nbsp;Using
+                the GUI to create a portable installation</h3>
+              </div>
+            </div>
+          </div>
+          <p>The <span class="application">Recoll</span>
+          <span class="application">Windows</span> and <span class=
+          "application">AppImage</span> GUIs have an additional
+          entry in the <span class="guilabel">Tools</span> menu for
+          creating a portable installation: create the appropriate
+          directory structure, copy the needed binary files and
+          initialise the main configuration file.</p>
+        </div>
+        <div class="sect2">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h3 class="title"><a name=
+                "RCL.CONFIG.PORTABLE.DETAILS" id=
+                "RCL.CONFIG.PORTABLE.DETAILS"></a>5.9.2.&nbsp;Details
+                of the volume configuration, manual creation</h3>
+              </div>
+            </div>
+          </div>
+          <p>The <span class="application">Windows</span> binary
+          installation directory and the <span class=
+          "application">AppImage</span> are standard <span class=
+          "application">Recoll</span> copies. The programs identify
+          a portable installation using the name of the folder
+          where they reside, and the presence of a <span class=
+          "application">Recoll</span> configuration directory of a
+          specific name, under the same parent folder:</p>
+          <pre class="screen"><code class=
+          "prompt">/mount/point/</code>
+            └─ <code class="filename">indrive/path/</code>
+                           ├─ <code class=
+"filename">recoll-portable/</code>
+                           ├─ <code class=
+"filename">recoll-appimage-portable/</code>
+                           └─ <code class=
+"filename">recoll-config/</code></pre>
+          <p>The <code class="literal">recoll-xxx</code>
+          directories can be placed under the volume root (no
+          <em class="replaceable"><code>indrive/path/</code></em>
+          part)</p>
+          <p>Simple <span class="application">Windows</span>
+          example:</p>
+          <pre class="screen"><code class=
+          "filename">E:/recoll-portable</code>
+<code class="filename">E:\recoll-config</code>
+<code class="filename">E:\somedatafolder</code></pre>
+          <p>Mixed <span class="application">Windows</span> +
+          <span class="application">AppImage</span> example with
+          internal path (mounted under Linux):</p>
+          <pre class="screen"><code class=
+          "filename">/mount/point/recoll/recoll-portable</code>
+<code class=
+"filename">/mount/point/recoll/recoll-appimage-portable</code>
+<code class="filename">/mount/point/recoll/recoll-config</code>
+<code class="filename">/mount/point/yourdata</code></pre>
+          <p>The <code class="filename">recoll.conf</code>
+          configuration file inside <code class=
+          "filename">recoll-config/</code> has two mandatory
+          entries:</p>
+          <div class="itemizedlist">
+            <ul class="itemizedlist" style=
+            "list-style-type: disc;">
+              <li class="listitem"><code class=
+              "literal">orgidxconfdir</code>, which is set to the
+              location of the configuration directory when the data
+              is first indexed (e.g. if the above is the original
+              location: <code class="literal">orgidxconfdir
+              =</code> <em class="replaceable"><code><code class=
+              "filename">/mount/point/recoll/recoll-config</code></code></em>).
+              This is used to compute the path transformations when
+              the drive is subsequently mounted elsewhere.</li>
+              <li class="listitem"><code class=
+              "literal">topdirs</code> which, as usual, designates
+              the folder(s) to be indexed. E.g.: <code class=
+              "literal">topdirs = <em class=
+              "replaceable"><code>/mount/point/yourdata</code></em></code></li>
+            </ul>
+          </div>
+          <p>When the <code class="filename">recoll.conf</code>
+          file is created by the GUI:</p>
+          <div class="itemizedlist">
+            <ul class="itemizedlist" style=
+            "list-style-type: disc;">
+              <li class="listitem"><code class=
+              "literal">topdirs</code> is set to the drive root
+              (e.g.: <em class=
+              "replaceable"><code>E:/</code></em>).</li>
+              <li class="listitem"><code class=
+              "literal">skippedNames</code> is set to exclude the
+              recoll installation folder(s) from indexing.</li>
+            </ul>
+          </div>
+          <p><code class="literal">topdirs</code> could also
+          include data outside the volume but, of course, this part
+          of the index would not be portable: only search and
+          previewing from index data would work when used in
+          another location.</p>
+          <p>The configuration and index paths always refer to the
+          original location. When used or updated in a different
+          location, they are modified back and forth between the
+          original and current mount points.</p>
+        </div>
+      </div>
+      <div class="sect1">
+        <div class="titlepage">
+          <div>
+            <div>
+              <h2 class="title" style="clear: both"><a name=
               "RCL.CONFIG.EXAMPLES" id=
-              "RCL.CONFIG.EXAMPLES"></a>5.9.&nbsp;Examples of
+              "RCL.CONFIG.EXAMPLES"></a>5.10.&nbsp;Examples of
               configuration adjustments</h2>
             </div>
           </div>
@@ -12466,7 +12662,7 @@ other = rclcat:other</pre>
               <div>
                 <h3 class="title"><a name=
                 "RCL.CONFIG.EXAMPLES.ADDVIEW" id=
-                "RCL.CONFIG.EXAMPLES.ADDVIEW"></a>5.9.1.&nbsp;Adding
+                "RCL.CONFIG.EXAMPLES.ADDVIEW"></a>5.10.1.&nbsp;Adding
                 an external viewer for an non-indexed type</h3>
               </div>
             </div>
@@ -12527,7 +12723,7 @@ application/x-blobapp = blobviewer %f</pre>
               <div>
                 <h3 class="title"><a name=
                 "RCL.CONFIG.EXAMPLES.ADDINDEX" id=
-                "RCL.CONFIG.EXAMPLES.ADDINDEX"></a>5.9.2.&nbsp;Adding
+                "RCL.CONFIG.EXAMPLES.ADDINDEX"></a>5.10.2.&nbsp;Adding
                 indexing support for a new file type</h3>
               </div>
             </div>

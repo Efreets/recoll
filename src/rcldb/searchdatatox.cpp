@@ -1095,10 +1095,32 @@ bool SearchDataClausePath::toNativeQuery(Rcl::Db &db, void *p)
 #ifdef _WIN32
     // Windows file names are case-insensitive, so we lowercase (same as when indexing)
     unacmaybefold(m_text, ltext, UNACOP_FOLD);
+    ltext = path_slashdrive(ltext);
 #else
-    ltext = m_text;
+    LOGDEB1("SearchDataClausePath: haswinpaths: " << db.hasWinPaths() << " text " <<
+            m_text << " isdriveabs " << path_isdriveabs(m_text) << "\n");
+    if (db.hasWinPaths() && path_isdriveabs(m_text)) {
+        // Index created on Windows, either mounted or from a portable install. We then need to
+        // lowercase, esp., the drive letter and replace the : with a / because this is how they are
+        // indexed in a split path (look for pathelt_prefix in rcldnb.cpp and path_slashdrive()).
+        // 
+        // However the index could also contain Posix paths (if it is not a portable index and it
+        // was updated on both sides - implausible actually -) and someone could have a directory
+        // named c: on linux, and post a relative search under it. Under windows ':' is forbidden
+        // in file names so there is no conflict.
+        // Anyway, in this case we sacrifice the possibility to filter on a Posix path beginning
+        // with a Windows drive.
+        //
+        // Note that we don't lowercase if this is not an absolute Windows path meaning that manual
+        // Windows dir filters used on Posix need to be lowercased by the user. the GUI side filter
+        // paths are always absolute
+        unacmaybefold(m_text, ltext, UNACOP_FOLD);
+        ltext = path_slashdrive(ltext);
+    } else {
+        ltext = m_text;
+    }
+        
 #endif
-
     if (ltext.empty()) {
         LOGERR("SearchDataClausePath: empty path??\n");
         m_reason = "Empty path ?";

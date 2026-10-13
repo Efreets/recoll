@@ -64,7 +64,7 @@ XAPC=$RCLW/qmake/build/xapian-check/${QTA}/${qtsdir}/xapian-check.exe
 # Embedded Python version and tree
 PYTHONMINOR=12
 PYTHON=${RCLDEPS}python-3.12.4-embed-amd64
-UNRTF=${RCLDEPS}unrtf
+UNRTF=${RCLDEPS}unrtf-0.21.12
 ANTIWORD=${RCLDEPS}antiword
 ICONVDLL=/c/msys64/usr/bin/msys-iconv-2.dll
 MSYSDLL=/c/msys64/usr/bin/msys-2.0.dll

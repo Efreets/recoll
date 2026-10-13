@@ -328,7 +328,8 @@ static bool createstemdb(RclConfig *config, const string &lang)
 // match existing files or directories. Warn if they don't
 static bool checktopdirs(RclConfig *config, vector<string>& nonexist)
 {
-    if (!config->getConfParam("topdirs", &o_topdirs)) {
+    o_topdirs = config->getTopdirs();
+    if (o_topdirs.empty()) {
         cerr << "No 'topdirs' parameter in configuration\n";
         LOGERR("recollindex:No 'topdirs' parameter in configuration\n");
         return false;
@@ -336,23 +337,21 @@ static bool checktopdirs(RclConfig *config, vector<string>& nonexist)
 
     // If a restricted list for real-time monitoring exists check that
     // all entries are descendants from a topdir
-    vector<string> mondirs;
-    if (config->getConfParam("monitordirs", &mondirs)) {
-        for (const auto& sub : mondirs) {
-            bool found{false};
-            for (const auto& top : o_topdirs) {
-                if (path_isdesc(top, sub)) {
-                    found = true;
-                    break;
-                }
+    vector<string> mondirs = config->getTopdirs(true);
+    for (const auto& sub : mondirs) {
+        bool found{false};
+        for (const auto& top : o_topdirs) {
+            if (path_isdesc(top, sub)) {
+                found = true;
+                break;
             }
-            if (!found) {
-                string s("Real time monitoring directory entry " + sub +
-                         " is not part of the topdirs tree\n");
-                cerr << s;
-                LOGERR(s);
-                return false;
-            }
+        }
+        if (!found) {
+            string s("Real time monitoring directory entry " + sub +
+                     " is not part of the topdirs tree\n");
+            cerr << s;
+            LOGERR(s);
+            return false;
         }
     }
 

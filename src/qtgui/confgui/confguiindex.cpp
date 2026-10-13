@@ -89,6 +89,41 @@ private:
     const string *m_sk;
 };
 
+class ConfLinkRclPaths : public ConfLinkRclRep {
+public:
+    ConfLinkRclPaths(RclConfig *rclconf, ConfNull **conf, const string& nm, string *sk = 0)
+        : ConfLinkRclRep(conf, nm, sk), m_rclconf(rclconf)
+        {}
+    virtual ~ConfLinkRclPaths() {}
+    virtual bool set(const string& _val) {
+        LOGDEB("ConfLinkRclPaths::set in: [" << _val <<"]\n");
+        std::vector<std::string> vals;
+        stringToStrings(_val, vals);
+        for (auto& val : vals) {
+            m_rclconf->pathToIndex(val);
+        }
+        std::string nval;
+        stringsToString(vals, nval);
+        LOGDEB("ConfLinkRclPaths::set after pathToIndex: [" << nval <<"]\n");
+        return ConfLinkRclRep::set(nval);
+    }
+    virtual bool get(string& val) {
+        LOGDEB("ConfLinkRclPaths::get\n");
+        if (!ConfLinkRclRep::get(val))
+            return false;
+        std::vector<std::string> vals;
+        stringToStrings(val, vals);
+        for (auto& v : vals) {
+            m_rclconf->pathFromIndex(v);
+        }
+        val.clear();
+        stringsToString(vals, val);
+        LOGDEB("ConfLinkRclPaths::get-> [" << val << "]\n");
+        return true;
+    }
+private:
+    RclConfig *m_rclconf;
+};
 
 /* Special link for skippedNames and noContentSuffixes which are
    computed as set differences */
@@ -233,27 +268,36 @@ void ConfIndexW::initPanels()
 
 bool ConfIndexW::setupTopPanel(int idx)
 {
-    m_w->addParam(idx, ConfTabsW::CFPT_DNL, "topdirs", 
-                  tr("Start folders"),
-                  tr("The list of folders/directories to be indexed, recursively with their "
-                     "sub-folders.<br>"
-#ifdef _WIN32
-                     "%USERPROFILE% or the '~' character expand to your user profile, which is the default "
-#else
-                     "The '~' character expands to your home directory, which is the default "
-#endif
-                     "initial value."));
+    ConfPanelW *panel = m_w->getPanel(idx);
 
-    ConfParamW *cparam = m_w->addParam(
-        idx, ConfTabsW::CFPT_DNL, "skippedPaths", tr("Skipped paths"),
+    auto topdirsw = new ConfParamDNLW(
+        "topdirs", this,
+        ConfLink(new ConfLinkRclPaths(m_rclconf, &m_conf, "topdirs")), 
+        QObject::tr("Start folders"),
+        QObject::tr(
+            "The list of folders/directories to be indexed, recursively with their "
+            "sub-folders.<br>"
+#ifdef _WIN32
+            "%USERPROFILE% or the '~' character expand to your user profile, which is the default "
+#else
+            "The '~' character expands to your home directory, which is the default "
+#endif
+            "initial value."));
+    panel->addParam(topdirsw);
+
+    auto skippedpathsw = new ConfParamDNLW(
+        "skippedPaths", this,
+        ConfLink(new ConfLinkRclPaths(m_rclconf, &m_conf, "skippedPaths")), 
+        tr("Skipped paths"),
         tr("These are pathnames of directories which indexing "
            "will not enter.<br>Path elements may contain wildcards. "
            "The entries must match the paths seen by the indexer "
            "(e.g.: if topdirs includes '/home/me' and '/home' is "
            "actually a link to '/usr/home', a correct skippedPath entry "
            "would be '/home/me/tmp*', not '/usr/home/me/tmp*')"));
-    cparam->setFsEncoding(true);
-    ((confgui::ConfParamSLW*)cparam)->setEditable(true);
+    skippedpathsw->setFsEncoding(true);
+    skippedpathsw->setEditable(true);
+    panel->addParam(skippedpathsw);
     
     if (m_stemlangs.empty()) {
         vector<string> cstemlangs = Rcl::Db::getStemmerNames();
@@ -309,7 +353,7 @@ bool ConfIndexW::setupTopPanel(int idx)
         tr("Disables use of aspell to generate spelling "
            "approximation in the term explorer tool.<br> "
            "Useful if aspell is absent or does not work. "));
-    cparam = m_w->addParam(
+    auto cparam = m_w->addParam(
         idx, ConfTabsW::CFPT_STR, "aspellLanguage",
         tr("Aspell language"),
         tr("The language for the aspell dictionary. "
@@ -454,48 +498,54 @@ ConfSubPanelW::ConfSubPanelW(QWidget *parent, ConfNull **config, RclConfig *rclc
     vboxLayout->setSpacing(spacing);
     vboxLayout->setContentsMargins(QMargins(margin,margin,margin,margin));
 
-    m_subdirs = new ConfParamDNLW(
-        "bogus00", this, ConfLink(new confgui::ConfLinkNullRep()), 
-        QObject::tr("<b>Customised subtrees"),
-        QObject::tr("The list of subdirectories in the indexed "
-                    "hierarchy <br>where some parameters need "
-                    "to be redefined. Default: empty."));
-    m_subdirs->getListBox()->setSelectionMode(QAbstractItemView::SingleSelection);
-    connect(m_subdirs->getListBox(), 
-            SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
-            this, SLOT(subDirChanged(QListWidgetItem *, QListWidgetItem *)));
-    connect(m_subdirs, SIGNAL(entryDeleted(QString)), this, SLOT(subDirDeleted(QString)));
+    if (rclconf->isPortable()) {
+        auto lbl = new QLabel(
+            "<b>Portable configuration: all parameters are defined at the top level", this);
+        vboxLayout->addWidget(lbl);
+        m_subdirs = nullptr;
+    } else {
+        m_subdirs = new ConfParamDNLW(
+            "bogus00", this, ConfLink(new confgui::ConfLinkNullRep()), 
+            QObject::tr("<b>Customised subtrees"),
+            QObject::tr("The list of subdirectories in the indexed "
+                        "hierarchy <br>where some parameters need "
+                        "to be redefined. Default: empty."));
+        m_subdirs->getListBox()->setSelectionMode(QAbstractItemView::SingleSelection);
+        connect(m_subdirs->getListBox(), 
+                SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+                this, SLOT(subDirChanged(QListWidgetItem *, QListWidgetItem *)));
+        connect(m_subdirs, SIGNAL(entryDeleted(QString)), this, SLOT(subDirDeleted(QString)));
 
-    // We only retrieve the subkeys from the user's config (shallow),
-    // no use to confuse the user by showing the subtrees which are
-    // customized in the system config like .thunderbird or
-    // .purple. This doesn't prevent them to add and customize them
-    // further.
-    vector<string> allkeydirs = (*config)->getSubKeys(true); 
-    QStringList qls;
-    for (const auto& dir: allkeydirs) {
-        qls.push_back(u8s2qs(dir));
+        // We only retrieve the subkeys from the user's config (shallow),
+        // no use to confuse the user by showing the subtrees which are
+        // customized in the system config like .thunderbird or
+        // .purple. This doesn't prevent them to add and customize them
+        // further.
+        vector<string> allkeydirs = (*config)->getSubKeys(true); 
+        QStringList qls;
+        for (const auto& dir: allkeydirs) {
+            qls.push_back(u8s2qs(dir));
+        }
+        m_subdirs->getListBox()->insertItems(0, qls);
+
+        vboxLayout->addWidget(m_subdirs);
+        QFrame *line2 = new QFrame(this);
+        line2->setFrameShape(QFrame::HLine);
+        line2->setFrameShadow(QFrame::Sunken);
+        vboxLayout->addWidget(line2);
+
+        QLabel *explain = new QLabel(this);
+        explain->setWordWrap(true);
+        explain->setText(
+            QObject::tr(
+                "<i>The parameters that follow are set either at the "
+                "top level, if nothing "
+                "or an empty line is selected in the listbox above, "
+                "or for the selected subdirectory. "
+                "You can add or remove directories by clicking "
+                "the +/- buttons."));
+        vboxLayout->addWidget(explain);
     }
-    m_subdirs->getListBox()->insertItems(0, qls);
-
-    vboxLayout->addWidget(m_subdirs);
-
-    QFrame *line2 = new QFrame(this);
-    line2->setFrameShape(QFrame::HLine);
-    line2->setFrameShadow(QFrame::Sunken);
-    vboxLayout->addWidget(line2);
-
-    QLabel *explain = new QLabel(this);
-    explain->setWordWrap(true);
-    explain->setText(
-        QObject::tr(
-            "<i>The parameters that follow are set either at the "
-            "top level, if nothing "
-            "or an empty line is selected in the listbox above, "
-            "or for the selected subdirectory. "
-            "You can add or remove directories by clicking "
-            "the +/- buttons."));
-    vboxLayout->addWidget(explain);
 
 
     m_groupbox = new QGroupBox(this);
@@ -710,5 +760,6 @@ void ConfSubPanelW::subDirDeleted(QString sbd)
 void ConfSubPanelW::restoreEmpty()
 {
     LOGDEB("ConfSubPanelW::restoreEmpty()\n");
-    m_subdirs->getListBox()->insertItem(0, "");
+    if (m_subdirs)
+        m_subdirs->getListBox()->insertItem(0, "");
 }

@@ -48,8 +48,7 @@ void PlainToRichQtPreview::clear()
     m_lastanchor = 0;
     m_groupanchors.clear();
     m_groupcuranchors.clear();
-    QSettings settings;
-    m_spacehack = settings.value("anchorSpcHack", 0).toBool();
+    m_spacehack = g_settings->value("anchorSpcHack", 0).toBool();
 }
 
 bool PlainToRichQtPreview::haveAnchors()

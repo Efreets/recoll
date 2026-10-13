@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 J.F.Dockes
+/* Copyright (C) 2004-2026 J.F.Dockes
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
@@ -31,14 +31,15 @@ enum CopyfileFlags {COPYFILE_NONE = 0,
  * A partially copied dst is normally removed, except if COPYFILE_NOERRUNLINK 
  * is set.
  */
-extern bool copyfile(const char *src, const char *dst, std::string &reason,
-             int flags = 0);
+extern bool copyfile(const std::string& src, const std::string& dst, std::string &reason,
+                     int flags = 0);
 
 /** Save c++ string to file */
-extern bool stringtofile(const std::string& dt, const char *dst, 
+extern bool stringtofile(const std::string& data, const std::string& dst,
                          std::string& reason, int flags = 0);
 
-/** Try to rename src. If this fails (different devices) copy then unlink src */
-extern bool renameormove(const char *src, const char *dst, std::string &reason);
+/** Try to rename src. If this fails (different devices) copy then unlink src 
+ * TODO: unlike the above, this won't work with non-ASCII paths on Windows */
+extern bool renameormove(const std::string& src, const std::string& dst, std::string &reason);
 
 #endif /* _COPYFILE_H_INCLUDED_ */

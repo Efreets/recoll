@@ -216,6 +216,7 @@ void RclMain::init()
 #ifdef _WIN32
     connect(checkWinVersion_Action, SIGNAL(triggered()), this, SLOT(checkWinVersion()));
 #endif
+    connect(portabCreatAction, SIGNAL(triggered()), this, SLOT(showPortabCreat()));
     connect(showMissingHelpers_Action, SIGNAL(triggered()), this, SLOT(showMissingHelpers()));
     connect(showActiveTypes_Action, SIGNAL(triggered()), this, SLOT(showActiveTypes()));
     connect(userManualAction, SIGNAL(triggered()), this, SLOT(startManual()));
@@ -306,10 +307,9 @@ void RclMain::init()
         m_sortspec.desc = prefs.sortDesc;
         emit sortDataChanged(m_sortspec);
     }
-    QSettings settings;
-    restoreGeometry(settings.value("/Recoll/geometry/maingeom").toByteArray());
+    restoreGeometry(g_settings->value("/Recoll/geometry/maingeom").toByteArray());
 
-    QVariant saved = settings.value(settingskey_sidefilterssize);
+    QVariant saved = g_settings->value(settingskey_sidefilterssize);
     if (saved != QVariant()) {
         sideFiltersSPLT->restoreState(saved.toByteArray());
     } else {
@@ -426,10 +426,9 @@ void RclMain::setupToolbars()
         m_toolsTB->addAction(toolsSpellAction);
         m_toolsTB->addAction(actionQuery_Fragments);
     }
-    QSettings settings;
     int val;
     if (!prefs.noToolbars) {
-        val = settings.value(settingskey_toolarea).toInt();
+        val = g_settings->value(settingskey_toolarea).toInt();
         this->addToolBar(int2area(val), m_toolsTB);
         m_toolsTB->show();
     } else {
@@ -440,7 +439,7 @@ void RclMain::setupToolbars()
         m_resTB->setObjectName(QString::fromUtf8("m_resTB"));
     }
     if (!prefs.noToolbars) {
-        val = settings.value(settingskey_resarea).toInt();
+        val = g_settings->value(settingskey_resarea).toInt();
         this->addToolBar(int2area(val), m_resTB);
         m_resTB->show();
     } else {
@@ -774,22 +773,27 @@ void RclMain::fileExit()
 
     // Don't save geometry if we're currently maximized. At least under X11
     // this saves the maximized size. otoh isFullscreen() does not seem needed
-    QSettings settings;
     if (!isMaximized()) {
-        settings.setValue("/Recoll/geometry/maingeom", saveGeometry());
+        g_settings->setValue("/Recoll/geometry/maingeom", saveGeometry());
     }
     if (!prefs.noToolbars) {
-        settings.setValue(settingskey_toolarea, toolBarArea(m_toolsTB));
-        settings.setValue(settingskey_resarea, toolBarArea(m_resTB));
+        g_settings->setValue(settingskey_toolarea, toolBarArea(m_toolsTB));
+        g_settings->setValue(settingskey_resarea, toolBarArea(m_resTB));
     }
     restable->saveColState();
-    settings.setValue(settingskey_sidefilterssize, sideFiltersSPLT->saveState());
+    g_settings->setValue(settingskey_sidefilterssize, sideFiltersSPLT->saveState());
 
     if(prefs.ssearchTypSav) {
         prefs.ssearchTyp = sSearch->getSearchType();
     }
 
     rwSettings(true);
+
+    // The destructor syncs data to disk. As an alternative we could call sync() every time
+    // we change something, to be closer to what happened when we instanciated QSetting objects
+    // most of the times when we set a value.
+    delete g_settings;
+    g_settings = nullptr;
 
     deleteAllTempFiles();
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0)) && !defined(PREVIEW_FORCETEXTBROWSER)
@@ -1361,12 +1365,7 @@ void RclMain::setFiltSpec()
                 } else {
                     clause += " OR ";
                 }           
-#ifdef _WIN32
-                clause += prefix + makeCString(path_slashdrive(dir));
-#else
                 clause += prefix + makeCString(dir);
-#endif
-
             }
             LOGDEB0("Sidefilter dir clause: [" << clause << "]\n");
             m_filtspec.orCrit(DocSeqFiltSpec::DSFS_QLANG, clause);
@@ -1396,41 +1395,17 @@ void RclMain::setFiltSpec()
                 m_filtspec.orCrit(DocSeqFiltSpec::DSFS_QLANG, sizeclause);
             }
         }
-    }
 #ifdef EXT4_BIRTH_TIME
-        if (birthDateFilterCB->isEnabled()) {
-        // The CB is only disabled when we are not in query language mode
-        auto treedirs = idxTreeGetDirs();
-        if (!treedirs.empty()) {
-            bool first{true};
-            const std::string prefix{"dir:"};
-            std::string clause;
-            for (const auto& dir : treedirs) {
-                if (first) {
-                    first = false;
-                } else {
-                    clause += " OR ";
-                }           
-#ifdef _WIN32
-                clause += prefix + makeCString(path_slashdrive(dir));
-#else
-                clause += prefix + makeCString(dir);
-#endif
-
-            }
-            LOGDEB0("Sidefilter dir clause: [" << clause << "]\n");
-            m_filtspec.orCrit(DocSeqFiltSpec::DSFS_QLANG, clause);
-        }
-
         if (birthDateFilterCB->isChecked()) {
             QString mindate = minBirthDateFilterDTEDT->date().toString("yyyy-MM-dd");
             QString maxdate = maxBirthDateFilterDTEDT->date().toString("yyyy-MM-dd");
-            std::string clause = std::string("birtime:") + qs2utf8s(mindate) + "/" + qs2utf8s(maxdate);
+            std::string clause = std::string("birtime:") + qs2utf8s(mindate) +
+                                 "/" + qs2utf8s(maxdate);
             LOGDEB1("RclMain::setFiltSpec: birth date clause " << clause << "\n");
             m_filtspec.orCrit(DocSeqFiltSpec::DSFS_QLANG, clause);
         }
-    }
 #endif
+    }
 
     m_source->setFiltSpec(m_filtspec);
 }

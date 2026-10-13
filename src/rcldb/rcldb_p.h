@@ -88,14 +88,17 @@ inline std::string strip_prefix(const std::string& trm)
     std::string::size_type st = 0;
     if (o_index_stripchars) {
         st = trm.find_first_not_of("ABCDEFIJKLMNOPQRSTUVWXYZ");
-#ifdef _WIN32
-        // We have a problem there because we forgot to lowercase the drive
-        // name. So if the found character is a colon consider the drive name as
-        // the first non capital even if it is uppercase
-        if (st != std::string::npos && st >= 2 && trm[st] == ':') {
+
+        // We have a problem with Windows paths (in Q and F terms) because we forgot to lowercase
+        // the drive name. So, if the found character is a colon, consider the drive name as the
+        // first non capital even if it is uppercase.  2026: test now enabled on Linux also because
+        // of portable installs. Added the 'Q' or 'F' test because these are the only paths indexed
+        // by recoll itself (with the capital drive letter).
+        if (st == 2 && trm[st] == ':' && (trm[0] == 'Q' || trm[0] == 'F') &&
+            trm[1] >= 'A' && trm[1] <= 'Z') {
             st -= 1;
         }
-#endif
+
     } else {
         st = trm.find_first_of(":", 1) + 1;
     }
@@ -188,6 +191,7 @@ class Db::Native {
     bool m_iswritable{false};
     bool m_noversionwrite{false}; //Set if open failed because of version mismatch!
     bool m_storetext{false};
+    bool m_haswinpaths{false};
 #ifdef IDX_THREADS
     WorkQueue<DbUpdTask*> m_wqueue;
     std::mutex m_mutex;
@@ -223,9 +227,10 @@ class Db::Native {
     void openWrite(const std::string& dir, Db::OpenMode mode, int flags);
     void openRead(const std::string& dir);
 
-    // Determine if an existing index is of the full-text-storing kind
-    // by looking at the index metadata. Stores the result in m_storetext
-    void storesDocText(Xapian::Database&);
+    // Looking at the existing index metadata, to check some flags:
+    //  - Does the index store the full documents text contents.
+    //  - Does the index have Windows paths.
+    void readIndexCaps(Xapian::Database&);
     
     // Final steps of doc update, part which need to be single-threaded
     bool addOrUpdateWrite(const std::string& udi, const std::string& uniterm, 
@@ -449,5 +454,9 @@ private:
 
 // Append element to the data record
 #define RECORD_APPEND(R, NM, VAL) {R += NM + "=" + VAL + "\n";}
+
+/// Turn "c:/" into "/c/". This should be used only for splitting the path in rcldb for the dir:
+/// field
+extern std::string path_slashdrive(const std::string &path);
 
 #endif /* _rcldb_p_h_included_ */

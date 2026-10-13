@@ -34,11 +34,6 @@
 bool subtreelist(RclConfig *config, const std::string& _top, std::vector<std::string>& paths)
 {
     std::string top(_top);
-#ifdef _WIN32
-    // Need to convert c:path to /c/path because this is how paths are indexed
-    top = path_slashdrive(top);
-#endif
-
     LOGDEB("subtreelist: top: [" << top << "]\n");
     Rcl::Db rcldb(config);
     if (!rcldb.open(Rcl::Db::DbRO)) {

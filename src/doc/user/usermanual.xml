@@ -5,7 +5,7 @@
 <!ENTITY RCLWEB "<ulink url='https://www.recoll.org/'>https://www.recoll.org/</ulink>">
 <!ENTITY FAQS "https://www.recoll.org/faqsandhowtos/">
 <!ENTITY RCLAPPS "<ulink url='https://www.recoll.org/pages/features.html#doctypes'>https://www.recoll.org/pages/features.html</ulink>">
-<!ENTITY RCLVERSION "1.44.1">
+<!ENTITY RCLVERSION "1.45.0">
 <!ENTITY XAP "<application>Xapian</application>">
 <!ENTITY WIN "<application>Windows</application>">
 <!ENTITY LIN "<application>Unix</application>-like systems">
@@ -1757,16 +1757,18 @@ imgocr = 1</programlisting>
       <sect2 xml:id="RCL.INDEXING.REMOVABLE">
         <title>Removable volumes</title>
 
-        <para>&RCL; used to have no support for indexing removable volumes (portable disks, USB
-          keys, etc.). Recent versions have improved the situation and support indexing removable
-          volumes in two different ways:</para>
+        <para>&RCL; supports removable volumes (e.g. thumb drives, external disks) in several ways:
+        </para>
 
         <itemizedlist>
-          <listitem><para>By indexing the volume in the main, fixed, index, and
-              ensuring that the volume data is not purged if the indexing runs
-              while the volume is mounted. (since &RCL; 1.25.2).</para></listitem>
-          <listitem><para>By storing a volume index on the volume
-              itself (since &RCL; 1.24).</para></listitem>
+          <listitem>By indexing the volume in the main, fixed, index, and ensuring that the volume
+          data is not purged if the indexing runs while the volume is not mounted.</listitem>
+          <listitem>By storing a volume index on the volume itself.</listitem>
+          <listitem>By storing software, configuration, data and index on the volume
+          (<link linkend="RCL.CONFIG.PORTABLE">portable installation</link>). This last approach is
+          only possible when using an <application>AppImage</application> or &WIN; version of
+          &RCL;, and is an extension of the earlier <link linkend="RCL.INDEXING.REMOVABLE.SELF">self
+          contained volume</link> support.</listitem>
         </itemizedlist>
 
         <simplesect xml:id="RCL.INDEXING.REMOVABLE.MAIN">
@@ -6929,7 +6931,117 @@ other = rclcat:other</programlisting>
         </para>
       </sect1>
 
+      <sect1 xml:id="RCL.CONFIG.PORTABLE">
+        <title>Portable installation (1.45)</title>
 
+        <para>Under &WIN;, or <application>Linux</application> (using the &RCL;
+        <application>AppImage</application>), you can create a portable installation
+        on a removable drive. Your data and &RCL; binaries, configuration files, and index reside on
+        the drive, allowing you to move it to another system without extra configuration.</para>
+
+        <para>Searching and previewing documents work out of the box. Opening files depends on 
+        whether the target system has the required application installed.</para>
+
+        <para>You can also update data on the volume and run an incremental indexing. While the
+        &WIN; version is completely self-contained, the <application>Linux</application>
+        <application>AppImage</application> requires helper utilities on the target system for
+        certain file types (for example, <literal>poppler-utils</literal> for PDF indexing is not
+        bundled in the <application>AppImage</application>).</para>
+
+        <para>It is possible to install both the &WIN; binaries and the AppImage on the same drive,
+        making it portable betweeen Linux and &WIN;. Because of the differing file paths structure
+        there are a few specific limitations in this case.</para>
+
+        <formalpara xml:id="RCL.CONFIG.PORTABLE.LIMITATIONS">
+          <title>Limitations</title>
+          <para>Some of the following will possibly be fixed or mitigated in the future:
+          <itemizedlist>
+            <para>Portable installation can only be created based on the &WIN; or
+            <application>AppImage</application> versions of &RCL;</para>
+            <listitem>For the moment, portable installations do not support customising indexing
+            parameters to folder subtrees: all parameters must be global to the
+            configuration.</listitem>
+            <listitem>When a drive initialised on &WIN; is used with the AppImage under Linux the
+            directory side filter and path-based filtering in general do not work well or at all
+            because the Linux side does not understand &WIN; drive names
+            (e.g. <replaceable>C:/some/path</replaceable>).</listitem>
+            <listitem>This feature being very new, some other issues will probably emerge.</listitem>
+          </itemizedlist></para>
+        </formalpara>
+
+        <sect2 xml:id="RCL.CONFIG.PORTABLE.GUI">
+          <title>Using the GUI to create a portable installation</title>
+          <para>The &RCL; &WIN; and <application>AppImage</application> GUIs have an additional
+          entry in the <guilabel>Tools</guilabel> menu for creating a portable installation: create
+          the appropriate directory structure, copy the needed binary files and initialise the main
+          configuration file.</para>
+        </sect2>
+
+        <sect2 xml:id="RCL.CONFIG.PORTABLE.DETAILS">
+          <title>Details of the volume configuration, manual creation</title>
+
+          <para>The &WIN; binary installation directory and the <application>AppImage</application>
+          are standard &RCL; copies. The programs identify a portable installation using the name of
+          the folder where they reside, and the presence of a &RCL; configuration directory of a
+          specific name, under the same parent folder:
+          <screen><prompt>/mount/point/</prompt>
+            └─ <filename class="directory">indrive/path/</filename>
+                           ├─ <filename class="headerfile">recoll-portable/</filename>
+                           ├─ <filename class="headerfile">recoll-appimage-portable/</filename>
+                           └─ <filename class="sourcefile">recoll-config/</filename></screen>
+          </para>
+
+          <para>The <literal>recoll-xxx</literal> directories can be placed under the volume root
+          (no <replaceable>indrive/path/</replaceable> part)</para>
+
+          <para>Simple &WIN; example:<screen><filename>E:/recoll-portable</filename>
+<filename>E:\recoll-config</filename>
+<filename>E:\somedatafolder</filename></screen>
+          </para>
+
+          <para>Mixed &WIN; + <application>AppImage</application> example with internal path
+          (mounted under Linux):
+          <screen><filename>/mount/point/recoll/recoll-portable</filename>
+<filename>/mount/point/recoll/recoll-appimage-portable</filename>
+<filename>/mount/point/recoll/recoll-config</filename>
+<filename>/mount/point/yourdata</filename></screen>
+          </para>
+
+          <para>The <filename>recoll.conf</filename> configuration file inside
+          <filename>recoll-config/</filename> has two mandatory entries:
+          <itemizedlist>
+            <listitem><literal>orgidxconfdir</literal>, which is set to the location of the
+            configuration directory when the data is first indexed (e.g. if the above is the
+            original location:
+            <literal>orgidxconfdir = </literal><replaceable><filename>/mount/point/recoll/recoll-config</filename></replaceable>).
+            This is used to compute the path transformations when the drive is subsequently mounted 
+            elsewhere.</listitem>
+          <listitem><literal>topdirs</literal> which, as usual, designates the folder(s) to be
+          indexed. E.g.:
+          <literal>topdirs = <replaceable>/mount/point/yourdata</replaceable></literal></listitem>
+          </itemizedlist>
+        </para>
+
+          <para>When the <filename>recoll.conf</filename> file is created by the GUI: <itemizedlist>
+          <listitem><literal>topdirs</literal> is set to the drive root (e.g.:
+          <replaceable>E:/</replaceable>).</listitem>
+          <listitem><literal>skippedNames</literal> is set to exclude the recoll installation
+          folder(s) from indexing.</listitem>
+          </itemizedlist></para>
+
+          <para><literal>topdirs</literal> could also include data outside the volume but, of
+          course, this part of the index would not be portable: only search and previewing from index
+          data would work when used in another location.</para>
+
+          <para>The configuration and index paths always refer to the original location. When
+          used or updated in a different location, they are modified back and forth between the
+          original and current mount points.</para>
+          
+        </sect2>
+          
+        
+      </sect1>
+      
       <sect1 xml:id="RCL.CONFIG.EXAMPLES">
         <title>Examples of configuration adjustments</title>
 

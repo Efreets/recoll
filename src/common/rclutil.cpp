@@ -187,26 +187,6 @@ static bool path_gettempfilename(string& filename, string&)
     return true;
 }
 
-// Convert X:/path to /X/path for path splitting inside the index
-string path_slashdrive(const string& path)
-{
-    string npath;
-    if (path_hasdrive(path)) {
-        npath.append(1, '/');
-        npath.append(1, path[0]);
-        if (path_isdriveabs(path)) {
-            npath.append(path.substr(2));
-        } else {
-            // This should be an error really
-            npath.append(1, '/');
-            npath.append(path.substr(2));
-        }
-    } else {
-        npath = path; ///??
-    }
-    return npath;
-}
-
 #else // !_WIN32 ->
 
 static bool path_gettempfilename(string& filename, string& reason)
@@ -453,15 +433,6 @@ bool printableUrl(const string& fcharset, const string& in, string& out)
     }
 #endif
     return true;
-}
-
-string url_gpathS(const string& url)
-{
-#ifdef _WIN32
-    return path_slashdrive(url_gpath(url));
-#else
-    return url_gpath(url);
-#endif
 }
 
 std::string json_string(const std::string& in)

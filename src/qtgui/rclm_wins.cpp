@@ -24,6 +24,7 @@
 #include "listdialog.h"
 #include "confgui/confguiindex.h"
 #include "idxsched.h"
+#include "portabcreat.h"
 #ifdef _WIN32
 #include "winschedtool.h"
 #else
@@ -263,6 +264,20 @@ void RclMain::showIndexSched(bool modal)
     } else {
         indexSched->show();
     }
+}
+
+void RclMain::showPortabCreat()
+{
+    LOGDEB("showPortabCreat()\n" );
+    if (portabCreat == 0) {
+        portabCreat = new PortabCreatW(this);
+        connect(new QShortcut(quitKeySeq, portabCreat), SIGNAL (activated()), this,SLOT(fileExit()));
+        connect(portabCreat->createCLB, SIGNAL(clicked()), portabCreat, SLOT(createInstall()));
+    } else {
+        // Close and reopen, in hope that makes us visible...
+        portabCreat->close();
+    }
+    portabCreat->show();
 }
 
 void RclMain::showCronTool()

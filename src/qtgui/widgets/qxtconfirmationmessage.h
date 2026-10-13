@@ -33,6 +33,7 @@
 #define QXTCONFIRMATIONMESSAGE_H
 
 #include <QMessageBox>
+#include <QSettings>
 #include "qxtglobal.h"
 
 class QxtConfirmationMessagePrivate;
@@ -43,6 +44,7 @@ class QXT_GUI_EXPORT QxtConfirmationMessage : public QMessageBox
     QXT_DECLARE_PRIVATE(QxtConfirmationMessage)
     Q_PROPERTY(QString confirmationText READ confirmationText WRITE setConfirmationText)
     Q_PROPERTY(QString overrideSettingsKey READ overrideSettingsKey WRITE setOverrideSettingsKey)
+    Q_PROPERTY(QSettings* overrideSettings READ overrideSettings WRITE setOverrideSettings)
     Q_PROPERTY(bool rememberOnReject READ rememberOnReject WRITE setRememberOnReject)
 
 public:
@@ -67,6 +69,8 @@ public:
 
     QString overrideSettingsKey() const;
     void setOverrideSettingsKey(const QString& key);
+    QSettings* overrideSettings() const;
+    void setOverrideSettings(QSettings *settingsp);
 
     bool rememberOnReject() const;
     void setRememberOnReject(bool remember);

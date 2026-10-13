@@ -1044,7 +1044,7 @@ bool FileInterner::topdocToFile(
         LOGERR("FileInterner::topdocToFile fetcher failed\n");
         return false;
     }
-    const char *filename = "";
+    std::string filename;
     TempFile temp;
     if (tofile.empty()) {
         if (!tempFileForMT(temp, cnf, idoc.mimetype)) {
@@ -1052,7 +1052,7 @@ bool FileInterner::topdocToFile(
         }
         filename = temp.filename();
     } else {
-        filename = tofile.c_str();
+        filename = tofile;
     }
     string reason;
     switch (rawdoc.kind) {
@@ -1066,7 +1066,7 @@ bool FileInterner::topdocToFile(
             }
         }
         fn = temp.ok() ? temp.filename() : rawdoc.data;
-        if (!copyfile(fn.c_str(), filename, reason)) {
+        if (!copyfile(fn, filename, reason)) {
             LOGERR("FileInterner::idocToFile: copyfile: " << reason << "\n");
             return false;
         }
@@ -1114,7 +1114,7 @@ bool FileInterner::interntofile(TempFile& otemp, const string& tofile,
         doc.mimetype = cstr_texthtml;
     }
 
-    const char *filename;
+    std::string filename;
     TempFile temp;
     if (tofile.empty()) {
         if (!tempFileForMT(temp, m_cfg, mimetype)) {
@@ -1122,7 +1122,7 @@ bool FileInterner::interntofile(TempFile& otemp, const string& tofile,
         }
         filename = temp.filename();
     } else {
-        filename = tofile.c_str();
+        filename = tofile;
     }
     string reason;
     if (!stringtofile(doc.text, filename, reason)) {
@@ -1200,7 +1200,7 @@ bool FileInterner::maybeUncompressToTemp(TempFile& temp, const string& fn,
     // reason for this, but it's not nice here. Have to move, the
     // uncompressed file, hopefully staying on the same dev.
     string reason;
-    if (!renameormove(uncomped.c_str(), temp.filename(), reason)) {
+    if (!renameormove(uncomped, temp.filename(), reason)) {
         LOGERR("FileInterner::maybeUncompress: move [" << uncomped <<
                "] -> [" << temp.filename() << "] failed: " << reason << "\n");
         return false;

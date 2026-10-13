@@ -156,6 +156,9 @@ public:
 
     /** Check if index stores the documents' texts. Only valid after open */
     bool storesDocText();
+
+    /** Was this index created on Windows (!windows paths inside!) */
+    bool hasWinPaths();
     
     /** Test word for spelling correction candidate: not too long, no special chars... 
      * @param with_aspell test for use with aspell, else for xapian speller */

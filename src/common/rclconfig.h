@@ -84,6 +84,10 @@ public:
 
     /** Returns true if this is ~/.recoll */
     bool isDefaultConfig() const;
+    /** Is this a portable data + config/index on a movable volume ? */
+    bool isPortable() const;
+    /** Check for a portable install and return the configuration name */
+    static std::string checkPortable(std::string *reasonp = nullptr);
     /** Get the local value for /usr/local/share/recoll/ */
     const std::string& getDatadir() const;
 
@@ -149,7 +153,13 @@ public:
     /** Get indexing status file name */
     std::string getIdxStatusFile() const;
     std::string getIdxStopFile() const;
-    /** Do path translation according to the ptrans table */
+    /** Path translation according to orgidxconfdir (dataset mobility) only.*/
+    bool movable() const;
+    void urlToIndex(std::string& url) const;
+    bool pathToIndex(std::string& path) const;
+    void urlFromIndex(std::string& url) const;
+    bool pathFromIndex(std::string& path) const;
+    /** Do path translation according to the ptrans table AND orgidxconfdir. Only for query */
     void urlrewrite(const std::string& dbdir, std::string& url) const;
     ConfSimple *getPTrans();
     /** Get Web Queue directory name */

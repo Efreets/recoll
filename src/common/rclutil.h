@@ -60,12 +60,6 @@ extern std::string json_string(const std::string& in);
 
 /// Transcode to utf-8 if possible or url encoding, for display.
 extern bool printableUrl(const std::string& fcharset, const std::string& in, std::string& out);
-/// Same but, in the case of a Windows local path, also turn "c:/" into
-/// "/c/" This should be used only for splitting the path in rcldb.
-#ifdef _WIN32
-extern std::string path_slashdrive(const std::string& path);
-#endif
-extern std::string url_gpathS(const std::string& url);
 
 bool path_samepath(const std::string& p1, const std::string& p2);
 

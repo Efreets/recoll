@@ -7,8 +7,8 @@
 # py3versions program is found in the PATH before the system one, and
 # outputs the desired versions. E.g.:
 # #!/bin/sh
-# echo 3.8 3.9 3.10 3.11 3.12 3.13
-
+# echo 3.9 3.10 3.11 3.12 3.13
+# Note: the oldest release we support at the moment is debian bullseye, Python 3.9
 fatal()
 {
     echo $*
@@ -16,13 +16,13 @@ fatal()
 }
 
 BUILDTOP=`pwd`
-RCLDISTS=/home/dockes/projets/fulltext/web-recoll
-RCLSRC=/home/dockes/projets/fulltext/recoll
+RCLDISTS=${RCLDISTS:-/home/dockes/projets/fulltext/web-recoll}
+RCLSRC=${RCLSRC:-/home/dockes/projets/fulltext/recoll}
 
-FROMGIT=0
-RECOLL_VERSION=1.43.14
+FROMGIT=${FROMGIT:-0}
+RECOLL_VERSION=1.45.0
 
-UNRTF=unrtf-0.21.11
+UNRTF=unrtf-0.21.13
 ANTIWORD=antiword
 
 DEPLOYBINDIR=~/.local/bin
@@ -73,7 +73,8 @@ RECOLL_VERSION=`cat RECOLL-VERSION.txt`
 
 # The -Dappimage=true is not used after 2025-11-20, but needed for recoll-1.43.7
 meson setup --prefix=/usr ${BUILDDIR}
-ninja -C ${BUILDDIR}
+ninja -C ${BUILDDIR} || exit 1
+(cd ${BUILDDIR}/qtgui;make) || exit 1
 
 echo;echo INSTALLING TO $APPDIR
 DESTDIR=$APPDIR ninja -C ${BUILDDIR} install || exit 1

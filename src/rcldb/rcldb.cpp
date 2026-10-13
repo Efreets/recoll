@@ -251,6 +251,15 @@ bool Db::storesDocText()
     return m_ndb->m_storetext;
 }
 
+bool Db::hasWinPaths()
+{
+    if (!m_ndb || !m_ndb->m_isopen) {
+        LOGERR("Db::storesDocText: called on non-opened db\n");
+        return false;
+    }
+    return m_ndb->m_haswinpaths;
+}
+
 // Note: xapian has no close call, we delete and recreate the db
 bool Db::close()
 {

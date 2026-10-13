@@ -45,7 +45,8 @@ class RclDynConf;
 extern RclDynConf *g_dynconf;
 class AdvSearchHist;
 extern AdvSearchHist *g_advshistory;
-
+class QSettings;
+extern QSettings *g_settings;
 
 extern TempFile *rememberTempFile(TempFile);
 extern void forgetTempFile(std::string &fn);

@@ -1472,7 +1472,7 @@ bool CirCache::compact(const std::string& dir, std::string *reason)
     std::string r;
     std::string nfile = path_cat(ndir, "circache.crch").c_str();
     std::string ofile = path_cat(dir, "circache.crch").c_str();
-    if (!renameormove(nfile.c_str(), ofile.c_str(), r)) {
+    if (!renameormove(nfile, ofile, r)) {
         msg << "rename: " << r;
         LOGERR(msg.str() << "\n");
         if (reason) {
@@ -1527,7 +1527,7 @@ bool CCDataToFile::putFile(const std::string& udi, const ConfSimple *dicp, const
             break;
         }
     }
-    if (!stringtofile(data, fn.c_str(), m_reason)) {
+    if (!stringtofile(data, fn, m_reason)) {
         return false;
     }
     // Try to reset the original mtime on the data file.
@@ -1544,7 +1544,7 @@ bool CCDataToFile::putFile(const std::string& udi, const ConfSimple *dicp, const
     fn = path_cat(m_dir, "circache-" + hash + "-" + std::to_string(dupnum) + ".dic");
     std::ostringstream str;
     dicp->write(str);
-    if (!stringtofile(str.str(), fn.c_str(), m_reason)) {
+    if (!stringtofile(str.str(), fn, m_reason)) {
         return false;
     }
     return true;

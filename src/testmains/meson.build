@@ -60,6 +60,16 @@ trcopyfile = executable(
     link_with: librecoll,
     install: false,
 )
+trcopytree_sources = [
+    'trcopytree.cpp',
+]
+trcopytree = executable(
+    'trcopytree',
+    trcopytree_sources,
+    include_directories: tmain_incdirs,
+    link_with: librecoll,
+    install: false,
+)
 trcpuconf_sources = [
     'trcpuconf.cpp',
 ]

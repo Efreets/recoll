@@ -249,6 +249,7 @@ bool FsIndexer::index(int flags)
 
 void FsIndexer::shutdownQueues(bool ok)
 {
+    PRETEND_USE(ok);
 #ifdef IDX_THREADS
     if (!ok) {
         // Error or more probably interrupt. Discard everything for fast shutdown
@@ -452,6 +453,7 @@ bool FsIndexer::purgeFiles(vector<string>& files)
 
     for (auto it = files.begin(); it != files.end(); ) {
         string udi;
+        m_config->pathToIndex(*it);
         fileUdi::make_udi(*it, cstr_null, udi);
         // rcldb::purgefile returns true if the udi was either not
         // found or deleted, false only in case of actual error
@@ -653,7 +655,13 @@ FsTreeWalker::Status FsIndexer::processonefile(
     string sig;
     fsmakesig(stp, sig);
     string udi;
-    fileUdi::make_udi(fn, cstr_null, udi);
+    std::string idxfn(fn);
+    if (m_config->movable()) {
+        m_config->pathToIndex(idxfn);
+        fileUdi::make_udi(idxfn, cstr_null, udi);
+    } else {
+        fileUdi::make_udi(fn, cstr_null, udi);
+    }
     unsigned int existingDoc;
     string oldsig;
     bool needupdate;
@@ -765,7 +773,11 @@ FsTreeWalker::Status FsIndexer::processonefile(
             } else {
                 hadNonNullIpath = true;
             }
-            fileUdi::make_udi(fn, doc.ipath, udi);
+            if (m_config->movable()) {
+                fileUdi::make_udi(idxfn, doc.ipath, udi);
+            } else {
+                fileUdi::make_udi(fn, doc.ipath, udi);
+            }
 
             // Set file name, mod time and url if not done by filter. We used to set the top-level
             // container file name for all subdocs without a proper file name, but this did not make
@@ -779,8 +791,10 @@ FsTreeWalker::Status FsIndexer::processonefile(
                 doc.meta[Rcl::Doc::keybrt] = brdate;
             }
 #endif   
-            if (doc.url.empty())
+            if (doc.url.empty()) {
                 doc.url = path_pathtofileurl(fn);
+                config->urlToIndex(doc.url);
+            }
 
             if (doc.ipath.empty() && !doc.hasmetavalue(Rcl::Doc::keyfn)) {
                 doc.meta[Rcl::Doc::keyfn] = utf8fn;
@@ -881,6 +895,7 @@ FsTreeWalker::Status FsIndexer::processonefile(
             fileDoc.haschildren = true;
             fileDoc.mimetype = mimetype;
             fileDoc.url = path_pathtofileurl(fn);
+            config->urlToIndex(fileDoc.url);
             if (m_havelocalfields) 
                 setlocalfields(localfields, fileDoc);
             fileDoc.pcbytes = std::to_string(stp.pst_size);

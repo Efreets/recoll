@@ -51,13 +51,12 @@ void ViewAction::init()
     connect(setExceptCB, SIGNAL(stateChanged(int)), this, SLOT(onSetExceptCBToggled(int)));
     connect(selSamePB, SIGNAL(clicked()), this, SLOT(onSelSameClicked()));
 
-    QSettings settings;
-    auto w = settings.value(settingskey_width).toInt();
-    auto h = settings.value(settingskey_height).toInt();
+    auto w = g_settings->value(settingskey_width).toInt();
+    auto h = g_settings->value(settingskey_height).toInt();
     if (w != 0 && h != 0) {
         resize(QSize(w, h).expandedTo(minimumSizeHint()));
     }
-    auto qw = settings.value(settingskey_fieldwidths).toString();
+    auto qw = g_settings->value(settingskey_fieldwidths).toString();
     if (!qw.isEmpty()) {
         auto *header = actionsLV->horizontalHeader();
         std::vector<std::string> vw;
@@ -75,16 +74,15 @@ void ViewAction::init()
 
 void ViewAction::onClose()
 {
-    QSettings settings;
     auto *header = actionsLV->horizontalHeader();
     std::vector<std::string> vw;
     for (int i = 0; i < 2; i++){
         vw.push_back(std::to_string(header->sectionSize(i)));
     }
     auto s = stringsToString(vw);
-    settings.setValue(settingskey_fieldwidths, u8s2qs(s));
-    settings.setValue(settingskey_width, width());
-    settings.setValue(settingskey_height, height());
+    g_settings->setValue(settingskey_fieldwidths, u8s2qs(s));
+    g_settings->setValue(settingskey_width, width());
+    g_settings->setValue(settingskey_height, height());
     close();
 }
 

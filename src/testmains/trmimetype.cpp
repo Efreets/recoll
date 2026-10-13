@@ -30,7 +30,7 @@ int main(int argc, const char **argv)
             fprintf(stderr, "Can't stat %s\n", filename.c_str());
             continue;
         }
-        cout << filename << " -> " <<  mimetype(filename, config, true, st) << "\n";
+        cout << filename << " -> " <<  mimetype(config, filename, &st) << "\n";
 
     }
     return 0;
