@@ -219,34 +219,33 @@ bool Aspell::buildDict(Rcl::Db &db, string &reason)
 
     // We create the dictionary by executing the aspell command:
     // aspell --lang=[lang] create master [dictApath]
-    string cmdstring(m_data->m_execbuild);
     ExecCmd aspell;
     vector<string> args;
     args.push_back(string("--lang=")+ m_lang);
-    cmdstring += string(" ") + string("--lang=") + m_lang;
     args.push_back("--encoding=utf-8");
-    cmdstring += string(" ") + "--encoding=utf-8";
 #ifdef _WIN32
     args.push_back(string("--data-dir=") + m_data->m_datadir);
 #endif
     if (!m_data->m_addCreateParam.empty()) {
         args.push_back(m_data->m_addCreateParam);
-        cmdstring += string(" ") + m_data->m_addCreateParam;
     }
     args.push_back("create");
-    cmdstring += string(" ") + "create";
     args.push_back("master");
-    cmdstring += string(" ") + "master";
     args.push_back(dicPath());
-    cmdstring += string(" ") + dicPath();
+    string cmdstring = m_data->m_execbuild + " " + stringsToString(args);
 
     // Have to disable stderr, as numerous messages about bad strings are
     // printed. We'd like to keep errors about missing databases though, so
     // make it configurable for diags
     bool keepStderr = false;
     m_config->getConfParam("aspellKeepStderr", &keepStderr);
+
+#ifndef _WIN32
+    // Total mystery: as of ~2026-10 doing this makes the command fail on windows...
+    // Maybe because of an aspell rebuild ?? Just let the messages go wherever they go...
     if (!keepStderr)
         aspell.setStderr("/dev/null");
+#endif
 
     Rcl::TermIter *tit = db.termWalkOpen();
     if (nullptr == tit) {
