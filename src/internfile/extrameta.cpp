@@ -20,6 +20,10 @@
 #include <string>
 
 #include <errno.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "smallut.h"
 #include "rclconfig.h"
@@ -89,6 +93,65 @@ string decode_finder_metadata(const string& path, const string& xkey, const stri
 }
 #endif // __APPLE__
 
+// MoobFS typed attributes (user.moob.*): one type byte followed by a little-endian payload. See
+// https://github.com/studiomoob/llmoobfs/blob/main/docs/client-contract.md (section 4).
+// Values which do not match the encoding are returned unchanged.
+static string decode_moob_value(const string& path, const string& xkey, const string& value)
+{
+    if (value.empty())
+        return value;
+    const unsigned char *p = (const unsigned char *)value.data() + 1;
+    size_t len = value.size() - 1;
+    uint64_t u = 0;
+    if (len == 8) {
+        for (int i = 7; i >= 0; i--)
+            u = (u << 8) | p[i];
+    }
+    switch (value[0]) {
+    case 1: // UTF-8 string
+        if (len <= 1024)
+            return value.substr(1);
+        break;
+    case 2: // int64
+        if (len == 8)
+            return std::to_string((long long)(int64_t)u);
+        break;
+    case 3: // double
+        if (len == 8) {
+            double d;
+            memcpy(&d, &u, sizeof(d));
+            if (d == d) {
+                // Fewest digits (15 to 17) which read back as the same value
+                char buf[40];
+                for (int prec = 15; prec <= 17; prec++) {
+                    snprintf(buf, sizeof(buf), "%.*g", prec, d);
+                    if (strtod(buf, nullptr) == d)
+                        break;
+                }
+                return buf;
+            }
+        }
+        break;
+    case 4: // bool
+        if (len == 1 && p[0] <= 1)
+            return p[0] ? "true" : "false";
+        break;
+    case 5: // time, nanoseconds since the epoch. Output seconds, same as dmtime
+        if (len == 8) {
+            int64_t ns = (int64_t)u;
+            int64_t secs = ns / 1000000000;
+            if (ns % 1000000000 < 0)
+                secs--;
+            return std::to_string((long long)secs);
+        }
+        break;
+    case 6: // raw: opaque, not indexed
+        return string();
+    }
+    LOGINF("reapXattrs: bad MoobFS value for " << path << " : " << xkey << ", keeping it as is\n");
+    return value;
+}
+
 static void docfieldfrommeta(RclConfig* cfg, const string& name, const string &value, Rcl::Doc& doc)
 {
     string fieldname = cfg->fieldCanon(name);
@@ -145,6 +208,10 @@ void reapXAttrs(const RclConfig* cfg, const string& path,  map<string, string>& 
             value = decode_finder_metadata(path, xkey, value);
         }
 #endif // __APPLE__
+
+        if (beginswith(xkey, "moob.")) {
+            value = decode_moob_value(path, xkey, value);
+        }
 
         if (value.empty())
             continue;
