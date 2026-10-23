@@ -468,6 +468,9 @@ qtgui/mtpics/video.png
 qtgui/mtpics/wordprocessing.png
 qtgui/multisave.cpp
 qtgui/multisave.h
+qtgui/portabcreat.cpp
+qtgui/portabcreat.h
+qtgui/portabcreat.ui
 qtgui/preview.ui
 qtgui/preview_load.cpp
 qtgui/preview_load.h
@@ -690,6 +693,8 @@ utils/conftree.h
 utils/confxml.cpp
 utils/copyfile.cpp
 utils/copyfile.h
+utils/copytree.cpp
+utils/copytree.h
 utils/cpuconf.cpp
 utils/cpuconf.h
 utils/damlev.h

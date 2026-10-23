@@ -7,6 +7,7 @@ set(qtgui_ui_SOURCES
     crontool.ui
     firstidx.ui
     idxsched.ui
+    portabcreat.ui
     preview.ui
     ptrans.ui
     rclmain.ui
@@ -51,6 +52,8 @@ set(qtgui_SOURCES
     main.cpp
     multisave.cpp
     multisave.h
+    portabcreat.cpp
+    portabcreat.ui
     preview_load.cpp
     preview_load.h
     preview_plaintorich.cpp

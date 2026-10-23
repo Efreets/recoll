@@ -311,6 +311,8 @@ set(librecoll_SOURCES
     utils/conftree.h
     utils/copyfile.cpp
     utils/copyfile.h
+    utils/copytree.cpp
+    utils/copytree.h
     utils/cpuconf.cpp
     utils/cpuconf.h
     utils/damlev.h
