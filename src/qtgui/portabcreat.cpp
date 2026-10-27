@@ -26,7 +26,7 @@
 #include "log.h"
 #include "recoll.h"
 #include "pathut.h"
-#ifdef _WIN32
+#if defined(_WIN32) || defined(RECOLL_AS_MAC_BUNDLE)
 #include "fstreewalk.h"
 #include "copytree.h"
 #endif
@@ -63,10 +63,14 @@ indexing and queries there.
 
 void PortabCreatW::init()
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(RECOLL_AS_MAC_BUNDLE)
     const char *whatstr = QT_TRANSLATE_NOOP("PortabCreatW", "full Recoll installation");
     const char *wherestr = QT_TRANSLATE_NOOP("PortabCreatW", "installation");
+#if defined(_WIN32)
     const char *namestr = "recoll-portable/";
+#else // Apple
+    const char *namestr = "recoll-portable.app/";
+#endif
 #else
     const char *whatstr = QT_TRANSLATE_NOOP("PortabCreatW", "AppImage executable");
     const char *wherestr = QT_TRANSLATE_NOOP("PortabCreatW", "executable location");
@@ -90,11 +94,12 @@ bool copycb(void *ctx, int64_t bytes)
 }
 
 static const char *wininstalldir = "recoll-portable";
+static const char *appleinstalldir = "recoll-portable.app";
 static const char *appiminstalldir = "recoll-appimage-portable";
 
 void PortabCreatW::createInstall()
 {
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(RECOLL_AS_MAC_BUNDLE)
     const char *envapp = getenv("APPIMAGE");
     if (nullptr == envapp)
         return;
@@ -114,30 +119,39 @@ void PortabCreatW::createInstall()
     }
     std::string rootdir(qs2path(dirl[0]));
     std::string configdir = path_cat(rootdir, "recoll-config");
-#ifdef _WIN32
+#if defined(_WIN32)
     std::string installdir = path_cat(rootdir, wininstalldir);
-    std::string otherinstalldir = path_cat(rootdir, appiminstalldir);
+    std::vector<std::string> otherinstalldirs = {path_cat(rootdir, appiminstalldir),
+						 path_cat(rootdir, appleinstalldir)};
+#elif defined(RECOLL_AS_MAC_BUNDLE)
+    std::string installdir = path_cat(rootdir, appleinstalldir);
+    std::vector<std::string> otherinstalldirs = {path_cat(rootdir, appiminstalldir),
+						 path_cat(rootdir, wininstalldir)};
 #else
-    std::string installdir = path_cat(rootdir, appiminstalldir);
+    std::string installdir = path_cat(rootdir, appleinstalldir);
     std::string otherinstalldir = path_cat(rootdir, wininstalldir);
 #endif
-    auto configfound = path_exists(configdir);
+
     auto installfound = path_exists(installdir);
-    if (configfound || installfound) {
+    if (installfound) {
         QMessageBox::warning(0, "Recoll",tr("It seems that an installation already exists here."));
         return;
     }
+
+    // Check available space on target
     int pc;
     long long avmbs;
     if (!fsocc(rootdir, &pc, &avmbs)) {
         QMessageBox::warning(0, "Recoll", tr("Can't determine available space on volume."));
         return;
     }
-#ifdef _WIN32
+#if defined(_WIN32)
     std::string recollinstall = path_thisexecdir();
     // Note: fstreebytes is not very accurate on windows, it ignores cluster size adjustments.
     int64_t recollmbs = fsTreeBytes(recollinstall) / 1024 / 1024;
-    LOGDEB("PorabCreat: space: recoll mbs " << recollmbs << " vol avail mbs " << avmbs << "\n");
+#elif defined(RECOLL_AS_MAC_BUNDLE)
+    std::string recollinstall = path_getfather(path_getfather(path_thisexecdir()));
+    int64_t recollmbs = fsTreeBytes(recollinstall) / 1024 / 1024;
 #else
     PathStat st;
     if (path_fileprops(appimage, &st) != 0) {
@@ -147,6 +161,7 @@ void PortabCreatW::createInstall()
     }
     int64_t recollmbs = st.pst_size / 1024 / 1024;
 #endif
+    LOGDEB("PortabCreat: space: recoll mbs " << recollmbs << " vol avail mbs " << avmbs << "\n");
     if (recollmbs + 100 > avmbs) {
         QMessageBox::warning(0, "Recoll", tr("Insufficient available space on volume"));
         return;
@@ -154,14 +169,19 @@ void PortabCreatW::createInstall()
 
     std::string reason;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(RECOLL_AS_MAC_BUNDLE)
     // Create the recoll installation directory and copy recoll in there
     QProgressDialog progress(tr("Copying installation"), tr("Cancel"), 0, recollmbs, this);
     progress.setValue(0);
     progress.setMinimumDuration(1000);
     TrackProgress progressdata;
     progressdata.progress = &progress;
-    if (!copytree(path_thisexecdir(), installdir, copycb, &progressdata)) {
+#ifdef _WIN32
+    std::string srcdir = path_thisexecdir();
+#else
+    std::string srcdir = path_getfather(path_getfather(path_thisexecdir()));
+#endif
+    if (!copytree(srcdir, installdir, copycb, &progressdata)) {
         QMessageBox::warning(0, "Recoll", tr("Could not copy recoll installation"));
         return;
     }
@@ -175,25 +195,30 @@ void PortabCreatW::createInstall()
     }
 #endif
     
-    // Create the configuration directory
+    // Create the configuration directory if it does not exist.
     if (!path_makepath(configdir, 0755)) {
         QMessageBox::warning(0, "Recoll", tr("Could not create the configuration directory"));
         return;
     }
 
     std::string dst = path_cat(configdir, "recoll.conf");
-    ConfSimple conf(dst.c_str());
-    conf.set("orgidxconfdir", configdir);
-    conf.set("topdirs", rootdir);
-    std::vector<std::string> dirs{installdir, otherinstalldir, configdir};
-    conf.set("skippedPaths", stringsToString(dirs));
-    if (!conf.ok()) {
+    if (!path_exists(dst)) {
+      ConfSimple conf(dst.c_str());
+      conf.set("orgidxconfdir", configdir);
+      conf.set("topdirs", rootdir);
+      std::vector<std::string> dirs{installdir, configdir};
+      dirs.insert(dirs.end(), otherinstalldirs.begin(), otherinstalldirs.end());
+      conf.set("skippedPaths", stringsToString(dirs));
+      if (!conf.ok()) {
         QMessageBox::warning(0, "Recoll", tr("Could not create the configuration file"));
         return;
+      }
     }
     dst = path_cat(configdir, "backends");
-    if (!stringtofile("", dst, reason)) {
+    if (!path_exists(dst)) {
+      if (!stringtofile("", dst, reason)) {
         LOGINF("portabcreat: could not create backends file: " << reason << '\n');
+      }
     }
     createCLB->hide();
     mainExplainLBL->setText(tr("A portable Recoll configuration was created on ") +

@@ -34,6 +34,25 @@ public:
     void *ctx{nullptr};
 };
 
+#ifndef _WIN32
+#include <unistd.h>
+bool copylink(const std::string& src, const std::string& dst)
+{
+    char pathbuf[PATH_MAX+1];
+    ssize_t buff_len = readlink(src.c_str(), pathbuf, PATH_MAX);
+    if (buff_len < 0 || buff_len == PATH_MAX) {
+        LOGSYSERR("copylink", "readlink", src);
+        return false;
+    }
+    pathbuf[buff_len] = 0;
+    if (symlink(pathbuf, dst.c_str()) < 0) {
+        LOGSYSERR("copylink", "symlink", dst);
+        return false;
+    }
+    return true;
+}
+#endif
+
 FsTreeWalker::Status
 CopyWalker::processone(const std::string& path, FsTreeWalker::CbFlag flag,
                        const struct PathStat& pst)
@@ -66,6 +85,14 @@ CopyWalker::processone(const std::string& path, FsTreeWalker::CbFlag flag,
         return FsTreeWalker::FtwOk;
         break;
     case FsTreeWalker::FtwRegular:
+#ifndef _WIN32
+        if (pst.pst_type == PathStat::PST_SYMLINK) {
+            if (!copylink(path, dst)) {
+                return FsTreeWalker::FtwError;
+            }
+            return FsTreeWalker::FtwOk;
+        }
+#endif
         if (path_exists(dst)) {
             if (!path_isfile(dst)) {
                 LOGERR("copytree: " << dst << " exists and is not a file\n");

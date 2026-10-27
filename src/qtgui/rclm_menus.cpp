@@ -94,7 +94,7 @@ void RclMain::buildMenus()
     toolsMenu->addAction(showMissingHelpers_Action);
     toolsMenu->addAction(showActiveTypes_Action);
     toolsMenu->addAction(actionShow_index_statistics);
-#ifdef _WIN32
+#if defined(_WIN32) || defined(RECOLL_AS_MAC_BUNDLE)
     portabCreatAction->setText(portabCreatAction->text() + ellips);
     toolsMenu->addAction(portabCreatAction);
 #else

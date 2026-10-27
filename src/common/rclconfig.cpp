@@ -485,13 +485,18 @@ void RclConfig::Internal::initParamStale(ConfNull *cnf, ConfNull *mimemap)
 // Static because this may need to be called extremely early, before we actually build the config
 std::string RclConfig::checkPortable(std::string *reasonp)
 {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(RECOLL_AS_MAC_BUNDLE)
     // Check for a portable installation. The exe is directly under the top
     // installation directory
+#ifdef _WIN32
     auto installdir = path_thisexecdir();
     auto installname = path_getsimple(installdir);
-    LOGDEB0("RclConfig: portable? got installname [" << installname << "]\n");
     if (installname == "recoll-portable") {
+#else
+    auto installdir = path_getfather(path_getfather(path_thisexecdir()));
+    auto installname = path_getsimple(installdir);
+    if (installname == "recoll-portable.app") {
+#endif
         // The config must be on the same level and named "recoll-config"
         auto configdir = path_cat(path_getfather(installdir), "recoll-config");
         if (path_exists(configdir)) {
