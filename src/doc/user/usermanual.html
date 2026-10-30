@@ -571,17 +571,6 @@ alink="#0000FF">
             <dt><span class="sect1">5.9. <a href=
             "#RCL.CONFIG.PORTABLE">Portable installation
             (1.45)</a></span></dt>
-            <dd>
-              <dl>
-                <dt><span class="sect2">5.9.1. <a href=
-                "#RCL.CONFIG.PORTABLE.GUI">Using the GUI to create
-                a portable installation</a></span></dt>
-                <dt><span class="sect2">5.9.2. <a href=
-                "#RCL.CONFIG.PORTABLE.DETAILS">Details of the
-                volume configuration, manual
-                creation</a></span></dt>
-              </dl>
-            </dd>
             <dt><span class="sect1">5.10. <a href=
             "#RCL.CONFIG.EXAMPLES">Examples of configuration
             adjustments</a></span></dt>
@@ -12479,15 +12468,15 @@ other = rclcat:other</pre>
             </div>
           </div>
         </div>
-        <p>Under <span class="application">Windows</span>, or
+        <p>Under <span class="application">Windows</span>,
         <span class="application">Linux</span> (using the
         <span class="application">Recoll</span> <span class=
-        "application">AppImage</span>), you can create a portable
-        installation on a removable drive. Your data and
+        "application">AppImage</span>), or Mac OS, you can create a
+        portable installation on a removable drive. Your data and
         <span class="application">Recoll</span> binaries,
         configuration files, and index reside on the drive,
-        allowing you to move it to another system without extra
-        configuration.</p>
+        allowing you to move it to another system, and use it there
+        without installing anything.</p>
         <p>Searching and previewing documents work out of the box.
         Opening files depends on whether the target system has the
         required application installed.</p>
@@ -12495,69 +12484,81 @@ other = rclcat:other</pre>
         incremental indexing. While the <span class=
         "application">Windows</span> version is completely
         self-contained, the <span class="application">Linux</span>
-        <span class="application">AppImage</span> requires helper
-        utilities on the target system for certain file types (for
-        example, <code class="literal">poppler-utils</code> for PDF
-        indexing is not bundled in the <span class=
-        "application">AppImage</span>).</p>
-        <p>It is possible to install both the <span class=
-        "application">Windows</span> binaries and the AppImage on
-        the same drive, making it portable betweeen Linux and
-        <span class="application">Windows</span>. Because of the
-        differing file paths structure there are a few specific
-        limitations in this case.</p>
-        <p><a name="RCL.CONFIG.PORTABLE.LIMITATIONS" id=
-        "RCL.CONFIG.PORTABLE.LIMITATIONS"></a>
-        <b>Limitations.&nbsp;</b> Some of the following will
-        possibly be fixed or mitigated in the future:</p>
-        <div class="itemizedlist">
-          <p>Portable installation can only be created based on the
-          <span class="application">Windows</span> or <span class=
-          "application">AppImage</span> versions of <span class=
-          "application">Recoll</span></p>
-          <ul class="itemizedlist" style="list-style-type: disc;">
-            <li class="listitem">For the moment, portable
-            installations do not support customising indexing
-            parameters to folder subtrees: all parameters must be
-            global to the configuration.</li>
-            <li class="listitem">When a drive initialised on
-            <span class="application">Windows</span> is used with
-            the AppImage under Linux the directory side filter and
-            path-based filtering in general do not work well or at
-            all because the Linux side does not understand
-            <span class="application">Windows</span> drive names
-            (e.g. <em class=
-            "replaceable"><code>C:/some/path</code></em>).</li>
-            <li class="listitem">This feature being very new, some
-            other issues will probably emerge.</li>
-          </ul>
-        </div>
-        <div class="sect2">
+        <span class="application">AppImage</span> and Mac OS bundle
+        require helper utilities on the target system for certain
+        file types (for example, <code class=
+        "literal">poppler-utils</code> for PDF indexing is not
+        bundled in the <span class="application">AppImage</span>).
+        Realistically the <span class="application">AppImage</span>
+        and Mac OS versions are mostly useful for querying.</p>
+        <p>It is possible to install all three versions on the same
+        drive, making it portable betweeen Linux, <span class=
+        "application">Windows</span> and Mac OS. Updating on the
+        other system type should work fine, but has seen little
+        real world use.</p>
+        <p>In case of need, it is also possible to query the index
+        from a normal <span class="application">Recoll</span>
+        installation: just point it to the configuration directory
+        on the volume.</p>
+        <div class="sect4">
           <div class="titlepage">
             <div>
               <div>
-                <h3 class="title"><a name="RCL.CONFIG.PORTABLE.GUI"
-                id="RCL.CONFIG.PORTABLE.GUI"></a>5.9.1.&nbsp;Using
-                the GUI to create a portable installation</h3>
+                <h5 class="title"><a name=
+                "RCL.CONFIG.PORTABLE.LIMITATIONS" id=
+                "RCL.CONFIG.PORTABLE.LIMITATIONS"></a>Limitations</h5>
               </div>
             </div>
           </div>
-          <p>The <span class="application">Recoll</span>
-          <span class="application">Windows</span> and <span class=
-          "application">AppImage</span> GUIs have an additional
-          entry in the <span class="guilabel">Tools</span> menu for
-          creating a portable installation: create the appropriate
-          directory structure, copy the needed binary files and
-          initialise the main configuration file.</p>
+          <p>Some of the following will possibly be fixed or
+          mitigated in the future:</p>
+          <div class="itemizedlist">
+            <span class="application">Privacy: it is possible in
+            some cases that Recoll may create a temporary file on
+            the target system. If the data is confidential, do not
+            use this feature on an untrusted system.</span>
+            <ul class="itemizedlist" style=
+            "list-style-type: disc;">
+              <li class="listitem">A portable installation can only
+              be created based on the <span class=
+              "application">Windows</span>, <span class=
+              "application">AppImage</span>, or Mac OS bundle
+              versions of <span class=
+              "application">Recoll</span></li>
+              <li class="listitem">For the moment, portable
+              installations do not support customising indexing
+              parameters to folder subtrees: all parameters must be
+              global to the configuration.</li>
+              <li class="listitem">This feature being very new,
+              some other issues will probably emerge.</li>
+            </ul>
+          </div>
         </div>
-        <div class="sect2">
+        <div class="sect4">
           <div class="titlepage">
             <div>
               <div>
-                <h3 class="title"><a name=
+                <h5 class="title"><a name="RCL.CONFIG.PORTABLE.GUI"
+                id="RCL.CONFIG.PORTABLE.GUI"></a>Using the GUI to
+                create a portable installation</h5>
+              </div>
+            </div>
+          </div>
+          <p>The <span class="application">Recoll</span> GUI for
+          supported platforms have an additional entry in the
+          <span class="guilabel">Tools</span> menu for creating a
+          portable installation: create the appropriate directory
+          structure, copy the needed binary files and initialise
+          the main configuration file.</p>
+        </div>
+        <div class="sect4">
+          <div class="titlepage">
+            <div>
+              <div>
+                <h5 class="title"><a name=
                 "RCL.CONFIG.PORTABLE.DETAILS" id=
-                "RCL.CONFIG.PORTABLE.DETAILS"></a>5.9.2.&nbsp;Details
-                of the volume configuration, manual creation</h3>
+                "RCL.CONFIG.PORTABLE.DETAILS"></a>Details of the
+                volume configuration, manual creation:</h5>
               </div>
             </div>
           </div>
@@ -12575,6 +12576,8 @@ other = rclcat:other</pre>
                            ├─ <code class=
 "filename">recoll-portable/</code>
                            ├─ <code class=
+"filename">recoll-portable.app/</code>
+                           ├─ <code class=
 "filename">recoll-appimage-portable/</code>
                            └─ <code class=
 "filename">recoll-config/</code></pre>
@@ -12586,8 +12589,8 @@ other = rclcat:other</pre>
           example:</p>
           <pre class="screen"><code class=
           "filename">E:/recoll-portable</code>
-<code class="filename">E:\recoll-config</code>
-<code class="filename">E:\somedatafolder</code></pre>
+<code class="filename">E:/recoll-config</code>
+<code class="filename">E:/somedatafolder</code></pre>
           <p>Mixed <span class="application">Windows</span> +
           <span class="application">AppImage</span> example with
           internal path (mounted under Linux):</p>

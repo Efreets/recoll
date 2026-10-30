@@ -6934,51 +6934,55 @@ other = rclcat:other</programlisting>
       <sect1 xml:id="RCL.CONFIG.PORTABLE">
         <title>Portable installation (1.45)</title>
 
-        <para>Under &WIN;, or <application>Linux</application> (using the &RCL;
-        <application>AppImage</application>), you can create a portable installation
+        <para>Under &WIN;, <application>Linux</application> (using the &RCL;
+        <application>AppImage</application>), or Mac OS, you can create a portable installation
         on a removable drive. Your data and &RCL; binaries, configuration files, and index reside on
-        the drive, allowing you to move it to another system without extra configuration.</para>
+        the drive, allowing you to move it to another system, and use it there without installing
+        anything.</para> 
 
         <para>Searching and previewing documents work out of the box. Opening files depends on 
         whether the target system has the required application installed.</para>
 
         <para>You can also update data on the volume and run an incremental indexing. While the
         &WIN; version is completely self-contained, the <application>Linux</application>
-        <application>AppImage</application> requires helper utilities on the target system for
-        certain file types (for example, <literal>poppler-utils</literal> for PDF indexing is not
-        bundled in the <application>AppImage</application>).</para>
+        <application>AppImage</application> and Mac OS bundle require helper utilities on the target
+        system for certain file types (for example, <literal>poppler-utils</literal> for PDF
+        indexing is not bundled in the <application>AppImage</application>). Realistically the
+        <application>AppImage</application> and Mac OS versions are mostly useful for
+        querying.</para>
 
-        <para>It is possible to install both the &WIN; binaries and the AppImage on the same drive,
-        making it portable betweeen Linux and &WIN;. Because of the differing file paths structure
-        there are a few specific limitations in this case.</para>
+        <para>It is possible to install all three versions on the same drive, making it portable
+        betweeen Linux, &WIN; and Mac OS. Updating on the other system type should work fine, but
+        has seen little real world use.</para>
 
-        <formalpara xml:id="RCL.CONFIG.PORTABLE.LIMITATIONS">
+        <para>In case of need, it is also possible to query the index from a normal &RCL;
+        installation: just point it to the configuration directory on the volume.</para>
+
+        <sect4 xml:id="RCL.CONFIG.PORTABLE.LIMITATIONS">
           <title>Limitations</title>
           <para>Some of the following will possibly be fixed or mitigated in the future:
           <itemizedlist>
-            <para>Portable installation can only be created based on the &WIN; or
-            <application>AppImage</application> versions of &RCL;</para>
+            <listitem>A portable installation can only be created based on the &WIN;,
+            <application>AppImage</application>, or Mac OS bundle versions of &RCL;</listitem>
             <listitem>For the moment, portable installations do not support customising indexing
             parameters to folder subtrees: all parameters must be global to the
             configuration.</listitem>
-            <listitem>When a drive initialised on &WIN; is used with the AppImage under Linux the
-            directory side filter and path-based filtering in general do not work well or at all
-            because the Linux side does not understand &WIN; drive names
-            (e.g. <replaceable>C:/some/path</replaceable>).</listitem>
+            <application>Privacy: it is possible in some cases that Recoll may create a temporary
+            file on the target system. If the data is confidential, do not use this feature on an
+            untrusted system.</application>
             <listitem>This feature being very new, some other issues will probably emerge.</listitem>
           </itemizedlist></para>
-        </formalpara>
+        </sect4>
 
-        <sect2 xml:id="RCL.CONFIG.PORTABLE.GUI">
-          <title>Using the GUI to create a portable installation</title>
-          <para>The &RCL; &WIN; and <application>AppImage</application> GUIs have an additional
-          entry in the <guilabel>Tools</guilabel> menu for creating a portable installation: create
-          the appropriate directory structure, copy the needed binary files and initialise the main
-          configuration file.</para>
-        </sect2>
+        <sect4 xml:id="RCL.CONFIG.PORTABLE.GUI">
+          <title>Using the GUI to create a portable installation</title> <para>The &RCL; GUI for
+          supported platforms have an additional entry in the <guilabel>Tools</guilabel> menu for
+          creating a portable installation: create the appropriate directory structure, copy the
+          needed binary files and initialise the main configuration file.</para>
+        </sect4>
 
-        <sect2 xml:id="RCL.CONFIG.PORTABLE.DETAILS">
-          <title>Details of the volume configuration, manual creation</title>
+        <sect4 xml:id="RCL.CONFIG.PORTABLE.DETAILS">
+          <title>Details of the volume configuration, manual creation:</title>
 
           <para>The &WIN; binary installation directory and the <application>AppImage</application>
           are standard &RCL; copies. The programs identify a portable installation using the name of
@@ -6987,6 +6991,7 @@ other = rclcat:other</programlisting>
           <screen><prompt>/mount/point/</prompt>
             └─ <filename class="directory">indrive/path/</filename>
                            ├─ <filename class="headerfile">recoll-portable/</filename>
+                           ├─ <filename class="headerfile">recoll-portable.app/</filename>
                            ├─ <filename class="headerfile">recoll-appimage-portable/</filename>
                            └─ <filename class="sourcefile">recoll-config/</filename></screen>
           </para>
@@ -6995,8 +7000,8 @@ other = rclcat:other</programlisting>
           (no <replaceable>indrive/path/</replaceable> part)</para>
 
           <para>Simple &WIN; example:<screen><filename>E:/recoll-portable</filename>
-<filename>E:\recoll-config</filename>
-<filename>E:\somedatafolder</filename></screen>
+<filename>E:/recoll-config</filename>
+<filename>E:/somedatafolder</filename></screen>
           </para>
 
           <para>Mixed &WIN; + <application>AppImage</application> example with internal path
@@ -7037,9 +7042,7 @@ other = rclcat:other</programlisting>
           used or updated in a different location, they are modified back and forth between the
           original and current mount points.</para>
           
-        </sect2>
-          
-        
+        </sect4>
       </sect1>
       
       <sect1 xml:id="RCL.CONFIG.EXAMPLES">

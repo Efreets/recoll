@@ -636,11 +636,15 @@ Override logfilename for the indexer.
 .BI "idxlogthedate = "bool
 override logthedate for the indexer. 
 .TP
-.BI "helperlogfilename = "fn
+.BI "handlerlogfilename = "fn
 Destination file for external helpers standard error output. The external program error output is left alone by default,
 e.g. going to the terminal when the recoll[index] program is executed
 from the command line. Use /dev/null or a file inside a non-existent
 directory to completely suppress the output.
+.TP
+.BI "handlerloglevel = "int
+Handler log verbosity 1-5 from silent to verbose. This can't control the output of external programs of course, only the one from
+Recoll Python handler scripts.
 .TP
 .BI "daemloglevel = "int
 Override loglevel for the real time indexer. The default is to use the idx... values if set, else the log... values.
