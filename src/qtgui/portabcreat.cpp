@@ -99,6 +99,7 @@ static const char *appiminstalldir = "recoll-appimage-portable";
 
 void PortabCreatW::createInstall()
 {
+    PRETEND_USE(appiminstalldir);
 #if !defined(_WIN32) && !defined(RECOLL_AS_MAC_BUNDLE)
     const char *envapp = getenv("APPIMAGE");
     if (nullptr == envapp)
@@ -129,7 +130,8 @@ void PortabCreatW::createInstall()
 						 path_cat(rootdir, wininstalldir)};
 #else
     std::string installdir = path_cat(rootdir, appleinstalldir);
-    std::string otherinstalldir = path_cat(rootdir, wininstalldir);
+    std::vector<std::string> otherinstalldirs = {path_cat(rootdir, wininstalldir),
+						 path_cat(rootdir, appleinstalldir)};
 #endif
 
     auto installfound = path_exists(installdir);

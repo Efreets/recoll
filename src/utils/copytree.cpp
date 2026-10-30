@@ -18,6 +18,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 #include <sys/stat.h>
+#include <limits.h>
 
 #include "copytree.h"
 #include "copyfile.h"
