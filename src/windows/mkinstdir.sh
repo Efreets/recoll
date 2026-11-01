@@ -172,11 +172,6 @@ copyrecoll()
     chkcp $RCL/desktop/recoll.ico $DESTDIR/Share
 }
 
-copyredist()
-{
-    chkcp ${RCLDEPS}/vc_redist/VC_redist.x64.exe ${DESTDIR}/Share/dist
-}
-
 copyantiword()
 {
     bindir=$ANTIWORD/
@@ -303,6 +298,26 @@ copychm()
     popd
 }
 
+# We used to do this. Now ship the dlls instead
+copyredist()
+{
+    chkcp ${RCLDEPS}/vc_redist/VC_redist.x64.exe ${DESTDIR}/Share/dist
+}
+
+# Copy msvcp140.dll, vcruntime140.dll vcruntime140_1.dll where needed
+copymsvcrt()
+{
+    rtdir="/c/Windows/System32"
+    rtfiles="$rtdir/vcruntime140.dll $rtdir/vcruntime140_1.dll $rtdir/msvcp140.dll"
+    dstdirs="${DESTDIR} ${DESTDIR}/Share/filters/poppler/Library/bin"
+
+    for dir in $dstdirs; do
+        for rtfile in $rtfiles; do
+            chkcp $rtfile $dir
+        done
+    done
+}
+
 # Recoll python package. Only when compiled with msvc as this is what
 # the standard Python dist is built with
 copypyrecoll()
@@ -363,6 +378,7 @@ copyaspell
 copychm
 copypyrecoll
 copymagic
-copyredist
+# copyredist
+copymsvcrt
 
 echo "MKINSTDIR OK"
