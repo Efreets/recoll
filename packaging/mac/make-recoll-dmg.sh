@@ -19,6 +19,7 @@ deploy=~/Qt/6.9.3/macos/bin/macdeployqt
 #### Locations depending on the above, should not change much
 toprecoll=$top/recoll/src
 appdir=$toprecoll/qtgui/build/${qcbuildloc}-Release/recoll.app
+qmdir=$toprecoll/qtgui/build/${qcbuildloc}-Release/.qm
 rclindexdir=$toprecoll/qmake/build/recollindex/${qcbuildloc}-Release
 rclqdir=$toprecoll/qmake/build/recollq/${qcbuildloc}-Release
 bindir=$appdir/Contents/MacOS
@@ -53,6 +54,10 @@ cp $top/libmagic/magic/magic.mgc $datadir
 cp $top/poppler/build/utils/pdfinfo $top/poppler/build/utils/pdftotext $bindir || exit 1
 mkdir -p $datadir/poppler || exit 1
 cp -rp $top/poppler-data/* $datadir/poppler || exit 1
+
+# Recoll translations
+mkdir -p $datadir/translations || exit 1
+cp -p $qmdir/*.qm $datadir/translations || exit 1
 
 ### Create the dmg
 rm -f $dmg ~/Documents/recoll-$VERSION-*.dmg
