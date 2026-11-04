@@ -37,6 +37,7 @@
 #include "cjksplitter.h"
 #include "kosplitter.h"
 #include "cnsplitter.h"
+#include "jasplitter.h"
 
 using namespace std;
 
@@ -46,14 +47,11 @@ using namespace std;
 // light-weight than a full-blown Unicode approach (ICU...)
 
 
-// Decide if we treat katakana as western scripts, splitting into words instead of n-grams. This is
-// not absurd (katakana is a kind of alphabet, albeit phonetic and syllabic and is mostly used to
-// transcribe western words), but it does not work well because japanese uses separator-less
-// compound katakana words, and because the plural terminaisons are irregular and would need a
-// specialized stemmer. So we for now process katakana as the rest of cjk, using ngrams. This would
-// change if we used an external "intelligent" segmenter like is possible for Hangul. Then Katakana
-// processing would depend on the configuration and not a hard ifdef.
-#undef KATAKANA_AS_WORDS
+// Decide if we treat Japanese (katakana+hiragana) as western scripts, splitting into words instead
+// of n-grams. We set this at compile time, and the actual processing is decided by the
+// configuration. If configured, we use Mecab to split Japanese. There is still a problem with Kanji
+// as these can not be identified as Japanese or Chinese, and are actually treated as Chinese.
+#define JAPANESE_AS_WORDS
 
 // Same for Korean syllabic, and same problem. However we have a runtime option to use an external
 // text analyser for Hangul, so this is defined at compile time.
@@ -90,6 +88,7 @@ static bool o_haveidxpunct;
 
 static bool o_exthangultagger{false};
 static bool o_extchinesetagger{false};
+static bool o_extjapanesetagger{false};
 
 // This is changed to 0 if _ is processed as a letter
 static char underscoreatend = '_';
@@ -160,6 +159,12 @@ void TextSplit::staticConfInit(RclConfig *config)
     if (!chinesetagger.empty()) {
         o_extchinesetagger = true;
         cnStaticConfInit(config, chinesetagger);
+    }
+    string japanesetagger;
+    config->getConfParam("japanesetagger", japanesetagger);
+    if (!japanesetagger.empty()) {
+        o_extjapanesetagger = true;
+        jaStaticConfInit(config, japanesetagger);
     }
 }
 
@@ -311,15 +316,16 @@ int TextSplit::whatcc(unsigned int c)
 // We should probably map 'fullwidth ascii variants' and 'halfwidth
 // katakana variants' to something else.  Look up "Kuromoji" Lucene
 // filter, KuromojiNormalizeFilter.java
-// 309F is Hiragana.
 #define UNICODE_IN_KATAKANA_RANGE(p)            \
-    ((p) != 0x309F &&                           \
-     (((p) >= 0x3099 && (p) <= 0x30FF) ||       \
-      ((p) >= 0x31F0 && (p) <= 0x31FF)))
-#ifdef KATAKANA_AS_WORDS
-#define UNICODE_IS_KATAKANA(p)  UNICODE_IN_KATAKANA_RANGE(p)
+     (((p) >= 0x30A0 && (p) <= 0x30FF) ||       \
+      ((p) >= 0x31F0 && (p) <= 0x31FF))
+#define UNICODE_IN_HIRAGANA_RANGE(p)            \
+    ((p) >= 0x3040 && (p) <= 0x309F)
+#define UNICODE_IN_JAPANESE_RANGE(p) (UNICODE_IN_KATAKANA_RANGE(p) || UNICODE_IN_HIRAGANA_RANGE(p))
+#ifdef JAPANESE_AS_WORDS
+#define UNICODE_IS_JAPANESE(p)  (o_extjapanesetagger && UNICODE_IN_JAPANESE_RANGE(p))
 #else
-#define UNICODE_IS_KATAKANA(p) false
+#define UNICODE_IS_JAPANESE(p) false
 #endif
 
 // Hangul ranges and options. If no external tagger is configured, we process HANGUL as generic CJK
@@ -339,7 +345,7 @@ int TextSplit::whatcc(unsigned int c)
 
 // Chinese ranges: everything in CJK range defined above which is not Katakana or Hangul
 #define UNICODE_IN_CHINESE_RANGE(p) \
-    (UNICODE_IS_CJK(p) && !(UNICODE_IN_KATAKANA_RANGE(p) || UNICODE_IN_HANGUL_RANGE(p)))
+    (UNICODE_IS_CJK(p) && !(UNICODE_IN_JAPANESE_RANGE(p) || UNICODE_IN_HANGUL_RANGE(p)))
 #ifdef CHINESE_AS_WORDS
 // If we are not using an external text splitter, IS_CJK will be true and IS_CHINESE false
 #define UNICODE_IS_CHINESE(p) (o_extchinesetagger && UNICODE_IN_CHINESE_RANGE(p))
@@ -377,6 +383,8 @@ int TextSplit::whatcc(unsigned int c)
 #define UNICODE_IS_TESTNGRAM(p) false
 #endif
 
+// The method versions of the macros are used by, e.g., the external splitters (e.g. to decide when
+// they're done), and misc. other places.
 bool TextSplit::isSpace(int c)
 {
     return whatcc(c) == SPACE;
@@ -389,10 +397,10 @@ bool TextSplit::noStemming(int c)
 {
     return UNICODE_IS_CJK(c) || UNICODE_IS_OTHER_NGRAM(c);
 }
-bool TextSplit::isKATAKANA(int c)
+bool TextSplit::isJAPANESE(int c)
 {
     PRETEND_USE(c);
-    return UNICODE_IS_KATAKANA(c);
+    return UNICODE_IS_JAPANESE(c);
 }
 bool TextSplit::isHANGUL(int c)
 {
@@ -407,7 +415,7 @@ bool TextSplit::isCHINESE(int c)
 bool TextSplit::isNGRAMMED(int c)
 {
     return UNICODE_IS_OTHER_NGRAM(c) || UNICODE_IS_TESTNGRAM(c) || 
-        (UNICODE_IS_CJK(c) && !UNICODE_IS_KATAKANA(c) && !UNICODE_IS_HANGUL(c) &&
+        (UNICODE_IS_CJK(c) && !UNICODE_IS_JAPANESE(c) && !UNICODE_IS_HANGUL(c) &&
          !UNICODE_IS_CHINESE(c));
 }
 
@@ -415,11 +423,11 @@ bool TextSplit::isNGRAMMED(int c)
 // This is used to detect katakana/other transitions, which must trigger a word split (there is not
 // always a separator, and katakana is otherwise treated like other, in the same routine, unless CJK
 // which has its span reader causing a word break)
-enum CharSpanClass {CSC_OTHER, CSC_HANGUL, CSC_CHINESE, CSC_CJK, CSC_KATAKANA, CSC_OTHERNGRAM,
+enum CharSpanClass {CSC_OTHER, CSC_HANGUL, CSC_CHINESE, CSC_CJK, CSC_JAPANESE, CSC_OTHERNGRAM,
                     CSC_TESTNGRAM};
 std::vector<CharFlags> csc_names {
     CHARFLAGENTRY(CSC_HANGUL), CHARFLAGENTRY(CSC_CHINESE), CHARFLAGENTRY(CSC_CJK),
-    CHARFLAGENTRY(CSC_KATAKANA), CHARFLAGENTRY(CSC_OTHER), CHARFLAGENTRY(CSC_OTHERNGRAM),
+    CHARFLAGENTRY(CSC_JAPANESE), CHARFLAGENTRY(CSC_OTHER), CHARFLAGENTRY(CSC_OTHERNGRAM),
     CHARFLAGENTRY(CSC_TESTNGRAM)};
 
 // Final term checkpoint: do some checking (the kind which is simpler to do here than in the main
@@ -671,7 +679,7 @@ bool TextSplit::text_to_words(const string &in)
     bool softhyphenpending = false;
 
     Utf8Iter it(in);
-#if defined(KATAKANA_AS_WORDS) || defined(HANGUL_AS_WORDS) || defined(CHINESE_AS_WORDS)
+#if defined(JAPANESE_AS_WORDS) || defined(HANGUL_AS_WORDS) || defined(CHINESE_AS_WORDS)
     int prev_csc = -1;
 #endif
     int prevc = -1;
@@ -690,8 +698,8 @@ bool TextSplit::text_to_words(const string &in)
         // configured. In other words, CJK characters are processed by the generic ngram term
         // generator, except if a language-specific processor has been implemented and configured.
         bool gospecial = true;
-        if (UNICODE_IS_KATAKANA(c)) {
-            csc = CSC_KATAKANA;
+        if (UNICODE_IS_JAPANESE(c)) {
+            csc = CSC_JAPANESE;
         } else if (UNICODE_IS_HANGUL(c)) {
             csc = CSC_HANGUL;
         } else if (UNICODE_IS_CHINESE(c)) {
@@ -707,7 +715,7 @@ bool TextSplit::text_to_words(const string &in)
             csc = CSC_OTHER;
         }
         if (o_processCJK && gospecial) {
-            // Using ngrams with possible exceptions for Hangul and Chinese if so configured.
+            // Using ngrams with possible exceptions if so configured.
 
             // Do like at EOF with the current non-cjk data.
             if (m_wordLen || m_span.length()) {
@@ -721,6 +729,13 @@ bool TextSplit::text_to_words(const string &in)
                 KOSplitter splt(*this);
                 if (!splt.text_to_words(it, &c, m_wordpos)) {
                     LOGERR("Textsplit: scan error in korean handler\n");
+                    return false;
+                }
+            } else if (csc == CSC_JAPANESE) {
+                // Same as above. Singleton splitter for now
+                JASplitter splt(*this);
+                if (!splt.text_to_words(it, &c, m_wordpos)) {
+                    LOGERR("Textsplit: scan error in japanese handler\n");
                     return false;
                 }
             } else if (csc == CSC_CHINESE) {
@@ -750,7 +765,7 @@ bool TextSplit::text_to_words(const string &in)
                 break;
         }
 
-#if defined(KATAKANA_AS_WORDS) || defined(HANGUL_AS_WORDS) || defined(CHINESE_AS_WORDS)
+#if defined(JAPANESE_AS_WORDS) || defined(HANGUL_AS_WORDS) || defined(CHINESE_AS_WORDS)
         // Only needed if we have script transitions inside this
         // routine, else the call to cjk_to_words does the job (so do
         // nothing right after a CJK section). Because

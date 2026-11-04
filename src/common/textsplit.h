@@ -116,7 +116,7 @@ public:
 
     /** Is char CJK ? */
     static bool isCJK(int c);
-    static bool isKATAKANA(int c);
+    static bool isJAPANESE(int c);
     static bool isHANGUL(int c);
     static bool isCHINESE(int c);
     /* Not split in words */

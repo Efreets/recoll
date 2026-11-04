@@ -145,21 +145,6 @@ public:
             return true;
         }
 
-        // We should have a Japanese stemmer to handle this, but for experimenting, let's do it
-        // here: remove 'prolounged sound mark' and its halfwidth variant from the end of terms.
-        if ((unsigned int)otrm[0] > 127) {
-            Utf8Iter it(otrm);
-            if (TextSplit::isKATAKANA(*it)) {
-                Utf8Iter itprev = it;
-                while (*it != (unsigned int)-1) {
-                    itprev = it;
-                    it++;
-                }
-                if (*itprev == 0x30fc || *itprev == 0xff70) {
-                    otrm = otrm.substr(0, itprev.getBpos());
-                }
-            }
-        }
         if (otrm.empty()) {
             return true;
         }
