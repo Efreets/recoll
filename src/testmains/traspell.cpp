@@ -133,4 +133,10 @@ int main(int argc, char **argv)
     }
     exit(0);
 }
+
+# else
+int main(int argc, char **argv)
+{
+    return 1;
+}
 #endif // RCL_USE_ASPELL

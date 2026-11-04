@@ -284,6 +284,7 @@ librecoll_sources = [
     'common/cnsplitter.cpp',
     'common/cstr.cpp',
     'common/firstmatchline.cpp',
+    'common/jasplitter.cpp',
     'common/kosplitter.cpp',
     'common/plaintorich.cpp',
     'common/rclconfig.cpp',
@@ -523,7 +524,7 @@ py3_dep = dependency('python3', required: true)
 if get_option('python-module')
     subdir('python/recoll')
 endif   
-if get_option('python-aspell')
+if get_option('aspell') and get_option('python-aspell')
     subdir('python/pyaspell')
 endif
 if get_option('python-chm')
