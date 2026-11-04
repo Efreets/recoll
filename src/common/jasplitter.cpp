@@ -36,7 +36,7 @@
 
 using namespace std;
 
-#define LOGJA LOGINF
+#define LOGJA LOGDEB0
 
 // Separator char used in the Python word list output.
 static const string sepchars(" ");

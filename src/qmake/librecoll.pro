@@ -28,6 +28,7 @@ SOURCES += \
 ../common/firstmatchline.cpp \
 ../common/firstmatchline.h \
 ../common/kosplitter.cpp \
+../common/jasplitter.cpp \
 ../common/cstr.cpp \
 ../common/plaintorich.cpp \
 ../common/rclconfig.cpp \
