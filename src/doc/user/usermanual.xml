@@ -1414,6 +1414,12 @@ fs.inotify.max_user_watches=32768</programlisting>
           <para>By default, other attributes are handled as &RCL; fields of the same name, 
           after removing the "<literal>user</literal>" prefix on Linux.</para>
 
+          <para>Attributes with names beginning with "<literal>user.moob.</literal>" are decoded
+          from the <link xl:href="https://github.com/studiomoob/llmoobfs/blob/main/docs/client-contract.md">MoobFS
+          typed value format</link>: strings are indexed as text, integers and floating point
+          numbers in decimal, booleans as <literal>true</literal> or <literal>false</literal>, and
+          times as Unix time (seconds since the epoch). Raw values are ignored.</para>
+
           <para>The name translation can be configured more precisely, inside the
           <link linkend="RCL.CONFIG.FIELDS.XATTR"><filename>fields</filename> configuration
           file</link>.</para>
