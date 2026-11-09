@@ -49,16 +49,15 @@
 #include "log.h"
 #include "guiutils.h"
 #include "reslistpager.h"
-#include "reslist.h"
 #include "rclconfig.h"
 #include "plaintorich.h"
-#include "indexer.h"
 #include "respopup.h"
 #include "rclmain_w.h"
 #include "multisave.h"
 #include "appformime.h"
 #include "transcode.h"
 #include "scbase.h"
+#include "smallut.h"
 
 using std::string;
 using std::vector;

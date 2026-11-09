@@ -44,9 +44,9 @@
 #include "rclquery.h"
 #include "rclhelp.h"
 #include "wasatorcl.h"
-#include "execmd.h"
-#include "indexer.h"
+#include "idxstatus.h"
 #include "fstreewalk.h"
+#include "smallut.h"
 
 using std::list;
 using std::multimap;

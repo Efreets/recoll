@@ -37,6 +37,7 @@
 #include "snippets_w.h"
 #include "idxstatus.h"
 #include "conftree.h"
+#include "smallut.h"
 
 using namespace std;
 
