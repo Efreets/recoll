@@ -1,3 +1,17 @@
+recoll (1.45.0-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
+
+  * Portable Recoll. Have a Recoll installation with its configuration and data on a removable volume
+    and use it elsewhere without needing a local installation. See the
+    link:https://recoll.org/usermanual/webhelp/docs/RCL.CONFIG.PORTABLE.html[manual].
+  * New entry in the result list context menu to make a copy even if the result is a regular file
+    system file.
+  * New pyvirtualenv configuration parameter to specify a virtual environment for all Recoll Python
+    commands.
+  * Fix issue resulting in temporary file creation failing with long paths.
+  * Misc small fixes, see the git log.
+  
+ -- Jean-Francois Dockes <jf@dockes.org>  Fri, 23 Oct 2026 11:00:00 +0200
+
 recoll (1.44.2-1~ppaPPAVERS~SERIES1) SERIES; urgency=low
 
   * Fix crash in indexer caused by unprocessed NULL return from magic_file()
