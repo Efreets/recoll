@@ -63,7 +63,7 @@ using namespace std;
 #ifdef RCL_USE_ASPELL
 #include "rclaspell.h"
 #endif
-
+#include "stemmap.h"
 
 
 namespace Rcl {
@@ -184,6 +184,8 @@ bool Db::open(OpenMode mode, OpenError *error, int flags)
         if (path_exists(synfile)) {
             setSynGroupsFile(synfile);
         }
+        // Enable the stemmap. This costs nothing if nobody uses it. 
+        StemMap::enable(true);
     }
     
     string dir = m_config->getDbDir();

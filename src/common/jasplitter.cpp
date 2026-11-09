@@ -33,6 +33,7 @@
 #include "smallut.h"
 #include "rclconfig.h"
 #include "cmdtalk.h"
+#include "stemmap.h"
 
 using namespace std;
 
@@ -46,7 +47,7 @@ static bool o_starterror{false};
 static string o_cmdpath;
 static vector<string> o_cmdargs;
 static std::mutex o_mutex;
-static string o_taggername{"MeCab"};
+static string o_taggername{"fugashi"};
 
 static const string magicpage{"NEWPPPAGE"};
 
@@ -59,12 +60,7 @@ void jaStaticConfInit(RclConfig *config, const string& tagger)
         o_cmdargs.clear();
         o_cmdargs.insert(o_cmdargs.end(), it, cmdvec.end());
     }
-    if (tagger == "MeCab") {
-        LOGINF("TextSplit::jaStaticConfInit: using " << tagger << '\n');
-        o_taggername = tagger;
-    } else {
-        LOGERR("TextSplit::jaStaticConfInit: unknown tagger [" << tagger << "], using MeCab\n");
-    }
+    o_taggername = tagger;
 }
 
 // Start the Python subprocess
@@ -90,6 +86,7 @@ static bool initCmd()
         o_starterror = true;
         return false;
     }
+    LOGINF("JASplitter: using tagger mecab with interface " << o_taggername << '\n');
     return true;
 }
 
@@ -112,6 +109,8 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
         return false;
     }
 
+    auto stmm = StemMap::getStemMap();
+    
     LOGJA("ja_to_words: wordpos " << wordpos << "\n");
 
     // Current character value
@@ -133,7 +132,13 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
     strsz_t orgbytepos = it.getBpos();
     for (; !it.eof() && !it.error(); it++) {
         c = *it;
-        if (!TextSplit::isJAPANESE(c) && !ISASCIIPUNCTORCTL(c)) {
+        // Are we done with Japanese ? If we only go on with pure Japanese characters
+        // (katakana+hiragana), we don't pass the Kanji to mecab because they are identified as
+        // Chinese. We can't use isCHINESE() because this only returns true if Jieba is
+        // configured. So we test for CJK, which only tests the ranges, and we're in trouble if
+        // there is Korean text among the Japanese. Maybe textsplit could export a chinese
+        // simple range test.
+        if (!TextSplit::isCJK(c) && !ISASCIIPUNCTORCTL(c)) {
             // Non-Japanese: we keep on if encountering space and other ASCII punctuation. Allows
             // sending longer pieces of text to the splitter (perf). Else break, process this piece,
             // and return to the main splitter
@@ -169,12 +174,24 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
         LOGERR("TextSplit::ja_to_words: no words in Python splitter output\n");
         return false;
     }        
-    string& outtext = resit->second;
+    string& wordstext = resit->second;
     vector<string> words;
-    trimstring(outtext, " \t\n\r");
-    stringToTokens(outtext, words, sepchars);
+    trimstring(wordstext, " \t\n\r");
+    stringToTokens(wordstext, words, sepchars);
+    resit = result.find("roots");
+    vector<string> roots;
+    if (resit != result.end()) {
+        string& txt = resit->second;
+        trimstring(txt, " \t\n\r");
+        stringToTokens(txt, roots, sepchars);
+    }
+
     LOGJA("ja_to_words: splitter returned " << words.size() << " words\n");
-    
+#if 0
+    for (unsigned int i = 0; i < words.size(); i++) {
+        std::cerr << words[i] << "  |  " << (roots.size() > i ? roots[i] : "") << '\n';
+    }
+#endif
     // bytepos is the position in the local fragment, not in the whole
     // text which is orgbytepos + bytepos
     strsz_t bytepos{0};
@@ -187,7 +204,7 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
         // that this works though, depending on exactly what transformation may have been applied
         // from the original input to the term. At worse, the byte positions will be wrong which
         // just impacts later highlighting
-        string word = words[i];
+        std::string& word = words[i];
         trimstring(word, " \t\n\r");
         if (word == magicpage) {
             LOGDEB1("ja_to_words: NEWPAGE\n");
@@ -195,6 +212,11 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
             bytepos += word.size() + 1;
             pagefix += word.size();
             continue;
+        }
+        if (nullptr != stmm && !roots.empty() && roots[i] != "*") {
+            const std::string& root = roots[i];
+            if (root != word)
+                stmm->addMapping(root, word);
         }
         // Find the actual start position of the word in the section.
         strsz_t newpos = inputdata.find(word, bytepos);
