@@ -28,10 +28,8 @@
 #include <vector>
 #include <ostream>
 #include <memory>
-#include <set>
 
 #include "rcldb.h"
-#include "smallut.h"
 #include "hldata.h"
 #include "rclutil.h"
 

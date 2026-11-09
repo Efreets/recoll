@@ -17,36 +17,18 @@
 
 // Handle translation from rcl's SearchData structures to Xapian Queries
 
-#include "autoconfig.h"
-
-#include <stdio.h>
+#include "searchdata.h"
 
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <sstream>
 #include <iostream>
 using namespace std;
 
-#include "xapian.h"
-
-#include "cstr.h"
 #include "rcldb.h"
-#include "rcldb_p.h"
-#include "searchdata.h"
 #include "log.h"
-#include "smallut.h"
 #include "textsplit.h"
-#include "unacpp.h"
-#include "utf8iter.h"
-#include "stoplist.h"
-#include "rclconfig.h"
-#include "termproc.h"
-#include "synfamily.h"
-#include "stemdb.h"
-#include "expansiondbs.h"
-#include "base64.h"
-#include "daterange.h"
+#include "smallut.h"
 
 namespace Rcl {
 

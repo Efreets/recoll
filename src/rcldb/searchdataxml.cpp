@@ -30,6 +30,7 @@
 #include "log.h"
 #include "base64.h"
 #include "picoxml.h"
+#include "smallut.h"
 
 using namespace std;
 

@@ -41,7 +41,6 @@
 #include "stoplist.h"
 #include "rclconfig.h"
 #include "termproc.h"
-#include "synfamily.h"
 #include "stemdb.h"
 #include "expansiondbs.h"
 #include "base64.h"

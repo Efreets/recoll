@@ -24,6 +24,7 @@
 #include "searchdata.h"
 #include "log.h"
 #include "rclconfig.h"
+#include "smallut.h"
 
 #define YYDEBUG 1
 

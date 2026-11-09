@@ -19,22 +19,20 @@
  * Management of the auxiliary databases listing stems and their expansion terms
  */
 
-#include "autoconfig.h"
-
-#include "safeunistd.h"
+#include "stemdb.h"
 
 #include <algorithm>
 #include <map>
 #include <iostream>
 #include <string>
+
+#include "safeunistd.h"
 using namespace std;
 
 #include <xapian.h>
 
-#include "stemdb.h"
 #include "log.h"
 #include "smallut.h"
-#include "synfamily.h"
 #include "unacpp.h"
 #include "rclconfig.h"
 
