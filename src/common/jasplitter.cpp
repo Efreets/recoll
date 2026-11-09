@@ -27,6 +27,7 @@
 #include <mutex>
 
 #include "textsplit.h"
+//#define LOGGER_LOCAL_LOGINC 3
 #include "log.h"
 //#define UTF8ITER_CHECK
 #include "utf8iter.h"

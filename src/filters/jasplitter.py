@@ -107,8 +107,8 @@ elif len(sys.argv) > 1:
     data = ""
     for w in sys.argv[1:]:
         data += w + " "
-    taggername = "MeCab"
-#    taggername = "fugashi"
+#    taggername = "MeCab"
+    taggername = "fugashi"
     result = processor.process({"tagger" : taggername, "data" : data})
     for w,r in zip(result["words"].split(), result["roots"].split()):
         print(f"{w} | {r}")

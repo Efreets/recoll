@@ -22,6 +22,9 @@
 
 #include <memory>
 #include <string>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
 #include "log.h"
 #include "utf8iter.h"
@@ -32,10 +35,13 @@
 #include "rcldb.h"
 #include "rcldb_p.h"
 #include "stemdb.h"
+#include "stemmap.h"
 
 using namespace std;
 
 namespace Rcl {
+
+static bool processStemMap(Xapian::WritableDatabase& wdb);
 
 /**
  * Create all expansion dbs used to transform user input term to widen a query
@@ -46,6 +52,16 @@ bool createExpansionDbs(Xapian::WritableDatabase& wdb, const vector<string>& lan
     LOGDEB("StemDb::createExpansionDbs: languages: " <<stringsToString(langs) << "\n");
     Chrono cron;
 
+    // Maybe peruse the stemmap. This is a map of word/stem assocs created while indexing as opposed
+    // to the normal mechanism which is to process the term list after indexing. The stemmap is used
+    // for Japanese at the moment, because it seems that context is important for Japanese stemming
+    // so that working on isolated words would produce inferior results.
+    // If the stemmap is not enabled or empty, this does nothing.
+    if (!processStemMap(wdb)) {
+        LOGERR("createExpansionDbs: fatal error while processing stemmap\n");
+        return false;
+    }
+    
     // Erase and recreate all the expansion groups
 
     // If langs is empty and we don't need casediac expansion, then no need to
@@ -155,5 +171,30 @@ bool createExpansionDbs(Xapian::WritableDatabase& wdb, const vector<string>& lan
     return true;
 }
 
-}    
+static bool processStemMap(Xapian::WritableDatabase& wdb)
+{
+    auto stmmp = StemMap::getStemMap();
+    if (nullptr == stmmp) {
+        LOGDEB("processStemMap: not enabled\n");
+        return true;
+    }
+    XapWritableSynFamMember syns(wdb, synFamCJK, "japanese");
+    // We do NOT reset the existing transformations, as they're only ever recreated by a full
+    // indexing (unlike western stemming where we walk the full term list to recreate the db from
+    // scratch). This means that some spurious data will stay in there if documents are, e.g.,
+    // deleted.
+    for (const auto& [stem, words] : *stmmp) {
+        // words is a space-separated list of surface forms.
+        std::vector<std::string> uwords;
+        stringToTokens(words, uwords);
+        std::sort(uwords.begin(), uwords.end());
+        auto uit = std::unique(uwords.begin(), uwords.end());
+        uwords.resize(uit - uwords.begin());
+        for (const auto& word : uwords) {
+            syns.addSynonym(word, stem);
+        }
+    }        
+    return true;
+}
 
+}    

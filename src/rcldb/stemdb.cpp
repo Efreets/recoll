@@ -52,6 +52,15 @@ bool StemDb::stemExpand(const std::string& langs, const std::string& _term, vect
     string term;
     unacmaybefold(_term, term, UNACOP_FOLD);
 
+    // Japanese is not in the list of possibly configured stemming languages, which come out of the
+    // Xapian stemmers. We could make an effort to detect the use of mecab/fugashi, but if we're not
+    // processing japanese, the 2 next line do practically nothing, so it's probably not worth the
+    // trouble.
+    // We would want to change this if disabling japanese stem expansion is actually needed, we
+    // would then need an api and user interface to do it.
+    XapSynFamMember expander(getdb(), synFamCJK, "japanese");
+    (void)expander.synExpand(term, result);
+
     for (const auto& lang : llangs) {
         SynTermTransStem stemmer(lang);
         XapComputableSynFamMember expander(getdb(), synFamStem, lang, &stemmer);

@@ -39,14 +39,14 @@ static int        op_flags;
 #define OPT_D     0x1
 #define OPT_L     0x2
 #define OPT_a     0x4
-#define OPT_u     0x8
+#define OPT_c     0x8
 #define OPT_d     0x10
-#define OPT_l     0x20
-#define OPT_s     0x40
-#define OPT_e     0x80
-
+#define OPT_e     0x20
+#define OPT_l     0x40
+#define OPT_s     0x80
+#define OPT_u     0x100
 static string usage =
-    " -d <dbdir> {-s|-a|-u} database dir and synfamily: stem accents/case ustem\n"
+    " -d <dbdir> {-s|-a|-u|-c} database dir and synfamily: stem accents/case ustem\n"
     " -l : list members\n"
     " -L <member>: list entries for given member\n"
     " -e <member> <key> : list expansion for given member and key\n"
@@ -77,6 +77,7 @@ int main(int argc, char **argv)
         while (**argv)
             switch (*(*argv)++) {
             case 'a':   op_flags |= OPT_a; break;
+            case 'c':   op_flags |= OPT_c; break;
             case 'D':   op_flags |= OPT_D; break;
             case 'd':   op_flags |= OPT_d; if (argc < 2)  Usage();
                 dbdir = *(++argv); argc--; 
@@ -104,6 +105,8 @@ int main(int argc, char **argv)
         familyname = Rcl::synFamDiCa;
     } else if (op_flags & OPT_u) {
         familyname = Rcl::synFamStemUnac;
+    } else if (op_flags & OPT_c) {
+        familyname = Rcl::synFamCJK;
     } else {
         familyname = Rcl::synFamStem;
     }

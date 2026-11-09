@@ -46,7 +46,7 @@ bool XapWritableSynFamily::createMember(const string& membername)
 
 bool XapWritableSynFamily::deleteMember(const string& membername)
 {
-    string key = entryprefix(membername);
+    string key = memberprefix(membername);
 
     for (Xapian::TermIterator xit = m_wdb.synonym_keys_begin(key);
          xit != m_wdb.synonym_keys_end(key); xit++) {
@@ -75,41 +75,41 @@ bool XapSynFamily::getMembers(vector<string>& members)
 
 bool XapSynFamily::listMap(const string& membername)
 {
-    string key = entryprefix(membername);
+    string key = memberprefix(membername);
     string ermsg;
     try {
         for (Xapian::TermIterator kit = m_rdb.synonym_keys_begin(key);
              kit != m_rdb.synonym_keys_end(key); kit++) {
-            cout << "[" << *kit << "] -> ";
+            cout << *kit << " -> ";
             for (Xapian::TermIterator xit = m_rdb.synonyms_begin(*kit);
                  xit != m_rdb.synonyms_end(*kit); xit++) {
-                cout << *xit << " ";
+                cout << *xit << " = ";
             }
-            cout << endl;
+            cout << '\n';
         }
     } XCATCHERROR(ermsg);
     if (!ermsg.empty()) {
-        LOGERR("XapSynFamily::listMap: xapian error " << ermsg << "\n");
+        LOGERR("XapSynFamily::listMap: xapian error " << ermsg << '\n');
         return false;
     }
     vector<string>members;
     getMembers(members);
     cout << "All family members: ";
-    for (vector<string>::const_iterator it = members.begin();
-         it != members.end(); it++) {
-        cout << *it << " ";
+    for (const auto& member : members) {
+        cout << member << " ";
     }
-    cout << endl;
+    cout << '\n';
     return true;
 }
 
-bool XapSynFamily::synExpand(const string& member, const string& term,
+
+bool XapSynFamily::synExpand(const string& member, const string& root,
                              vector<string>& result)
 {
-    LOGDEB("XapSynFamily::synExpand:(" << m_prefix1 << ") " << term <<
+    LOGDEB("XapSynFamily::synExpand:(" << m_prefix1 << ") " << root <<
            " for " << member << "\n");
 
-    string key = entryprefix(member) + term;
+    string key = memberprefix(member) + root;
     string ermsg;
     try {
         for (Xapian::TermIterator xit = m_rdb.synonyms_begin(key);
@@ -120,13 +120,13 @@ bool XapSynFamily::synExpand(const string& member, const string& term,
     } XCATCHERROR(ermsg);
     if (!ermsg.empty()) {
         LOGERR("synFamily::synExpand: error for member [" << member <<
-               "] term [" << term << "]\n");
-        result.push_back(term);
+               "] root [" << root << "]\n");
+        result.push_back(root);
         return false;
     }
-    // If the input term is not in the list, add it
-    if (find(result.begin(), result.end(), term) == result.end()) {
-        result.push_back(term);
+    // If the input root is not in the list, add it
+    if (find(result.begin(), result.end(), root) == result.end()) {
+        result.push_back(root);
     }
 
     return true;
@@ -182,9 +182,9 @@ bool XapComputableSynFamMember::synExpand(const string& term,
     return true;
 }
 
-bool XapComputableSynFamMember::synKeyExpand(StrMatcher* inexp,
-                                             vector<string>& result,
-                                             SynTermTrans *filtertrans)
+// inexp is either a regexp or wild-card matcher
+bool XapComputableSynFamMember::synKeyExpand(
+    StrMatcher* inexp, vector<string>& result, SynTermTrans *filtertrans)
 {
     LOGDEB("XapCompSynFam::synKeyExpand: [" << inexp->exp() << "]\n");
     
@@ -247,10 +247,70 @@ bool XapComputableSynFamMember::synKeyExpand(StrMatcher* inexp,
         LOGERR("XapCompSynFam::synKeyExpand: xapian: [" << ermsg << "]\n");
         return false;
     }
-    LOGDEB1("XapCompSynFam::synKeyExpand: final: [" <<
-            stringsToString(result) << "]\n");
+    LOGDEB1("XapCompSynFam::synKeyExpand: final: [" << stringsToString(result) << "]\n");
     return true;
 }
 
+// Expansion for the non-computable variant: find root in reverse map, then find siblings
+bool XapSynFamMember::synExpand(const std::string& term, std::vector<std::string>& result,
+                                SynTermTrans *)
+{
+    LOGDEB("XapSynFamMember::synExpand:" << term << '\n');
 
+    // Look up the root term for the surface term
+    string key = m_revprefix + term;
+    string ermsg;
+    string root;
+    try {
+        Xapian::TermIterator xit = m_family.getdb().synonyms_begin(key);
+        if (xit != m_family.getdb().synonyms_end(key)) {
+            root = *xit;
+        }
+    } XCATCHERROR(ermsg);
+    if (!ermsg.empty()) {
+        LOGERR("XapSynFamMember::synExpand: " << m_membername << " no root (error) for [" <<
+               term << "]\n");
+        result.push_back(term);
+        return false;
+    }
+
+    // Root empty may mean that the root was used as a search term but that it's not present in the
+    // corpus. Let's try to search the root->terms map with the term as root anyway.
+    if (root.empty()) {
+        LOGINF("XapSynFamMember::synExpand: " << m_membername << " no root for [" << term <<
+               "], using term as root\n");
+        root = term;
+    }
+
+    result.push_back(root);
+
+    key = m_prefix + root;
+    try {
+        for (Xapian::TermIterator xit = m_family.getdb().synonyms_begin(key);
+             xit != m_family.getdb().synonyms_end(key); xit++) {
+            LOGDEB("XapCompSynFamMbr::synExpand: " << *xit << '\n');
+            result.push_back(*xit);
+        }
+    } XCATCHERROR(ermsg);
+    if (!ermsg.empty()) {
+        LOGERR("XapSynFamMember::synExpand: error for root [" << root <<
+               "] (key " << key << ")\n");
+        result.push_back(term);
+        return false;
+    }
+    
+    // If the input term is not in the list, add it
+    if (find(result.begin(), result.end(), term) == result.end()) {
+        result.push_back(term);
+    }
+    return true;
+}
+
+// I don't think that we can do this
+bool XapSynFamMember::synKeyExpand(
+    StrMatcher* inexp, vector<string>& result, SynTermTrans *filtertrans)
+{
+    LOGERR("XapSynFamMember:synkeyExpand(): not implemented\n");
+    return false;
+}
 } // Namespace Rcl

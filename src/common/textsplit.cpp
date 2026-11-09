@@ -322,8 +322,13 @@ int TextSplit::whatcc(unsigned int c)
 #define UNICODE_IN_HIRAGANA_RANGE(p)            \
     ((p) >= 0x3040 && (p) <= 0x309F)
 #define UNICODE_IN_JAPANESE_RANGE(p) (UNICODE_IN_KATAKANA_RANGE(p) || UNICODE_IN_HIRAGANA_RANGE(p))
+// If we are using a japanese tagger, we have to send it the Chinese characters too, esp. because
+// jasplitter does not break on kanji, so we may have cases where a search term beginning with kanji
+// is treated as ngrams at query time, but possibly as japanese when found in context, yielding no
+// hits.
 #ifdef JAPANESE_AS_WORDS
-#define UNICODE_IS_JAPANESE(p)  (o_extjapanesetagger && UNICODE_IN_JAPANESE_RANGE(p))
+#define UNICODE_IS_JAPANESE(p)  (o_extjapanesetagger && UNICODE_IS_CJK(p) && \
+                                 !UNICODE_IN_HANGUL_RANGE(p))
 #else
 #define UNICODE_IS_JAPANESE(p) false
 #endif
@@ -698,19 +703,26 @@ bool TextSplit::text_to_words(const string &in)
         // configured. In other words, CJK characters are processed by the generic ngram term
         // generator, except if a language-specific processor has been implemented and configured.
         bool gospecial = true;
-        if (UNICODE_IS_JAPANESE(c)) {
-            csc = CSC_JAPANESE;
-        } else if (UNICODE_IS_HANGUL(c)) {
+        if (UNICODE_IS_HANGUL(c)) {
+            LOGDEB1("GOT HANGUL CHARACTER "  << std::hex << c << std::dec << '\n');
             csc = CSC_HANGUL;
+        } else if (UNICODE_IS_JAPANESE(c)) {
+            LOGDEB1("GOT JAPANESE CHARACTER "  << std::hex << c << std::dec << '\n');
+            csc = CSC_JAPANESE;
         } else if (UNICODE_IS_CHINESE(c)) {
+            LOGDEB1("GOT CHINESE CHARACTER "  << std::hex << c << std::dec << '\n');
             csc = CSC_CHINESE;
         } else if (UNICODE_IS_OTHER_NGRAM(c)) {
+            LOGDEB1("GOT OTHERNGRAM CHARACTER "  << std::hex << c << std::dec << '\n');
             csc = CSC_OTHERNGRAM;
         } else if (UNICODE_IS_TESTNGRAM(c)) {
+            LOGDEB1("GOT TESTNGRAM CHARACTER "  << std::hex << c << std::dec << '\n');
             csc = CSC_TESTNGRAM;
         } else if (UNICODE_IS_CJK(c)) {
+            LOGDEB1("GOT CJK CHARACTER "  << std::hex << c << std::dec << '\n');
             csc = CSC_CJK;
         } else {
+            LOGDEB1("GOT OTHER: " << std::hex << c << std::dec << '\n');
             gospecial = false;
             csc = CSC_OTHER;
         }
