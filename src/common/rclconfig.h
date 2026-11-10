@@ -356,4 +356,8 @@ extern bool o_uptodate_test_use_mtime;
 // (use 'l' to disable for a specific instance)
 extern bool o_expand_phrases;
 
+// When using MeCab with japanese: expand japanese search term term->root->terms at query time.
+// This is only a global because its used its buried at a point with no easy access to the config.
+extern bool o_japanese_stemming;
+
 #endif /* _RCLCONFIG_H_INCLUDED_ */

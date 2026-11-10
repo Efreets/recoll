@@ -145,6 +145,9 @@ bool o_no_term_positions = false;
 bool o_uptodate_test_use_mtime = false;
 
 bool o_expand_phrases = false;
+
+bool o_japanese_stemming = true;
+
 // We build this once. Used to ensure that the suffix used for a temp
 // file of a given MIME type is the FIRST one from the mimemap config
 // file. Previously it was the first in alphabetic (map) order, with
@@ -835,6 +838,7 @@ bool RclConfig::updateMainConfig()
         getConfParam("testmodifusemtime", &o_uptodate_test_use_mtime);
         getConfParam("stemexpandphrases", &o_expand_phrases);
         getConfParam("notermpositions", &o_no_term_positions);
+        getConfParam("japanesestemming", &o_japanese_stemming);
         m_index_stripchars_init = 1;
     }
 

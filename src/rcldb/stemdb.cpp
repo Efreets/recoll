@@ -22,11 +22,8 @@
 #include "stemdb.h"
 
 #include <algorithm>
-#include <map>
-#include <iostream>
 #include <string>
 
-#include "safeunistd.h"
 using namespace std;
 
 #include <xapian.h>
@@ -56,10 +53,12 @@ bool StemDb::stemExpand(const std::string& langs, const std::string& _term, vect
     // Xapian stemmers. We could make an effort to detect the use of mecab/fugashi, but if we're not
     // processing japanese, the 2 next line do practically nothing, so it's probably not worth the
     // trouble.
-    // We would want to change this if disabling japanese stem expansion is actually needed, we
-    // would then need an api and user interface to do it.
-    XapSynFamMember expander(getdb(), synFamCJK, "japanese");
-    (void)expander.synExpand(term, result);
+    // The feature can still be disabled through a configuration variable (using a global because
+    // we have no easy rclconfig access here).
+    if (o_japanese_stemming) {
+        XapSynFamMember expander(getdb(), synFamCJK, "japanese");
+        (void)expander.synExpand(term, result);
+    }
 
     for (const auto& lang : llangs) {
         SynTermTransStem stemmer(lang);
