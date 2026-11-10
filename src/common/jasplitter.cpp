@@ -124,7 +124,6 @@ bool JASplitter::text_to_words(Utf8Iter& it, unsigned int *cp, int& wordpos)
 
     if (first_time) {
         first_time = false;
-        // We only use MeCab anyway...
         args.insert(pair<string,string>{"tagger", o_taggername});
     }
     

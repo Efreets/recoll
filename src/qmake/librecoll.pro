@@ -88,6 +88,7 @@ SOURCES += \
 ../rcldb/searchdatatox.cpp \
 ../rcldb/searchdataxml.cpp \
 ../rcldb/stemdb.cpp \
+../rcldb/stemmap.cpp \
 ../rcldb/stoplist.cpp \
 ../rcldb/synfamily.cpp \
 ../unac/unac.cpp \
