@@ -81,11 +81,15 @@ class SofficeRunner(object):
         # but I get "corrupted bootstrap.ini" probably during USERINS. expansion in there.
         # The Windows indexer is single-threaded, so we could possibly avoid the option. However
         # I also get popups about waiting a printer connection. What a mess.
-        # We could probably use --safe-mode on Windows instead.
-        sofficeconfig = _path2fileurl(posixpath.join(self.tmpdir.getpath(), "soffice-profile"))
-        self.cmdbase = sofficecmd + ["--norestore", "--headless",
-                                     f"-env:UserInstallation={sofficeconfig}",
-                                     "--convert-to", "html", "--outdir"]
+        # Use --safe-mode on Windows instead.
+        if _platsys == "Windows":
+            self.cmdbase = sofficecmd + ["--norestore", "--headless", "--safe-mode",
+                                         "--convert-to", "html", "--outdir"]
+        else:
+            sofficeconfig = _path2fileurl(posixpath.join(self.tmpdir.getpath(), "soffice-profile"))
+            self.cmdbase = sofficecmd + ["--norestore", "--headless",
+                                         f"-env:UserInstallation={sofficeconfig}",
+                                         "--convert-to", "html", "--outdir"]
 
     def runsoffice(self, inpath):
         if isinstance(inpath, bytes):
