@@ -5,12 +5,12 @@ cachedir = @RECOLL_TESTCACHEDIR@
 
 loglevel = 3
 logfilename = @TMPDIR@/logrcltst
+idxloglevel = 3
 idxlogfilename = @TMPDIR@/idxlogrcltst
 
 daemloglevel = 3
 daemlogfilename = @TMPDIR@/rclmontrace
 
-systemfilecommand = xdg-mime query filetype
 # This is the default on unix but not windows, and needed for windows test
 # to succeed
 usesystemfilecommand = 1
@@ -36,6 +36,7 @@ skippedNames- = recoll.ini
 noContentSuffixes+ = .nosuff
 # Removing from noContentSuffixes
 noContentSuffixes- = .md5
+sofficecmd=@SOFFICECMD@
 
 # Comics_12 causes rclppt to loop. We keep it around for general testing
 # but it takes too much time when running the test-set

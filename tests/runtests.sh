@@ -115,12 +115,22 @@ test -n "$RECOLL_TESTDATA" || fatal RECOLL_TESTDATA is not set
 test -n "$TMPDIR" || fatal TMPDIR is not set
 
 if iswindows; then
+    test -n "$SOFFICECMD" || fatal SOFFICECMD is not set
     checkcmds recollq || exit 1
     if test x$noindex = x ; then
         checkcmds recollindex || exit 1
     fi
     export MSYS2_ARG_CONV_EXCL='*'
+
+    # Note: the embedded interpreter does not support PYTHONPATH
+    # https://bugs.python.org/issue28245
+    # This means that we can't test e.g. chinese on Windows.
+    # Would have to modify the python/python312._pth file.
+    # See https://docs.python.org/3/library/sys_path_init.html#pth-files
+    # export PYTHONPATH=D:/pytestvenv/Lib/site-packages
+
     # casediac, cjk koi8r tibetan: need utf8 on the command line
+    # chinese: see pythonpath above, found no easy way to import an external Jieba
     # compressed: weird unix stuff
     # pyupdate: TBD
     # info kar kword lyx djvu dvi Maildir Maildir1 man purple scribus xattr:
@@ -132,12 +142,13 @@ if iswindows; then
     # pythonapi: would need a lot of porting. Design windows-specific one?
     # xml: several files are also compressed or have bad suffixes
     # pdf-ocr: would need work to set up ocr config
-    excluded="non-auto casediac cjk koi8r conftree compressed pyupdate info ipynb \
+    excluded="non-auto casediac cjk chinese koi8r conftree compressed pyupdate info ipynb \
               kar kword lyx \
               djvu dvi Maildir Maildir1 man empty nonumbers pdf-annots \
               pdf-ocr pdfattach postscript purple pythonapi scribus xattr xml tibetan"
 else
-    checkcmds recollq pxattr xadump || exit 1
+    checkcmds recollq pxattr xadump soffice || exit 1
+    SOFFICECMD=`which soffice`
     if test x$noindex = x ; then
         checkcmds recollindex || exit 1
     fi
@@ -190,6 +201,7 @@ export RECOLL_TESTCACHEDIR=$toptmp
 sed -e "s,@RECOLL_TESTS@,$RECOLL_TESTS,g" \
     -e "s,@RECOLL_TESTDATA@,$RECOLL_TESTDATA,g" \
     -e "s,@TMPDIR@,$TMPDIR,g" \
+    -e "s,@SOFFICECMD@,$SOFFICECMD,g" \
     -e "s,@RECOLL_TESTCACHEDIR@,$RECOLL_TESTCACHEDIR,g" \
     < $RECOLL_CONFDIR/recoll.conf.in \
     > $RECOLL_CONFDIR/recoll.conf || exit 1

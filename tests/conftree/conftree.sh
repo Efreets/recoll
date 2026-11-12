@@ -9,8 +9,7 @@ topdir=$thisdir/..
 initvariables $0
 
 # Python interpreter. Find it relative to recollindex
-sys=`uname -o`
-if test "$sys" = Msys; then
+if iswindows; then
     rindex=`which recollindex`
     test -n "$rindex" || fatal recollindex not found
     toprecoll=`dirname "$rindex"`
