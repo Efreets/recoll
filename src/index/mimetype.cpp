@@ -59,7 +59,7 @@ static std::map<std::string, std::string> mimealiases{
 static std::string mimetypefromdata(
     RclConfig *cfg, const std::string &fn, bool usfc, const std::string& data)
 {
-    LOGDEB1("mimetypefromdata: fn [" << fn << "]\n");
+    LOGDEB1("mimetypefromdata: usfc " << usfc << " fn [" << fn << "]\n");
 
     // First try the internal identifying routine. Can use file access or memory data. Only checks
     // for email data, for which libmagic is not that good.
@@ -103,6 +103,7 @@ static std::string mimetypefromdata(
             int ret = magic_load(mgtoken, nullptr);
 #endif
             if (ret != 0) {
+                LOGINF("mimetypefromdata: magic_load failed\n");
                 magic_close(mgtoken);
                 mgtoken = NULL;
             }
