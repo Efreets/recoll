@@ -330,7 +330,7 @@ copypyrecoll()
     DEST=${DESTDIR}/Share/dist
     test -d $DEST || mkdir $DEST || fatal cant create $DEST
     rm -f ${DEST}/Recoll*.egg ${DEST}/Recoll*.whl
-    for v in 10 11 12 13;do
+    for v in 11 12 13 14 15;do
         PYRCLDIST=${PYRECOLL}/dist/Recoll-${VERSION}-cp3${v}-cp3${v}-win_amd64.whl
         if test ! -f ${PYRCLDIST}; then
             pushd ${PYRECOLL}
