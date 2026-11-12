@@ -27,6 +27,7 @@ authorname = os.environ["AUTHORNAME"]
 class Updater(threading.Thread):
     def run(self):
         udi = fsudi.fs_udi(path)
+        msg(f"Connecting to {confdir}")
         db = recoll.connect(confdir, writable=1)
         doc = db.getDoc(udi)
         #msg(f"doc title: [{doc['title']}] author [{doc['author']}] sig [{doc['sig']}]")
@@ -64,6 +65,9 @@ class Queryer(threading.Thread):
 
 updthr = Updater()
 updthr.start()
+
+updthr.join()
+sys.exit(0)
 
 rthreads = []
 for i in range(3):

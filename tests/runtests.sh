@@ -120,23 +120,20 @@ if iswindows; then
         checkcmds recollindex || exit 1
     fi
     export MSYS2_ARG_CONV_EXCL='*'
-    # badsuffs[1] notypes onlynames: tests need 'file' for mime id. onlynames is easy to fix.
-    # casediac, cjk koi8r: needs utf8 on the command line
+    # casediac, cjk koi8r tibetan: need utf8 on the command line
     # compressed: weird unix stuff
-    # conftree pyupdate rclconfig: shebang + choice of python.
-    # info kar kword lyx djvu dvi Maildir Maildir1 man purple scribus:
+    # pyupdate: TBD
+    # info kar kword lyx djvu dvi Maildir Maildir1 man purple scribus xattr:
     #   need unix command (info) or code (rclmidi) missing or filter is shell-script etc.
     # empty: fails because of differing dir sizes (0 vs 4096), not worth fixing
     # nonumbers: fails because of paths and testing on unix is enough
     # pdf-annots: needs the poppler glib bindings
     # postscript: needs ghostscript
-    # program: issues with suffix-less files
     # pythonapi: would need a lot of porting. Design windows-specific one?
-    # tibetan: utf-8 on cmdline
-    # xattr: unix-specific
     # xml: several files are also compressed or have bad suffixes
-    excluded="non-auto casediac conftree pyupdate rclconf cjk compressed info ipynb \
-              kar koi8r kword lyx \
+    # pdf-ocr: would need work to set up ocr config
+    excluded="non-auto casediac cjk koi8r conftree compressed pyupdate info ipynb \
+              kar kword lyx \
               djvu dvi Maildir Maildir1 man empty nonumbers pdf-annots \
               pdf-ocr pdfattach postscript purple pythonapi scribus xattr xml tibetan"
 else
