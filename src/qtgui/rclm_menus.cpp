@@ -1,4 +1,4 @@
-/* Copyright (C) 2005-2020 J.F.Dockes
+/* Copyright (C) 2005-2026 J.F.Dockes
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
@@ -162,14 +162,9 @@ void RclMain::buildMenus()
     m_idAllStem = queryMenu->addAction(g_stringAllStem);
     m_idAllStem->setCheckable(true);
     m_stemLangToId[g_stringAllStem] = m_idAllStem;
-    // Can't get the stemming languages from the db at this stage as
-    // db not open yet (the case where it does not even exist makes
-    // things complicated). So get the languages from the config
-    // instead
     vector<string> langs;
     if (!getStemLangs(langs)) {
-        QMessageBox::warning(0, "Recoll", 
-                             tr("error retrieving stemming languages"));
+        QMessageBox::warning(0, "Recoll", tr("error retrieving stemming languages"));
     }
     QAction *curid = prefs.queryStemLang == "ALL" ? m_idAllStem : m_idNoStem;
     QAction *id; 
