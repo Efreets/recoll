@@ -190,8 +190,6 @@ public:
         std::string membername, SynTermTrans* trans)
         : m_family(xdb, familyname), m_membername(membername), 
           m_trans(trans), m_prefix(m_family.memberprefix(m_membername)) {
-        // For now there is only one member: japanese. Create every time, this is idempotent.
-        m_family.createMember("japanese");
     }
     virtual ~XapWritableComputableSynFamMember() = default;
     
@@ -276,7 +274,10 @@ public:
         Xapian::WritableDatabase xdb, std::string familyname, std::string membername)
         : m_family(xdb, familyname), m_membername(membername), 
           m_prefix(m_family.memberprefix(m_membername)),
-          m_revprefix(m_family.memberprefix(revmembername(membername)))  {}
+          m_revprefix(m_family.memberprefix(revmembername(membername)))  {
+        // For now there is only one member: japanese. Create every time, this is idempotent.
+        m_family.createMember("japanese");
+    }
     virtual ~XapWritableSynFamMember() = default;
     
     virtual bool addSynonym(const std::string& term, const std::string& root) {
